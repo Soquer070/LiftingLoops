@@ -61,6 +61,11 @@ static cl::opt<unsigned> RVVVectorBitsMaxOpt(
              "with zero meaning no maximum size is assumed."),
     cl::init(0), cl::Hidden);
 
+static cl::opt<bool>
+    EnableSchedBeforeVSETVLI("riscv-sched-before-vsetvli",
+            cl::desc("Run the scheduler before inserting vsetvli"),
+            cl::init(false), cl::Hidden);
+
 static cl::opt<int> RVVVectorBitsMinOpt(
     "riscv-v-vector-bits-min",
     cl::desc("Assume V extension vector registers are at least this big, "
@@ -391,6 +396,8 @@ void RISCVPassConfig::addPreRegAlloc() {
   addPass(createRISCVPreRAExpandPseudoPass());
   if (TM->getOptLevel() != CodeGenOpt::None)
     addPass(createRISCVMergeBaseOffsetOptPass());
+  if (EnableSchedBeforeVSETVLI)
+    addPass(&MachineSchedulerID);
   addPass(createRISCVInsertVSETVLIPass());
 }
 
