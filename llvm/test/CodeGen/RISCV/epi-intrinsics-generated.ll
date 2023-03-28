@@ -13037,7 +13037,7 @@ define void @intrinsic_vfmv.v.f_f_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfmv.v.f.nxv2f32.f32(
     float undef,
     i64 undef)
@@ -13057,7 +13057,7 @@ define void @intrinsic_vfmv.v.f_f_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfmv.v.f.nxv4f32.f32(
     float undef,
     i64 undef)
@@ -13077,7 +13077,7 @@ define void @intrinsic_vfmv.v.f_f_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfmv.v.f.nxv8f32.f32(
     float undef,
     i64 undef)
@@ -13097,7 +13097,7 @@ define void @intrinsic_vfmv.v.f_f_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfmv.v.f.nxv16f32.f32(
     float undef,
     i64 undef)
@@ -13117,7 +13117,7 @@ define void @intrinsic_vfmv.v.f_f_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfmv.v.f.nxv1f64.f64(
     double undef,
     i64 undef)
@@ -13137,7 +13137,7 @@ define void @intrinsic_vfmv.v.f_f_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfmv.v.f.nxv2f64.f64(
     double undef,
     i64 undef)
@@ -13157,7 +13157,7 @@ define void @intrinsic_vfmv.v.f_f_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfmv.v.f.nxv4f64.f64(
     double undef,
     i64 undef)
@@ -13177,7 +13177,7 @@ define void @intrinsic_vfmv.v.f_f_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.v.f_f_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmv.v.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.v.f {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfmv.v.f.nxv8f64.f64(
     double undef,
     i64 undef)
@@ -13753,7 +13753,7 @@ define void @intrinsic_vfmv.s.f_f_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfmv.s.f.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -13775,7 +13775,7 @@ define void @intrinsic_vfmv.s.f_f_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfmv.s.f.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -13797,7 +13797,7 @@ define void @intrinsic_vfmv.s.f_f_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfmv.s.f.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -13819,7 +13819,7 @@ define void @intrinsic_vfmv.s.f_f_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfmv.s.f.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -13841,7 +13841,7 @@ define void @intrinsic_vfmv.s.f_f_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfmv.s.f.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -13863,7 +13863,7 @@ define void @intrinsic_vfmv.s.f_f_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfmv.s.f.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -13885,7 +13885,7 @@ define void @intrinsic_vfmv.s.f_f_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfmv.s.f.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -13907,7 +13907,7 @@ define void @intrinsic_vfmv.s.f_f_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmv.s.f_f_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmv.s.f {{v[0-9]+}}, ft0
+; CHECK:       vfmv.s.f {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfmv.s.f.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -90598,7 +90598,7 @@ define void @intrinsic_vfadd_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfadd.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -90621,7 +90621,7 @@ define void @intrinsic_vfadd_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfadd.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -90645,7 +90645,7 @@ define void @intrinsic_vfadd_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfadd.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -90668,7 +90668,7 @@ define void @intrinsic_vfadd_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfadd.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -90692,7 +90692,7 @@ define void @intrinsic_vfadd_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfadd.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -90715,7 +90715,7 @@ define void @intrinsic_vfadd_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfadd.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -90739,7 +90739,7 @@ define void @intrinsic_vfadd_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfadd.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -90762,7 +90762,7 @@ define void @intrinsic_vfadd_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfadd.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -90786,7 +90786,7 @@ define void @intrinsic_vfadd_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfadd.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -90809,7 +90809,7 @@ define void @intrinsic_vfadd_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfadd.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -90833,7 +90833,7 @@ define void @intrinsic_vfadd_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfadd.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -90856,7 +90856,7 @@ define void @intrinsic_vfadd_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfadd.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -90880,7 +90880,7 @@ define void @intrinsic_vfadd_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfadd.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -90903,7 +90903,7 @@ define void @intrinsic_vfadd_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfadd.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -90927,7 +90927,7 @@ define void @intrinsic_vfadd_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfadd.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -90950,7 +90950,7 @@ define void @intrinsic_vfadd_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfadd_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfadd.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -91350,7 +91350,7 @@ define void @intrinsic_vfsub_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfsub.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -91373,7 +91373,7 @@ define void @intrinsic_vfsub_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfsub.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -91397,7 +91397,7 @@ define void @intrinsic_vfsub_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfsub.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -91420,7 +91420,7 @@ define void @intrinsic_vfsub_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfsub.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -91444,7 +91444,7 @@ define void @intrinsic_vfsub_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfsub.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -91467,7 +91467,7 @@ define void @intrinsic_vfsub_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfsub.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -91491,7 +91491,7 @@ define void @intrinsic_vfsub_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfsub.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -91514,7 +91514,7 @@ define void @intrinsic_vfsub_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfsub.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -91538,7 +91538,7 @@ define void @intrinsic_vfsub_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfsub.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -91561,7 +91561,7 @@ define void @intrinsic_vfsub_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfsub.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -91585,7 +91585,7 @@ define void @intrinsic_vfsub_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfsub.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -91608,7 +91608,7 @@ define void @intrinsic_vfsub_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfsub.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -91632,7 +91632,7 @@ define void @intrinsic_vfsub_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfsub.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -91655,7 +91655,7 @@ define void @intrinsic_vfsub_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfsub.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -91679,7 +91679,7 @@ define void @intrinsic_vfsub_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfsub.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -91702,7 +91702,7 @@ define void @intrinsic_vfsub_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsub_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfsub.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -91867,7 +91867,7 @@ define void @intrinsic_vfwadd_vf_nxv2f64_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd_vf_nxv2f64_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfwadd.nxv2f64.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -91890,7 +91890,7 @@ define void @intrinsic_vfwadd_mask_vf_nxv2f64_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd_mask_vf_nxv2f64_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfwadd.mask.nxv2f64.nxv2f32.f32(
     <vscale x 2 x double> undef,
     <vscale x 2 x float> undef,
@@ -91914,7 +91914,7 @@ define void @intrinsic_vfwadd_vf_nxv4f64_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd_vf_nxv4f64_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfwadd.nxv4f64.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -91937,7 +91937,7 @@ define void @intrinsic_vfwadd_mask_vf_nxv4f64_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd_mask_vf_nxv4f64_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfwadd.mask.nxv4f64.nxv4f32.f32(
     <vscale x 4 x double> undef,
     <vscale x 4 x float> undef,
@@ -91961,7 +91961,7 @@ define void @intrinsic_vfwadd_vf_nxv8f64_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd_vf_nxv8f64_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfwadd.nxv8f64.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -91984,7 +91984,7 @@ define void @intrinsic_vfwadd_mask_vf_nxv8f64_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd_mask_vf_nxv8f64_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwadd.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfwadd.mask.nxv8f64.nxv8f32.f32(
     <vscale x 8 x double> undef,
     <vscale x 8 x float> undef,
@@ -92149,7 +92149,7 @@ define void @intrinsic_vfwsub_vf_nxv2f64_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub_vf_nxv2f64_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfwsub.nxv2f64.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -92172,7 +92172,7 @@ define void @intrinsic_vfwsub_mask_vf_nxv2f64_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub_mask_vf_nxv2f64_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfwsub.mask.nxv2f64.nxv2f32.f32(
     <vscale x 2 x double> undef,
     <vscale x 2 x float> undef,
@@ -92196,7 +92196,7 @@ define void @intrinsic_vfwsub_vf_nxv4f64_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub_vf_nxv4f64_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfwsub.nxv4f64.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -92219,7 +92219,7 @@ define void @intrinsic_vfwsub_mask_vf_nxv4f64_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub_mask_vf_nxv4f64_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfwsub.mask.nxv4f64.nxv4f32.f32(
     <vscale x 4 x double> undef,
     <vscale x 4 x float> undef,
@@ -92243,7 +92243,7 @@ define void @intrinsic_vfwsub_vf_nxv8f64_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub_vf_nxv8f64_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfwsub.nxv8f64.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -92266,7 +92266,7 @@ define void @intrinsic_vfwsub_mask_vf_nxv8f64_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub_mask_vf_nxv8f64_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwsub.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfwsub.mask.nxv8f64.nxv8f32.f32(
     <vscale x 8 x double> undef,
     <vscale x 8 x float> undef,
@@ -92431,7 +92431,7 @@ define void @intrinsic_vfwadd.w_wf_nxv2f64_nxv2f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd.w_wf_nxv2f64_nxv2f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfwadd.w.nxv2f64.f32(
     <vscale x 2 x double> undef,
     float undef,
@@ -92454,7 +92454,7 @@ define void @intrinsic_vfwadd.w_mask_wf_nxv2f64_nxv2f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd.w_mask_wf_nxv2f64_nxv2f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfwadd.w.mask.nxv2f64.f32(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -92478,7 +92478,7 @@ define void @intrinsic_vfwadd.w_wf_nxv4f64_nxv4f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd.w_wf_nxv4f64_nxv4f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfwadd.w.nxv4f64.f32(
     <vscale x 4 x double> undef,
     float undef,
@@ -92501,7 +92501,7 @@ define void @intrinsic_vfwadd.w_mask_wf_nxv4f64_nxv4f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd.w_mask_wf_nxv4f64_nxv4f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfwadd.w.mask.nxv4f64.f32(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -92525,7 +92525,7 @@ define void @intrinsic_vfwadd.w_wf_nxv8f64_nxv8f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd.w_wf_nxv8f64_nxv8f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfwadd.w.nxv8f64.f32(
     <vscale x 8 x double> undef,
     float undef,
@@ -92548,7 +92548,7 @@ define void @intrinsic_vfwadd.w_mask_wf_nxv8f64_nxv8f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwadd.w_mask_wf_nxv8f64_nxv8f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwadd.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfwadd.w.mask.nxv8f64.f32(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -92713,7 +92713,7 @@ define void @intrinsic_vfwsub.w_wf_nxv2f64_nxv2f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub.w_wf_nxv2f64_nxv2f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfwsub.w.nxv2f64.f32(
     <vscale x 2 x double> undef,
     float undef,
@@ -92736,7 +92736,7 @@ define void @intrinsic_vfwsub.w_mask_wf_nxv2f64_nxv2f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub.w_mask_wf_nxv2f64_nxv2f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfwsub.w.mask.nxv2f64.f32(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -92760,7 +92760,7 @@ define void @intrinsic_vfwsub.w_wf_nxv4f64_nxv4f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub.w_wf_nxv4f64_nxv4f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfwsub.w.nxv4f64.f32(
     <vscale x 4 x double> undef,
     float undef,
@@ -92783,7 +92783,7 @@ define void @intrinsic_vfwsub.w_mask_wf_nxv4f64_nxv4f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub.w_mask_wf_nxv4f64_nxv4f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfwsub.w.mask.nxv4f64.f32(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -92807,7 +92807,7 @@ define void @intrinsic_vfwsub.w_wf_nxv8f64_nxv8f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub.w_wf_nxv8f64_nxv8f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfwsub.w.nxv8f64.f32(
     <vscale x 8 x double> undef,
     float undef,
@@ -92830,7 +92830,7 @@ define void @intrinsic_vfwsub.w_mask_wf_nxv8f64_nxv8f64_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwsub.w_mask_wf_nxv8f64_nxv8f64_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwsub.wf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfwsub.w.mask.nxv8f64.f32(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -93230,7 +93230,7 @@ define void @intrinsic_vfmul_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfmul.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -93253,7 +93253,7 @@ define void @intrinsic_vfmul_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfmul.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -93277,7 +93277,7 @@ define void @intrinsic_vfmul_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfmul.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -93300,7 +93300,7 @@ define void @intrinsic_vfmul_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfmul.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -93324,7 +93324,7 @@ define void @intrinsic_vfmul_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfmul.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -93347,7 +93347,7 @@ define void @intrinsic_vfmul_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfmul.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -93371,7 +93371,7 @@ define void @intrinsic_vfmul_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfmul.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -93394,7 +93394,7 @@ define void @intrinsic_vfmul_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfmul.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -93418,7 +93418,7 @@ define void @intrinsic_vfmul_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfmul.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -93441,7 +93441,7 @@ define void @intrinsic_vfmul_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfmul.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -93465,7 +93465,7 @@ define void @intrinsic_vfmul_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfmul.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -93488,7 +93488,7 @@ define void @intrinsic_vfmul_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfmul.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -93512,7 +93512,7 @@ define void @intrinsic_vfmul_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfmul.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -93535,7 +93535,7 @@ define void @intrinsic_vfmul_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfmul.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -93559,7 +93559,7 @@ define void @intrinsic_vfmul_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfmul.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -93582,7 +93582,7 @@ define void @intrinsic_vfmul_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmul_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfmul.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -93982,7 +93982,7 @@ define void @intrinsic_vfdiv_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfdiv.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -94005,7 +94005,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfdiv.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -94029,7 +94029,7 @@ define void @intrinsic_vfdiv_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfdiv.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -94052,7 +94052,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfdiv.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -94076,7 +94076,7 @@ define void @intrinsic_vfdiv_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfdiv.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -94099,7 +94099,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfdiv.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -94123,7 +94123,7 @@ define void @intrinsic_vfdiv_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfdiv.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -94146,7 +94146,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfdiv.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -94170,7 +94170,7 @@ define void @intrinsic_vfdiv_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfdiv.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -94193,7 +94193,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfdiv.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -94217,7 +94217,7 @@ define void @intrinsic_vfdiv_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfdiv.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -94240,7 +94240,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfdiv.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -94264,7 +94264,7 @@ define void @intrinsic_vfdiv_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfdiv.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -94287,7 +94287,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfdiv.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -94311,7 +94311,7 @@ define void @intrinsic_vfdiv_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfdiv.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -94334,7 +94334,7 @@ define void @intrinsic_vfdiv_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfdiv_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfdiv.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -94358,7 +94358,7 @@ define void @intrinsic_vfrdiv_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfrdiv.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -94381,7 +94381,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfrdiv.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -94405,7 +94405,7 @@ define void @intrinsic_vfrdiv_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfrdiv.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -94428,7 +94428,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfrdiv.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -94452,7 +94452,7 @@ define void @intrinsic_vfrdiv_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfrdiv.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -94475,7 +94475,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfrdiv.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -94499,7 +94499,7 @@ define void @intrinsic_vfrdiv_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfrdiv.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -94522,7 +94522,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfrdiv.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -94546,7 +94546,7 @@ define void @intrinsic_vfrdiv_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfrdiv.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -94569,7 +94569,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfrdiv.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -94593,7 +94593,7 @@ define void @intrinsic_vfrdiv_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfrdiv.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -94616,7 +94616,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfrdiv.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -94640,7 +94640,7 @@ define void @intrinsic_vfrdiv_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfrdiv.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -94663,7 +94663,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfrdiv.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -94687,7 +94687,7 @@ define void @intrinsic_vfrdiv_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfrdiv.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -94710,7 +94710,7 @@ define void @intrinsic_vfrdiv_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfrdiv_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfrdiv.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfrdiv.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -94875,7 +94875,7 @@ define void @intrinsic_vfwmul_vf_nxv2f64_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwmul_vf_nxv2f64_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfwmul.nxv2f64.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -94898,7 +94898,7 @@ define void @intrinsic_vfwmul_mask_vf_nxv2f64_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwmul_mask_vf_nxv2f64_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfwmul.mask.nxv2f64.nxv2f32.f32(
     <vscale x 2 x double> undef,
     <vscale x 2 x float> undef,
@@ -94922,7 +94922,7 @@ define void @intrinsic_vfwmul_vf_nxv4f64_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwmul_vf_nxv4f64_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfwmul.nxv4f64.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -94945,7 +94945,7 @@ define void @intrinsic_vfwmul_mask_vf_nxv4f64_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwmul_mask_vf_nxv4f64_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfwmul.mask.nxv4f64.nxv4f32.f32(
     <vscale x 4 x double> undef,
     <vscale x 4 x float> undef,
@@ -94969,7 +94969,7 @@ define void @intrinsic_vfwmul_vf_nxv8f64_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwmul_vf_nxv8f64_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfwmul.nxv8f64.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -94992,7 +94992,7 @@ define void @intrinsic_vfwmul_mask_vf_nxv8f64_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfwmul_mask_vf_nxv8f64_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfwmul.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfwmul.mask.nxv8f64.nxv8f32.f32(
     <vscale x 8 x double> undef,
     <vscale x 8 x float> undef,
@@ -95392,7 +95392,7 @@ define void @intrinsic_vfmin_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfmin.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -95415,7 +95415,7 @@ define void @intrinsic_vfmin_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfmin.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -95439,7 +95439,7 @@ define void @intrinsic_vfmin_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfmin.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -95462,7 +95462,7 @@ define void @intrinsic_vfmin_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfmin.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -95486,7 +95486,7 @@ define void @intrinsic_vfmin_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfmin.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -95509,7 +95509,7 @@ define void @intrinsic_vfmin_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfmin.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -95533,7 +95533,7 @@ define void @intrinsic_vfmin_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfmin.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -95556,7 +95556,7 @@ define void @intrinsic_vfmin_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfmin.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -95580,7 +95580,7 @@ define void @intrinsic_vfmin_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfmin.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -95603,7 +95603,7 @@ define void @intrinsic_vfmin_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfmin.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -95627,7 +95627,7 @@ define void @intrinsic_vfmin_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfmin.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -95650,7 +95650,7 @@ define void @intrinsic_vfmin_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfmin.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -95674,7 +95674,7 @@ define void @intrinsic_vfmin_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfmin.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -95697,7 +95697,7 @@ define void @intrinsic_vfmin_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfmin.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -95721,7 +95721,7 @@ define void @intrinsic_vfmin_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfmin.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -95744,7 +95744,7 @@ define void @intrinsic_vfmin_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmin_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmin.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfmin.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -96144,7 +96144,7 @@ define void @intrinsic_vfmax_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfmax.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -96167,7 +96167,7 @@ define void @intrinsic_vfmax_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfmax.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -96191,7 +96191,7 @@ define void @intrinsic_vfmax_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfmax.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -96214,7 +96214,7 @@ define void @intrinsic_vfmax_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfmax.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -96238,7 +96238,7 @@ define void @intrinsic_vfmax_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfmax.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -96261,7 +96261,7 @@ define void @intrinsic_vfmax_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfmax.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -96285,7 +96285,7 @@ define void @intrinsic_vfmax_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfmax.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -96308,7 +96308,7 @@ define void @intrinsic_vfmax_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfmax.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -96332,7 +96332,7 @@ define void @intrinsic_vfmax_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfmax.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -96355,7 +96355,7 @@ define void @intrinsic_vfmax_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfmax.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -96379,7 +96379,7 @@ define void @intrinsic_vfmax_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfmax.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -96402,7 +96402,7 @@ define void @intrinsic_vfmax_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfmax.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -96426,7 +96426,7 @@ define void @intrinsic_vfmax_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfmax.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -96449,7 +96449,7 @@ define void @intrinsic_vfmax_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfmax.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -96473,7 +96473,7 @@ define void @intrinsic_vfmax_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfmax.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -96496,7 +96496,7 @@ define void @intrinsic_vfmax_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmax_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfmax.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfmax.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -96896,7 +96896,7 @@ define void @intrinsic_vfsgnj_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfsgnj.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -96919,7 +96919,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfsgnj.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -96943,7 +96943,7 @@ define void @intrinsic_vfsgnj_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfsgnj.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -96966,7 +96966,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfsgnj.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -96990,7 +96990,7 @@ define void @intrinsic_vfsgnj_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfsgnj.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -97013,7 +97013,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfsgnj.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -97037,7 +97037,7 @@ define void @intrinsic_vfsgnj_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfsgnj.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -97060,7 +97060,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfsgnj.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -97084,7 +97084,7 @@ define void @intrinsic_vfsgnj_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfsgnj.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -97107,7 +97107,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfsgnj.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -97131,7 +97131,7 @@ define void @intrinsic_vfsgnj_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfsgnj.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -97154,7 +97154,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfsgnj.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -97178,7 +97178,7 @@ define void @intrinsic_vfsgnj_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfsgnj.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -97201,7 +97201,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfsgnj.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -97225,7 +97225,7 @@ define void @intrinsic_vfsgnj_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfsgnj.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -97248,7 +97248,7 @@ define void @intrinsic_vfsgnj_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnj_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnj.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfsgnj.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -97648,7 +97648,7 @@ define void @intrinsic_vfsgnjn_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfsgnjn.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -97671,7 +97671,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfsgnjn.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -97695,7 +97695,7 @@ define void @intrinsic_vfsgnjn_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfsgnjn.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -97718,7 +97718,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfsgnjn.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -97742,7 +97742,7 @@ define void @intrinsic_vfsgnjn_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfsgnjn.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -97765,7 +97765,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfsgnjn.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -97789,7 +97789,7 @@ define void @intrinsic_vfsgnjn_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfsgnjn.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -97812,7 +97812,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfsgnjn.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -97836,7 +97836,7 @@ define void @intrinsic_vfsgnjn_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfsgnjn.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -97859,7 +97859,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfsgnjn.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -97883,7 +97883,7 @@ define void @intrinsic_vfsgnjn_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfsgnjn.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -97906,7 +97906,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfsgnjn.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -97930,7 +97930,7 @@ define void @intrinsic_vfsgnjn_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfsgnjn.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -97953,7 +97953,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfsgnjn.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -97977,7 +97977,7 @@ define void @intrinsic_vfsgnjn_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfsgnjn.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -98000,7 +98000,7 @@ define void @intrinsic_vfsgnjn_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjn_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjn.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfsgnjn.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -98400,7 +98400,7 @@ define void @intrinsic_vfsgnjx_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x float> @llvm.epi.vfsgnjx.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -98423,7 +98423,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfsgnjx.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     <vscale x 2 x float> undef,
@@ -98447,7 +98447,7 @@ define void @intrinsic_vfsgnjx_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x float> @llvm.epi.vfsgnjx.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -98470,7 +98470,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfsgnjx.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     <vscale x 4 x float> undef,
@@ -98494,7 +98494,7 @@ define void @intrinsic_vfsgnjx_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x float> @llvm.epi.vfsgnjx.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -98517,7 +98517,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfsgnjx.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     <vscale x 8 x float> undef,
@@ -98541,7 +98541,7 @@ define void @intrinsic_vfsgnjx_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x float> @llvm.epi.vfsgnjx.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -98564,7 +98564,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfsgnjx.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     <vscale x 16 x float> undef,
@@ -98588,7 +98588,7 @@ define void @intrinsic_vfsgnjx_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x double> @llvm.epi.vfsgnjx.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -98611,7 +98611,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfsgnjx.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     <vscale x 1 x double> undef,
@@ -98635,7 +98635,7 @@ define void @intrinsic_vfsgnjx_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x double> @llvm.epi.vfsgnjx.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -98658,7 +98658,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfsgnjx.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     <vscale x 2 x double> undef,
@@ -98682,7 +98682,7 @@ define void @intrinsic_vfsgnjx_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x double> @llvm.epi.vfsgnjx.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -98705,7 +98705,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfsgnjx.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     <vscale x 4 x double> undef,
@@ -98729,7 +98729,7 @@ define void @intrinsic_vfsgnjx_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x double> @llvm.epi.vfsgnjx.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -98752,7 +98752,7 @@ define void @intrinsic_vfsgnjx_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfsgnjx_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vfsgnjx.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfsgnjx.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     <vscale x 8 x double> undef,
@@ -99152,7 +99152,7 @@ define void @intrinsic_vmfeq_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfeq.nxv2i1.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -99175,7 +99175,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfeq.mask.nxv2i1.f32(
     <vscale x 2 x i1> undef,
     <vscale x 2 x float> undef,
@@ -99199,7 +99199,7 @@ define void @intrinsic_vmfeq_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfeq.nxv4i1.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -99222,7 +99222,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfeq.mask.nxv4i1.f32(
     <vscale x 4 x i1> undef,
     <vscale x 4 x float> undef,
@@ -99246,7 +99246,7 @@ define void @intrinsic_vmfeq_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfeq.nxv8i1.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -99269,7 +99269,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfeq.mask.nxv8i1.f32(
     <vscale x 8 x i1> undef,
     <vscale x 8 x float> undef,
@@ -99293,7 +99293,7 @@ define void @intrinsic_vmfeq_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x i1> @llvm.epi.vmfeq.nxv16i1.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -99316,7 +99316,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x i1> @llvm.epi.vmfeq.mask.nxv16i1.f32(
     <vscale x 16 x i1> undef,
     <vscale x 16 x float> undef,
@@ -99340,7 +99340,7 @@ define void @intrinsic_vmfeq_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x i1> @llvm.epi.vmfeq.nxv1i1.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -99363,7 +99363,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x i1> @llvm.epi.vmfeq.mask.nxv1i1.f64(
     <vscale x 1 x i1> undef,
     <vscale x 1 x double> undef,
@@ -99387,7 +99387,7 @@ define void @intrinsic_vmfeq_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfeq.nxv2i1.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -99410,7 +99410,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfeq.mask.nxv2i1.f64(
     <vscale x 2 x i1> undef,
     <vscale x 2 x double> undef,
@@ -99434,7 +99434,7 @@ define void @intrinsic_vmfeq_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfeq.nxv4i1.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -99457,7 +99457,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfeq.mask.nxv4i1.f64(
     <vscale x 4 x i1> undef,
     <vscale x 4 x double> undef,
@@ -99481,7 +99481,7 @@ define void @intrinsic_vmfeq_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfeq.nxv8i1.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -99504,7 +99504,7 @@ define void @intrinsic_vmfeq_mask_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfeq_mask_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfeq.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfeq.mask.nxv8i1.f64(
     <vscale x 8 x i1> undef,
     <vscale x 8 x double> undef,
@@ -99904,7 +99904,7 @@ define void @intrinsic_vmfne_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfne.nxv2i1.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -99927,7 +99927,7 @@ define void @intrinsic_vmfne_mask_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfne.mask.nxv2i1.f32(
     <vscale x 2 x i1> undef,
     <vscale x 2 x float> undef,
@@ -99951,7 +99951,7 @@ define void @intrinsic_vmfne_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfne.nxv4i1.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -99974,7 +99974,7 @@ define void @intrinsic_vmfne_mask_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfne.mask.nxv4i1.f32(
     <vscale x 4 x i1> undef,
     <vscale x 4 x float> undef,
@@ -99998,7 +99998,7 @@ define void @intrinsic_vmfne_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfne.nxv8i1.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -100021,7 +100021,7 @@ define void @intrinsic_vmfne_mask_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfne.mask.nxv8i1.f32(
     <vscale x 8 x i1> undef,
     <vscale x 8 x float> undef,
@@ -100045,7 +100045,7 @@ define void @intrinsic_vmfne_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x i1> @llvm.epi.vmfne.nxv16i1.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -100068,7 +100068,7 @@ define void @intrinsic_vmfne_mask_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x i1> @llvm.epi.vmfne.mask.nxv16i1.f32(
     <vscale x 16 x i1> undef,
     <vscale x 16 x float> undef,
@@ -100092,7 +100092,7 @@ define void @intrinsic_vmfne_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x i1> @llvm.epi.vmfne.nxv1i1.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -100115,7 +100115,7 @@ define void @intrinsic_vmfne_mask_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x i1> @llvm.epi.vmfne.mask.nxv1i1.f64(
     <vscale x 1 x i1> undef,
     <vscale x 1 x double> undef,
@@ -100139,7 +100139,7 @@ define void @intrinsic_vmfne_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfne.nxv2i1.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -100162,7 +100162,7 @@ define void @intrinsic_vmfne_mask_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfne.mask.nxv2i1.f64(
     <vscale x 2 x i1> undef,
     <vscale x 2 x double> undef,
@@ -100186,7 +100186,7 @@ define void @intrinsic_vmfne_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfne.nxv4i1.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -100209,7 +100209,7 @@ define void @intrinsic_vmfne_mask_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfne.mask.nxv4i1.f64(
     <vscale x 4 x i1> undef,
     <vscale x 4 x double> undef,
@@ -100233,7 +100233,7 @@ define void @intrinsic_vmfne_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfne.nxv8i1.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -100256,7 +100256,7 @@ define void @intrinsic_vmfne_mask_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfne_mask_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfne.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfne.mask.nxv8i1.f64(
     <vscale x 8 x i1> undef,
     <vscale x 8 x double> undef,
@@ -100656,7 +100656,7 @@ define void @intrinsic_vmflt_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmflt.nxv2i1.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -100679,7 +100679,7 @@ define void @intrinsic_vmflt_mask_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmflt.mask.nxv2i1.f32(
     <vscale x 2 x i1> undef,
     <vscale x 2 x float> undef,
@@ -100703,7 +100703,7 @@ define void @intrinsic_vmflt_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmflt.nxv4i1.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -100726,7 +100726,7 @@ define void @intrinsic_vmflt_mask_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmflt.mask.nxv4i1.f32(
     <vscale x 4 x i1> undef,
     <vscale x 4 x float> undef,
@@ -100750,7 +100750,7 @@ define void @intrinsic_vmflt_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmflt.nxv8i1.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -100773,7 +100773,7 @@ define void @intrinsic_vmflt_mask_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmflt.mask.nxv8i1.f32(
     <vscale x 8 x i1> undef,
     <vscale x 8 x float> undef,
@@ -100797,7 +100797,7 @@ define void @intrinsic_vmflt_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x i1> @llvm.epi.vmflt.nxv16i1.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -100820,7 +100820,7 @@ define void @intrinsic_vmflt_mask_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x i1> @llvm.epi.vmflt.mask.nxv16i1.f32(
     <vscale x 16 x i1> undef,
     <vscale x 16 x float> undef,
@@ -100844,7 +100844,7 @@ define void @intrinsic_vmflt_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x i1> @llvm.epi.vmflt.nxv1i1.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -100867,7 +100867,7 @@ define void @intrinsic_vmflt_mask_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x i1> @llvm.epi.vmflt.mask.nxv1i1.f64(
     <vscale x 1 x i1> undef,
     <vscale x 1 x double> undef,
@@ -100891,7 +100891,7 @@ define void @intrinsic_vmflt_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmflt.nxv2i1.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -100914,7 +100914,7 @@ define void @intrinsic_vmflt_mask_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmflt.mask.nxv2i1.f64(
     <vscale x 2 x i1> undef,
     <vscale x 2 x double> undef,
@@ -100938,7 +100938,7 @@ define void @intrinsic_vmflt_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmflt.nxv4i1.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -100961,7 +100961,7 @@ define void @intrinsic_vmflt_mask_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmflt.mask.nxv4i1.f64(
     <vscale x 4 x i1> undef,
     <vscale x 4 x double> undef,
@@ -100985,7 +100985,7 @@ define void @intrinsic_vmflt_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmflt.nxv8i1.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -101008,7 +101008,7 @@ define void @intrinsic_vmflt_mask_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmflt_mask_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmflt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmflt.mask.nxv8i1.f64(
     <vscale x 8 x i1> undef,
     <vscale x 8 x double> undef,
@@ -101408,7 +101408,7 @@ define void @intrinsic_vmfle_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfle.nxv2i1.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -101431,7 +101431,7 @@ define void @intrinsic_vmfle_mask_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfle.mask.nxv2i1.f32(
     <vscale x 2 x i1> undef,
     <vscale x 2 x float> undef,
@@ -101455,7 +101455,7 @@ define void @intrinsic_vmfle_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfle.nxv4i1.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -101478,7 +101478,7 @@ define void @intrinsic_vmfle_mask_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfle.mask.nxv4i1.f32(
     <vscale x 4 x i1> undef,
     <vscale x 4 x float> undef,
@@ -101502,7 +101502,7 @@ define void @intrinsic_vmfle_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfle.nxv8i1.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -101525,7 +101525,7 @@ define void @intrinsic_vmfle_mask_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfle.mask.nxv8i1.f32(
     <vscale x 8 x i1> undef,
     <vscale x 8 x float> undef,
@@ -101549,7 +101549,7 @@ define void @intrinsic_vmfle_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x i1> @llvm.epi.vmfle.nxv16i1.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -101572,7 +101572,7 @@ define void @intrinsic_vmfle_mask_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x i1> @llvm.epi.vmfle.mask.nxv16i1.f32(
     <vscale x 16 x i1> undef,
     <vscale x 16 x float> undef,
@@ -101596,7 +101596,7 @@ define void @intrinsic_vmfle_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x i1> @llvm.epi.vmfle.nxv1i1.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -101619,7 +101619,7 @@ define void @intrinsic_vmfle_mask_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x i1> @llvm.epi.vmfle.mask.nxv1i1.f64(
     <vscale x 1 x i1> undef,
     <vscale x 1 x double> undef,
@@ -101643,7 +101643,7 @@ define void @intrinsic_vmfle_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfle.nxv2i1.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -101666,7 +101666,7 @@ define void @intrinsic_vmfle_mask_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfle.mask.nxv2i1.f64(
     <vscale x 2 x i1> undef,
     <vscale x 2 x double> undef,
@@ -101690,7 +101690,7 @@ define void @intrinsic_vmfle_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfle.nxv4i1.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -101713,7 +101713,7 @@ define void @intrinsic_vmfle_mask_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfle.mask.nxv4i1.f64(
     <vscale x 4 x i1> undef,
     <vscale x 4 x double> undef,
@@ -101737,7 +101737,7 @@ define void @intrinsic_vmfle_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfle.nxv8i1.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -101760,7 +101760,7 @@ define void @intrinsic_vmfle_mask_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfle_mask_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfle.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfle.mask.nxv8i1.f64(
     <vscale x 8 x i1> undef,
     <vscale x 8 x double> undef,
@@ -102160,7 +102160,7 @@ define void @intrinsic_vmfgt_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfgt.nxv2i1.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -102183,7 +102183,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfgt.mask.nxv2i1.f32(
     <vscale x 2 x i1> undef,
     <vscale x 2 x float> undef,
@@ -102207,7 +102207,7 @@ define void @intrinsic_vmfgt_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfgt.nxv4i1.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -102230,7 +102230,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfgt.mask.nxv4i1.f32(
     <vscale x 4 x i1> undef,
     <vscale x 4 x float> undef,
@@ -102254,7 +102254,7 @@ define void @intrinsic_vmfgt_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfgt.nxv8i1.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -102277,7 +102277,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfgt.mask.nxv8i1.f32(
     <vscale x 8 x i1> undef,
     <vscale x 8 x float> undef,
@@ -102301,7 +102301,7 @@ define void @intrinsic_vmfgt_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x i1> @llvm.epi.vmfgt.nxv16i1.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -102324,7 +102324,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x i1> @llvm.epi.vmfgt.mask.nxv16i1.f32(
     <vscale x 16 x i1> undef,
     <vscale x 16 x float> undef,
@@ -102348,7 +102348,7 @@ define void @intrinsic_vmfgt_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x i1> @llvm.epi.vmfgt.nxv1i1.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -102371,7 +102371,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x i1> @llvm.epi.vmfgt.mask.nxv1i1.f64(
     <vscale x 1 x i1> undef,
     <vscale x 1 x double> undef,
@@ -102395,7 +102395,7 @@ define void @intrinsic_vmfgt_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfgt.nxv2i1.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -102418,7 +102418,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfgt.mask.nxv2i1.f64(
     <vscale x 2 x i1> undef,
     <vscale x 2 x double> undef,
@@ -102442,7 +102442,7 @@ define void @intrinsic_vmfgt_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfgt.nxv4i1.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -102465,7 +102465,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfgt.mask.nxv4i1.f64(
     <vscale x 4 x i1> undef,
     <vscale x 4 x double> undef,
@@ -102489,7 +102489,7 @@ define void @intrinsic_vmfgt_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfgt.nxv8i1.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -102512,7 +102512,7 @@ define void @intrinsic_vmfgt_mask_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfgt_mask_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfgt.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfgt.mask.nxv8i1.f64(
     <vscale x 8 x i1> undef,
     <vscale x 8 x double> undef,
@@ -102912,7 +102912,7 @@ define void @intrinsic_vmfge_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfge.nxv2i1.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -102935,7 +102935,7 @@ define void @intrinsic_vmfge_mask_vf_nxv2i1_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv2i1_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfge.mask.nxv2i1.f32(
     <vscale x 2 x i1> undef,
     <vscale x 2 x float> undef,
@@ -102959,7 +102959,7 @@ define void @intrinsic_vmfge_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfge.nxv4i1.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -102982,7 +102982,7 @@ define void @intrinsic_vmfge_mask_vf_nxv4i1_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv4i1_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfge.mask.nxv4i1.f32(
     <vscale x 4 x i1> undef,
     <vscale x 4 x float> undef,
@@ -103006,7 +103006,7 @@ define void @intrinsic_vmfge_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfge.nxv8i1.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -103029,7 +103029,7 @@ define void @intrinsic_vmfge_mask_vf_nxv8i1_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv8i1_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfge.mask.nxv8i1.f32(
     <vscale x 8 x i1> undef,
     <vscale x 8 x float> undef,
@@ -103053,7 +103053,7 @@ define void @intrinsic_vmfge_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 16 x i1> @llvm.epi.vmfge.nxv16i1.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -103076,7 +103076,7 @@ define void @intrinsic_vmfge_mask_vf_nxv16i1_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv16i1_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 16 x i1> @llvm.epi.vmfge.mask.nxv16i1.f32(
     <vscale x 16 x i1> undef,
     <vscale x 16 x float> undef,
@@ -103100,7 +103100,7 @@ define void @intrinsic_vmfge_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 1 x i1> @llvm.epi.vmfge.nxv1i1.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -103123,7 +103123,7 @@ define void @intrinsic_vmfge_mask_vf_nxv1i1_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv1i1_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 1 x i1> @llvm.epi.vmfge.mask.nxv1i1.f64(
     <vscale x 1 x i1> undef,
     <vscale x 1 x double> undef,
@@ -103147,7 +103147,7 @@ define void @intrinsic_vmfge_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 2 x i1> @llvm.epi.vmfge.nxv2i1.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -103170,7 +103170,7 @@ define void @intrinsic_vmfge_mask_vf_nxv2i1_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv2i1_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 2 x i1> @llvm.epi.vmfge.mask.nxv2i1.f64(
     <vscale x 2 x i1> undef,
     <vscale x 2 x double> undef,
@@ -103194,7 +103194,7 @@ define void @intrinsic_vmfge_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 4 x i1> @llvm.epi.vmfge.nxv4i1.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -103217,7 +103217,7 @@ define void @intrinsic_vmfge_mask_vf_nxv4i1_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv4i1_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 4 x i1> @llvm.epi.vmfge.mask.nxv4i1.f64(
     <vscale x 4 x i1> undef,
     <vscale x 4 x double> undef,
@@ -103241,7 +103241,7 @@ define void @intrinsic_vmfge_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5
   %a = call <vscale x 8 x i1> @llvm.epi.vmfge.nxv8i1.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -103264,7 +103264,7 @@ define void @intrinsic_vmfge_mask_vf_nxv8i1_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vmfge_mask_vf_nxv8i1_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0.t
+; CHECK:       vmfge.vf {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0.t
   %a = call <vscale x 8 x i1> @llvm.epi.vmfge.mask.nxv8i1.f64(
     <vscale x 8 x i1> undef,
     <vscale x 8 x double> undef,
@@ -103289,7 +103289,7 @@ define void @intrinsic_vfmerge_vfm_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 2 x float> @llvm.epi.vfmerge.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -103313,7 +103313,7 @@ define void @intrinsic_vfmerge_vfm_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 4 x float> @llvm.epi.vfmerge.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -103337,7 +103337,7 @@ define void @intrinsic_vfmerge_vfm_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 8 x float> @llvm.epi.vfmerge.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -103361,7 +103361,7 @@ define void @intrinsic_vfmerge_vfm_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 16 x float> @llvm.epi.vfmerge.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -103385,7 +103385,7 @@ define void @intrinsic_vfmerge_vfm_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 1 x double> @llvm.epi.vfmerge.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -103409,7 +103409,7 @@ define void @intrinsic_vfmerge_vfm_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 2 x double> @llvm.epi.vfmerge.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -103433,7 +103433,7 @@ define void @intrinsic_vfmerge_vfm_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 4 x double> @llvm.epi.vfmerge.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -103457,7 +103457,7 @@ define void @intrinsic_vfmerge_vfm_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmerge_vfm_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, ft0, v0
+; CHECK:       vfmerge.vfm {{v[0-9]+}}, {{v[0-9]+}}, fa5, v0
   %a = call <vscale x 8 x double> @llvm.epi.vfmerge.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -132003,7 +132003,7 @@ define void @intrinsic_vfmadd_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfmadd.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -132027,7 +132027,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfmadd.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -132052,7 +132052,7 @@ define void @intrinsic_vfmadd_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfmadd.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -132076,7 +132076,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfmadd.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -132101,7 +132101,7 @@ define void @intrinsic_vfmadd_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfmadd.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -132125,7 +132125,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfmadd.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -132150,7 +132150,7 @@ define void @intrinsic_vfmadd_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfmadd.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -132174,7 +132174,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfmadd.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -132199,7 +132199,7 @@ define void @intrinsic_vfmadd_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfmadd.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -132223,7 +132223,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfmadd.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -132248,7 +132248,7 @@ define void @intrinsic_vfmadd_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfmadd.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -132272,7 +132272,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfmadd.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -132297,7 +132297,7 @@ define void @intrinsic_vfmadd_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfmadd.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -132321,7 +132321,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfmadd.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -132346,7 +132346,7 @@ define void @intrinsic_vfmadd_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfmadd.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -132370,7 +132370,7 @@ define void @intrinsic_vfmadd_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmadd_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfmadd.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -132787,7 +132787,7 @@ define void @intrinsic_vfnmadd_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfnmadd.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -132811,7 +132811,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfnmadd.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -132836,7 +132836,7 @@ define void @intrinsic_vfnmadd_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfnmadd.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -132860,7 +132860,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfnmadd.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -132885,7 +132885,7 @@ define void @intrinsic_vfnmadd_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfnmadd.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -132909,7 +132909,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfnmadd.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -132934,7 +132934,7 @@ define void @intrinsic_vfnmadd_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfnmadd.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -132958,7 +132958,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfnmadd.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -132983,7 +132983,7 @@ define void @intrinsic_vfnmadd_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfnmadd.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -133007,7 +133007,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfnmadd.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -133032,7 +133032,7 @@ define void @intrinsic_vfnmadd_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfnmadd.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -133056,7 +133056,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfnmadd.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -133081,7 +133081,7 @@ define void @intrinsic_vfnmadd_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfnmadd.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -133105,7 +133105,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfnmadd.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -133130,7 +133130,7 @@ define void @intrinsic_vfnmadd_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfnmadd.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -133154,7 +133154,7 @@ define void @intrinsic_vfnmadd_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmadd_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmadd.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfnmadd.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -133571,7 +133571,7 @@ define void @intrinsic_vfmsub_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfmsub.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -133595,7 +133595,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfmsub.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -133620,7 +133620,7 @@ define void @intrinsic_vfmsub_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfmsub.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -133644,7 +133644,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfmsub.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -133669,7 +133669,7 @@ define void @intrinsic_vfmsub_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfmsub.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -133693,7 +133693,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfmsub.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -133718,7 +133718,7 @@ define void @intrinsic_vfmsub_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfmsub.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -133742,7 +133742,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfmsub.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -133767,7 +133767,7 @@ define void @intrinsic_vfmsub_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfmsub.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -133791,7 +133791,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfmsub.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -133816,7 +133816,7 @@ define void @intrinsic_vfmsub_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfmsub.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -133840,7 +133840,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfmsub.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -133865,7 +133865,7 @@ define void @intrinsic_vfmsub_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfmsub.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -133889,7 +133889,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfmsub.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -133914,7 +133914,7 @@ define void @intrinsic_vfmsub_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfmsub.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -133938,7 +133938,7 @@ define void @intrinsic_vfmsub_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsub_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfmsub.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -134355,7 +134355,7 @@ define void @intrinsic_vfnmsub_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfnmsub.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -134379,7 +134379,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfnmsub.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -134404,7 +134404,7 @@ define void @intrinsic_vfnmsub_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfnmsub.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -134428,7 +134428,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfnmsub.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -134453,7 +134453,7 @@ define void @intrinsic_vfnmsub_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfnmsub.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -134477,7 +134477,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfnmsub.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -134502,7 +134502,7 @@ define void @intrinsic_vfnmsub_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfnmsub.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -134526,7 +134526,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfnmsub.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -134551,7 +134551,7 @@ define void @intrinsic_vfnmsub_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfnmsub.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -134575,7 +134575,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfnmsub.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -134600,7 +134600,7 @@ define void @intrinsic_vfnmsub_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfnmsub.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -134624,7 +134624,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfnmsub.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -134649,7 +134649,7 @@ define void @intrinsic_vfnmsub_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfnmsub.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -134673,7 +134673,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfnmsub.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -134698,7 +134698,7 @@ define void @intrinsic_vfnmsub_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfnmsub.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -134722,7 +134722,7 @@ define void @intrinsic_vfnmsub_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsub_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsub.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfnmsub.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -135139,7 +135139,7 @@ define void @intrinsic_vfmacc_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfmacc.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -135163,7 +135163,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfmacc.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -135188,7 +135188,7 @@ define void @intrinsic_vfmacc_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfmacc.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -135212,7 +135212,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfmacc.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -135237,7 +135237,7 @@ define void @intrinsic_vfmacc_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfmacc.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -135261,7 +135261,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfmacc.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -135286,7 +135286,7 @@ define void @intrinsic_vfmacc_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfmacc.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -135310,7 +135310,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfmacc.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -135335,7 +135335,7 @@ define void @intrinsic_vfmacc_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfmacc.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -135359,7 +135359,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfmacc.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -135384,7 +135384,7 @@ define void @intrinsic_vfmacc_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfmacc.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -135408,7 +135408,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfmacc.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -135433,7 +135433,7 @@ define void @intrinsic_vfmacc_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfmacc.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -135457,7 +135457,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfmacc.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -135482,7 +135482,7 @@ define void @intrinsic_vfmacc_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfmacc.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -135506,7 +135506,7 @@ define void @intrinsic_vfmacc_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmacc_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfmacc.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -135923,7 +135923,7 @@ define void @intrinsic_vfnmacc_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfnmacc.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -135947,7 +135947,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfnmacc.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -135972,7 +135972,7 @@ define void @intrinsic_vfnmacc_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfnmacc.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -135996,7 +135996,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfnmacc.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -136021,7 +136021,7 @@ define void @intrinsic_vfnmacc_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfnmacc.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -136045,7 +136045,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfnmacc.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -136070,7 +136070,7 @@ define void @intrinsic_vfnmacc_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfnmacc.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -136094,7 +136094,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfnmacc.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -136119,7 +136119,7 @@ define void @intrinsic_vfnmacc_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfnmacc.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -136143,7 +136143,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfnmacc.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -136168,7 +136168,7 @@ define void @intrinsic_vfnmacc_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfnmacc.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -136192,7 +136192,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfnmacc.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -136217,7 +136217,7 @@ define void @intrinsic_vfnmacc_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfnmacc.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -136241,7 +136241,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfnmacc.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -136266,7 +136266,7 @@ define void @intrinsic_vfnmacc_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfnmacc.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -136290,7 +136290,7 @@ define void @intrinsic_vfnmacc_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmacc_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmacc.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfnmacc.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -136707,7 +136707,7 @@ define void @intrinsic_vfmsac_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfmsac.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -136731,7 +136731,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfmsac.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -136756,7 +136756,7 @@ define void @intrinsic_vfmsac_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfmsac.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -136780,7 +136780,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfmsac.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -136805,7 +136805,7 @@ define void @intrinsic_vfmsac_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfmsac.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -136829,7 +136829,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfmsac.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -136854,7 +136854,7 @@ define void @intrinsic_vfmsac_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfmsac.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -136878,7 +136878,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfmsac.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -136903,7 +136903,7 @@ define void @intrinsic_vfmsac_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfmsac.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -136927,7 +136927,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfmsac.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -136952,7 +136952,7 @@ define void @intrinsic_vfmsac_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfmsac.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -136976,7 +136976,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfmsac.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -137001,7 +137001,7 @@ define void @intrinsic_vfmsac_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfmsac.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -137025,7 +137025,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfmsac.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -137050,7 +137050,7 @@ define void @intrinsic_vfmsac_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfmsac.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -137074,7 +137074,7 @@ define void @intrinsic_vfmsac_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfmsac_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfmsac.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -137491,7 +137491,7 @@ define void @intrinsic_vfnmsac_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x float> @llvm.epi.vfnmsac.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -137515,7 +137515,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv2f32_nxv2f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv2f32_nxv2f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m1, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x float> @llvm.epi.vfnmsac.mask.nxv2f32.f32(
     <vscale x 2 x float> undef,
     float undef,
@@ -137540,7 +137540,7 @@ define void @intrinsic_vfnmsac_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x float> @llvm.epi.vfnmsac.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -137564,7 +137564,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv4f32_nxv4f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv4f32_nxv4f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m2, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x float> @llvm.epi.vfnmsac.mask.nxv4f32.f32(
     <vscale x 4 x float> undef,
     float undef,
@@ -137589,7 +137589,7 @@ define void @intrinsic_vfnmsac_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x float> @llvm.epi.vfnmsac.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -137613,7 +137613,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv8f32_nxv8f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv8f32_nxv8f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m4, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x float> @llvm.epi.vfnmsac.mask.nxv8f32.f32(
     <vscale x 8 x float> undef,
     float undef,
@@ -137638,7 +137638,7 @@ define void @intrinsic_vfnmsac_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 16 x float> @llvm.epi.vfnmsac.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -137662,7 +137662,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv16f32_nxv16f32_f32() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv16f32_nxv16f32_f32
 ; CHECK:       vsetvli {{.*}}, a0, e32, m8, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 16 x float> @llvm.epi.vfnmsac.mask.nxv16f32.f32(
     <vscale x 16 x float> undef,
     float undef,
@@ -137687,7 +137687,7 @@ define void @intrinsic_vfnmsac_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 1 x double> @llvm.epi.vfnmsac.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -137711,7 +137711,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv1f64_nxv1f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv1f64_nxv1f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m1, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 1 x double> @llvm.epi.vfnmsac.mask.nxv1f64.f64(
     <vscale x 1 x double> undef,
     double undef,
@@ -137736,7 +137736,7 @@ define void @intrinsic_vfnmsac_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 2 x double> @llvm.epi.vfnmsac.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -137760,7 +137760,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv2f64_nxv2f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv2f64_nxv2f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m2, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 2 x double> @llvm.epi.vfnmsac.mask.nxv2f64.f64(
     <vscale x 2 x double> undef,
     double undef,
@@ -137785,7 +137785,7 @@ define void @intrinsic_vfnmsac_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 4 x double> @llvm.epi.vfnmsac.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -137809,7 +137809,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv4f64_nxv4f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv4f64_nxv4f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m4, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 4 x double> @llvm.epi.vfnmsac.mask.nxv4f64.f64(
     <vscale x 4 x double> undef,
     double undef,
@@ -137834,7 +137834,7 @@ define void @intrinsic_vfnmsac_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]]
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]]
   %a = call <vscale x 8 x double> @llvm.epi.vfnmsac.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,
@@ -137858,7 +137858,7 @@ define void @intrinsic_vfnmsac_mask_vf_nxv8f64_nxv8f64_f64() nounwind {
 entry:
 ; CHECK-LABEL: intrinsic_vfnmsac_mask_vf_nxv8f64_nxv8f64_f64
 ; CHECK:       vsetvli {{.*}}, a0, e64, m8, ta, mu
-; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], ft0, [[VR]], v0.t
+; CHECK:       vfnmsac.vf [[VR:v[0-9]+]], fa5, [[VR]], v0.t
   %a = call <vscale x 8 x double> @llvm.epi.vfnmsac.mask.nxv8f64.f64(
     <vscale x 8 x double> undef,
     double undef,

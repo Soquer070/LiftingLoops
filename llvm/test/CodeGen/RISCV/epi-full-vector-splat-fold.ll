@@ -66,9 +66,9 @@ define <vscale x 1 x double> @binary_nxv1f64_imm(<vscale x 1 x double> %a) nounw
 ; CHECK-LABEL: binary_nxv1f64_imm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lui a0, %hi(.LCPI5_0)
-; CHECK-NEXT:    fld ft0, %lo(.LCPI5_0)(a0)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI5_0)(a0)
 ; CHECK-NEXT:    vsetvli a0, zero, e64, m1, ta, ma
-; CHECK-NEXT:    vfadd.vf v8, v8, ft0
+; CHECK-NEXT:    vfadd.vf v8, v8, fa5
 ; CHECK-NEXT:    ret
   %head = insertelement <vscale x 1 x double> undef, double 3.0, i32 0
   %splat = shufflevector <vscale x 1 x double> %head, <vscale x 1 x double> undef, <vscale x 1 x i32> zeroinitializer
@@ -92,9 +92,9 @@ define <vscale x 1 x double> @binary_nxv1f64_imm_rev(<vscale x 1 x double> %b) n
 ; CHECK-LABEL: binary_nxv1f64_imm_rev:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lui a0, %hi(.LCPI7_0)
-; CHECK-NEXT:    fld ft0, %lo(.LCPI7_0)(a0)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI7_0)(a0)
 ; CHECK-NEXT:    vsetvli a0, zero, e64, m1, ta, ma
-; CHECK-NEXT:    vfadd.vf v8, v8, ft0
+; CHECK-NEXT:    vfadd.vf v8, v8, fa5
 ; CHECK-NEXT:    ret
   %head = insertelement <vscale x 1 x double> undef, double 3.0, i32 0
   %splat = shufflevector <vscale x 1 x double> %head, <vscale x 1 x double> undef, <vscale x 1 x i32> zeroinitializer
@@ -142,9 +142,9 @@ define <vscale x 2 x float> @binary_nxv1f32_imm(<vscale x 2 x float> %a) nounwin
 ; CHECK-LABEL: binary_nxv1f32_imm:
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    lui a0, 263168
-; CHECK-NEXT:    fmv.w.x ft0, a0
+; CHECK-NEXT:    fmv.w.x fa5, a0
 ; CHECK-NEXT:    vsetvli a0, zero, e32, m1, ta, ma
-; CHECK-NEXT:    vfadd.vf v8, v8, ft0
+; CHECK-NEXT:    vfadd.vf v8, v8, fa5
 ; CHECK-NEXT:    ret
   %head = insertelement <vscale x 2 x float> undef, float 3.0, i32 0
   %splat = shufflevector <vscale x 2 x float> %head, <vscale x 2 x float> undef, <vscale x 2 x i32> zeroinitializer

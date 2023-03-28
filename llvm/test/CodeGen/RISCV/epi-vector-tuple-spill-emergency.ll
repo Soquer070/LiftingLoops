@@ -68,11 +68,11 @@ define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, doub
 ; CHECK-NEXT:    li a1, 96
 ; CHECK-NEXT:    mul s7, a3, a1
 ; CHECK-NEXT:    lui a1, %hi(.LCPI0_0)
-; CHECK-NEXT:    fld ft0, %lo(.LCPI0_0)(a1)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI0_0)(a1)
 ; CHECK-NEXT:    lui a1, %hi(.LCPI0_1)
-; CHECK-NEXT:    fld ft1, %lo(.LCPI0_1)(a1)
+; CHECK-NEXT:    fld fa4, %lo(.LCPI0_1)(a1)
 ; CHECK-NEXT:    lui a1, %hi(.LCPI0_2)
-; CHECK-NEXT:    fld ft2, %lo(.LCPI0_2)(a1)
+; CHECK-NEXT:    fld fa3, %lo(.LCPI0_2)(a1)
 ; CHECK-NEXT:    slli s8, a3, 5
 ; CHECK-NEXT:    slli s9, a3, 6
 ; CHECK-NEXT:    slli a6, a6, 3
@@ -265,19 +265,19 @@ define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, doub
 ; CHECK-NEXT:    vmv1r.v v11, v15
 ; CHECK-NEXT:    vfadd.vv v4, v2, v8
 ; CHECK-NEXT:    vmv1r.v v5, v3
-; CHECK-NEXT:    vfnmsac.vf v5, ft1, v4
+; CHECK-NEXT:    vfnmsac.vf v5, fa4, v4
 ; CHECK-NEXT:    vfsub.vv v6, v14, v13
 ; CHECK-NEXT:    vmv1r.v v10, v14
 ; CHECK-NEXT:    vfsub.vv v8, v8, v2
 ; CHECK-NEXT:    vmv1r.v v2, v6
-; CHECK-NEXT:    vfnmsac.vf v2, ft1, v8
+; CHECK-NEXT:    vfnmsac.vf v2, fa4, v8
 ; CHECK-NEXT:    vfneg.v v2, v2, v0.t
 ; CHECK-NEXT:    vtrn.vv v14, v2, v2
 ; CHECK-NEXT:    vtrn.vv v14, v15, v2
 ; CHECK-NEXT:    vfsub.vv v15, v5, v14
 ; CHECK-NEXT:    vse64.v v15, (s4)
-; CHECK-NEXT:    vfmacc.vf v3, ft1, v4
-; CHECK-NEXT:    vfmacc.vf v6, ft1, v8
+; CHECK-NEXT:    vfmacc.vf v3, fa4, v4
+; CHECK-NEXT:    vfmacc.vf v6, fa4, v8
 ; CHECK-NEXT:    vfneg.v v6, v6, v0.t
 ; CHECK-NEXT:    vtrn.vv v7, v6, v6
 ; CHECK-NEXT:    vtrn.vv v6, v8, v6
@@ -300,30 +300,30 @@ define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, doub
 ; CHECK-NEXT:    vfsub.vv v16, v26, v30
 ; CHECK-NEXT:    vfsub.vv v19, v31, v28
 ; CHECK-NEXT:    vmv1r.v v20, v16
-; CHECK-NEXT:    vfnmsac.vf v20, ft0, v19
-; CHECK-NEXT:    vfmacc.vf v19, ft0, v16
+; CHECK-NEXT:    vfnmsac.vf v20, fa5, v19
+; CHECK-NEXT:    vfmacc.vf v19, fa5, v16
 ; CHECK-NEXT:    vfsub.vv v16, v24, v27
 ; CHECK-NEXT:    vfsub.vv v21, v25, v29
 ; CHECK-NEXT:    vmv1r.v v22, v16
-; CHECK-NEXT:    vfnmsac.vf v22, ft0, v21
-; CHECK-NEXT:    vfmacc.vf v21, ft0, v16
+; CHECK-NEXT:    vfnmsac.vf v22, fa5, v21
+; CHECK-NEXT:    vfmacc.vf v21, fa5, v16
 ; CHECK-NEXT:    vmv1r.v v16, v8
-; CHECK-NEXT:    vfnmsac.vf v16, ft1, v17
+; CHECK-NEXT:    vfnmsac.vf v16, fa4, v17
 ; CHECK-NEXT:    vfadd.vv v23, v19, v21
 ; CHECK-NEXT:    vmv1r.v v24, v16
-; CHECK-NEXT:    vfnmsac.vf v24, ft2, v23
+; CHECK-NEXT:    vfnmsac.vf v24, fa3, v23
 ; CHECK-NEXT:    vmv1r.v v25, v14
-; CHECK-NEXT:    vfmacc.vf v25, ft1, v15
+; CHECK-NEXT:    vfmacc.vf v25, fa4, v15
 ; CHECK-NEXT:    vfsub.vv v26, v22, v20
 ; CHECK-NEXT:    vmv1r.v v27, v25
-; CHECK-NEXT:    vfnmsac.vf v27, ft2, v26
+; CHECK-NEXT:    vfnmsac.vf v27, fa3, v26
 ; CHECK-NEXT:    vfneg.v v27, v27, v0.t
 ; CHECK-NEXT:    vtrn.vv v28, v27, v27
 ; CHECK-NEXT:    vtrn.vv v27, v29, v27
 ; CHECK-NEXT:    vfsub.vv v28, v24, v27
 ; CHECK-NEXT:    vse64.v v28, (t5)
-; CHECK-NEXT:    vfmacc.vf v16, ft2, v23
-; CHECK-NEXT:    vfmacc.vf v25, ft2, v26
+; CHECK-NEXT:    vfmacc.vf v16, fa3, v23
+; CHECK-NEXT:    vfmacc.vf v25, fa3, v26
 ; CHECK-NEXT:    vfneg.v v25, v25, v0.t
 ; CHECK-NEXT:    vtrn.vv v28, v25, v25
 ; CHECK-NEXT:    vtrn.vv v25, v29, v25
@@ -354,21 +354,21 @@ define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, doub
 ; CHECK-NEXT:    vse64.v v10, (a0)
 ; CHECK-NEXT:    vfsub.vv v9, v12, v9
 ; CHECK-NEXT:    vse64.v v9, (a4)
-; CHECK-NEXT:    vfmacc.vf v8, ft1, v17
+; CHECK-NEXT:    vfmacc.vf v8, fa4, v17
 ; CHECK-NEXT:    vfadd.vv v9, v20, v22
 ; CHECK-NEXT:    vmv1r.v v10, v8
-; CHECK-NEXT:    vfnmsac.vf v10, ft2, v9
-; CHECK-NEXT:    vfnmsac.vf v14, ft1, v15
+; CHECK-NEXT:    vfnmsac.vf v10, fa3, v9
+; CHECK-NEXT:    vfnmsac.vf v14, fa4, v15
 ; CHECK-NEXT:    vfsub.vv v11, v19, v21
 ; CHECK-NEXT:    vmv1r.v v12, v14
-; CHECK-NEXT:    vfnmsac.vf v12, ft2, v11
+; CHECK-NEXT:    vfnmsac.vf v12, fa3, v11
 ; CHECK-NEXT:    vfneg.v v12, v12, v0.t
 ; CHECK-NEXT:    vtrn.vv v15, v12, v12
 ; CHECK-NEXT:    vtrn.vv v12, v16, v12
 ; CHECK-NEXT:    vfsub.vv v13, v10, v12
 ; CHECK-NEXT:    vse64.v v13, (a1)
-; CHECK-NEXT:    vfmacc.vf v8, ft2, v9
-; CHECK-NEXT:    vfmacc.vf v14, ft2, v11
+; CHECK-NEXT:    vfmacc.vf v8, fa3, v9
+; CHECK-NEXT:    vfmacc.vf v14, fa3, v11
 ; CHECK-NEXT:    vfneg.v v14, v14, v0.t
 ; CHECK-NEXT:    vtrn.vv v15, v14, v14
 ; CHECK-NEXT:    vtrn.vv v13, v16, v14

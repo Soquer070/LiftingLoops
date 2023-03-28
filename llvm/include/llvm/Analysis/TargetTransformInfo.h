@@ -1064,6 +1064,9 @@ public:
   /// \return the value of vscale to tune the cost model for.
   std::optional<unsigned> getVScaleForTuning() const;
 
+  /// \return true if vscale is known to be a power of 2
+  bool isVScaleKnownToBeAPowerOfTwo() const;
+
   /// \return True if the vectorization factor should be chosen to
   /// make the vector of the smallest element type match the size of a
   /// vector register. For wider element types, this could result in
@@ -1838,6 +1841,7 @@ public:
   virtual unsigned getMinVectorRegisterBitWidth() const = 0;
   virtual std::optional<unsigned> getMaxVScale() const = 0;
   virtual std::optional<unsigned> getVScaleForTuning() const = 0;
+  virtual bool isVScaleKnownToBeAPowerOfTwo() const = 0;
   virtual bool
   shouldMaximizeVectorBandwidth(TargetTransformInfo::RegisterKind K) const = 0;
   virtual ElementCount getMinimumVF(unsigned ElemWidth,
@@ -2397,6 +2401,9 @@ public:
   }
   std::optional<unsigned> getVScaleForTuning() const override {
     return Impl.getVScaleForTuning();
+  }
+  bool isVScaleKnownToBeAPowerOfTwo() const override {
+    return Impl.isVScaleKnownToBeAPowerOfTwo();
   }
   bool shouldMaximizeVectorBandwidth(
       TargetTransformInfo::RegisterKind K) const override {

@@ -16,8 +16,8 @@ entry:
 define float @fnma32(float %a, float %b, float %c) nounwind {
 ; CHECK-LABEL: fnma32:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmadd.s ft0, fa0, fa1, fa2
-; CHECK-NEXT:    fneg.s fa0, ft0
+; CHECK-NEXT:    fmadd.s fa5, fa0, fa1, fa2
+; CHECK-NEXT:    fneg.s fa0, fa5
 ; CHECK-NEXT:    ret
 entry:
   %0 = tail call float @llvm.fma.f32(float %a, float %b, float %c)
@@ -73,8 +73,8 @@ entry:
 define double @fnma64(double %a, double %b, double %c) nounwind {
 ; CHECK-LABEL: fnma64:
 ; CHECK:       # %bb.0: # %entry
-; CHECK-NEXT:    fmadd.d ft0, fa0, fa1, fa2
-; CHECK-NEXT:    fneg.d fa0, ft0
+; CHECK-NEXT:    fmadd.d fa5, fa0, fa1, fa2
+; CHECK-NEXT:    fneg.d fa0, fa5
 ; CHECK-NEXT:    ret
 entry:
   %0 = tail call double @llvm.fma.f64(double %a, double %b, double %c)

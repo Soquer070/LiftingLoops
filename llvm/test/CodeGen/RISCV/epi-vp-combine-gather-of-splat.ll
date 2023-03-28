@@ -11,13 +11,13 @@ define void @myMatmul(i64 %N, ptr %A, ptr %B, ptr %C) {
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
 ; CHECK-NEXT:    sub a5, a0, a4
 ; CHECK-NEXT:    vsetvli a5, a5, e32, m1, ta, mu
-; CHECK-NEXT:    flw ft0, 0(a1)
+; CHECK-NEXT:    flw fa5, 0(a1)
 ; CHECK-NEXT:    slli a6, a4, 2
 ; CHECK-NEXT:    add a7, a2, a6
 ; CHECK-NEXT:    vle32.v v8, (a7)
 ; CHECK-NEXT:    add a6, a3, a6
 ; CHECK-NEXT:    vle32.v v9, (a6)
-; CHECK-NEXT:    vfmacc.vf v9, ft0, v8
+; CHECK-NEXT:    vfmacc.vf v9, fa5, v8
 ; CHECK-NEXT:    add a4, a4, a5
 ; CHECK-NEXT:    vse32.v v9, (a6)
 ; CHECK-NEXT:    bne a4, a0, .LBB0_2

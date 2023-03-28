@@ -442,6 +442,7 @@ public:
 
   std::optional<unsigned> getMaxVScale() const { return std::nullopt; }
   std::optional<unsigned> getVScaleForTuning() const { return std::nullopt; }
+  bool isVScaleKnownToBeAPowerOfTwo() const { return false; }
 
   std::pair<ElementCount, ElementCount>
   getFeasibleMaxVFRange(TargetTransformInfo::RegisterKind K,

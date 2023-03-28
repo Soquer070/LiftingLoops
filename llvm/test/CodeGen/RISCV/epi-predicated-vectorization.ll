@@ -8,7 +8,7 @@ define void @vec_add(i32 signext %N, double* noalias nocapture %c, double* noali
 ; CHECK-NEXT:    blez a0, .LBB0_3
 ; CHECK-NEXT:  # %bb.1: # %for.body.preheader
 ; CHECK-NEXT:    lui a5, %hi(.LCPI0_0)
-; CHECK-NEXT:    fld ft0, %lo(.LCPI0_0)(a5)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI0_0)(a5)
 ; CHECK-NEXT:    li t2, 0
 ; CHECK-NEXT:  .LBB0_2: # %vector.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
@@ -17,7 +17,7 @@ define void @vec_add(i32 signext %N, double* noalias nocapture %c, double* noali
 ; CHECK-NEXT:    sub t0, a0, t2
 ; CHECK-NEXT:    vsetvli t1, t0, e64, m1, ta, mu
 ; CHECK-NEXT:    vle64.v v8, (a7)
-; CHECK-NEXT:    vmflt.vf v8, v8, ft0
+; CHECK-NEXT:    vmflt.vf v8, v8, fa5
 ; CHECK-NEXT:    add a5, a2, a6
 ; CHECK-NEXT:    vle64.v v9, (a5)
 ; CHECK-NEXT:    add a5, a3, a6

@@ -43,10 +43,10 @@ define double @foo_double(double %a, double %b) nounwind {
 define float @foo_float(float %a, float %b) nounwind {
 ; RISCV32F-LABEL: foo_float:
 ; RISCV32F:       # %bb.0:
-; RISCV32F-NEXT:    fmv.w.x ft0, a1
-; RISCV32F-NEXT:    fmv.w.x ft1, a0
-; RISCV32F-NEXT:    fadd.s ft0, ft1, ft0
-; RISCV32F-NEXT:    fmv.x.w a0, ft0
+; RISCV32F-NEXT:    fmv.w.x fa5, a1
+; RISCV32F-NEXT:    fmv.w.x fa4, a0
+; RISCV32F-NEXT:    fadd.s fa5, fa4, fa5
+; RISCV32F-NEXT:    fmv.x.w a0, fa5
 ; RISCV32F-NEXT:    ret
 ;
 ; RISCV32D-LABEL: foo_float:
@@ -56,10 +56,10 @@ define float @foo_float(float %a, float %b) nounwind {
 ;
 ; RISCV64F-LABEL: foo_float:
 ; RISCV64F:       # %bb.0:
-; RISCV64F-NEXT:    fmv.w.x ft0, a1
-; RISCV64F-NEXT:    fmv.w.x ft1, a0
-; RISCV64F-NEXT:    fadd.s ft0, ft1, ft0
-; RISCV64F-NEXT:    fmv.x.w a0, ft0
+; RISCV64F-NEXT:    fmv.w.x fa5, a1
+; RISCV64F-NEXT:    fmv.w.x fa4, a0
+; RISCV64F-NEXT:    fadd.s fa5, fa4, fa5
+; RISCV64F-NEXT:    fmv.x.w a0, fa5
 ; RISCV64F-NEXT:    ret
 ;
 ; RISCV64D-LABEL: foo_float:

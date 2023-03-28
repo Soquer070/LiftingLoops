@@ -40,10 +40,10 @@ define void @saxpy(i32 signext %N, float* noalias nocapture %y, float* noalias n
 ; CHECK-NEXT:    add a2, a2, a3
 ; CHECK-NEXT:  .LBB0_7: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    flw ft0, 0(a2)
-; CHECK-NEXT:    flw ft1, 0(a1)
-; CHECK-NEXT:    fmadd.s ft0, ft0, fa0, ft1
-; CHECK-NEXT:    fsw ft0, 0(a1)
+; CHECK-NEXT:    flw fa5, 0(a2)
+; CHECK-NEXT:    flw fa4, 0(a1)
+; CHECK-NEXT:    fmadd.s fa5, fa5, fa0, fa4
+; CHECK-NEXT:    fsw fa5, 0(a1)
 ; CHECK-NEXT:    addi a0, a0, -1
 ; CHECK-NEXT:    addi a1, a1, 4
 ; CHECK-NEXT:    addi a2, a2, 4
@@ -151,10 +151,10 @@ define void @daxpy(i32 signext %N, double* noalias nocapture %y, double* noalias
 ; CHECK-NEXT:    add a2, a2, a3
 ; CHECK-NEXT:  .LBB1_7: # %for.body
 ; CHECK-NEXT:    # =>This Inner Loop Header: Depth=1
-; CHECK-NEXT:    fld ft0, 0(a2)
-; CHECK-NEXT:    fld ft1, 0(a1)
-; CHECK-NEXT:    fmadd.d ft0, ft0, fa0, ft1
-; CHECK-NEXT:    fsd ft0, 0(a1)
+; CHECK-NEXT:    fld fa5, 0(a2)
+; CHECK-NEXT:    fld fa4, 0(a1)
+; CHECK-NEXT:    fmadd.d fa5, fa5, fa0, fa4
+; CHECK-NEXT:    fsd fa5, 0(a1)
 ; CHECK-NEXT:    addi a0, a0, -1
 ; CHECK-NEXT:    addi a1, a1, 8
 ; CHECK-NEXT:    addi a2, a2, 8
