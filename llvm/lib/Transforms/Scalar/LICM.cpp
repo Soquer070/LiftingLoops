@@ -60,6 +60,7 @@
 #include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/TargetTransformInfo.h"
 #include "llvm/Analysis/ValueTracking.h"
+#include "llvm/Analysis/VectorUtils.h"
 #include "llvm/IR/CFG.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
@@ -926,26 +927,66 @@ bool llvm::hoistRegion(DomTreeNode *N, AAResults *AA, LoopInfo *LI,
 
       // Attempt to remove floating point division out of the loop by
       // converting it to a reciprocal multiplication.
-      if (I.getOpcode() == Instruction::FDiv && I.hasAllowReciprocal() &&
+      auto *CI = dyn_cast<CallInst>(&I);
+      bool IsFDiv = I.getOpcode() == Instruction::FDiv ||
+                    (CI && CI->getIntrinsicID() == Intrinsic::vp_fdiv);
+      if (IsFDiv && I.hasAllowReciprocal() &&
           CurLoop->isLoopInvariant(I.getOperand(1))) {
         auto Divisor = I.getOperand(1);
+        if (isSplatValue(Divisor)) {
+          Divisor = getSplatValue(Divisor);
+        }
         auto One = llvm::ConstantFP::get(Divisor->getType(), 1.0);
-        auto ReciprocalDivisor = BinaryOperator::CreateFDiv(One, Divisor);
+        Instruction *ReciprocalDivisor =
+            BinaryOperator::CreateFDiv(One, Divisor);
         ReciprocalDivisor->setFastMathFlags(I.getFastMathFlags());
         SafetyInfo->insertInstructionTo(ReciprocalDivisor, I.getParent());
         ReciprocalDivisor->insertBefore(&I);
 
-        auto Product =
-            BinaryOperator::CreateFMul(I.getOperand(0), ReciprocalDivisor);
+        hoist(*ReciprocalDivisor, DT, CurLoop, CFH.getOrCreateHoistedBlock(BB),
+              SafetyInfo, MSSAU, SE, ORE);
+        HoistedInstructions.push_back(ReciprocalDivisor);
+
+        Instruction *VecReciprocalDivisor = ReciprocalDivisor;
+        if (I.getOperand(0)->getType()->isVectorTy() &&
+            !VecReciprocalDivisor->getType()->isVectorTy()) {
+          // Splat the value.
+          auto *VTy = cast<VectorType>(I.getOperand(0)->getType());
+          // First insert it into a poison vector so we can shuffle it.
+          Value *Poison = PoisonValue::get(VTy);
+          Instruction *InsertEltInst = InsertElementInst::Create(
+              Poison, VecReciprocalDivisor,
+              ConstantInt::get(Type::getInt64Ty(BB->getContext()), 0));
+          InsertEltInst->insertAfter(VecReciprocalDivisor);
+          // Shuffle the value across the desired number of elements.
+          Value *ShuffleMask = ConstantInt::get(
+              VTy->getWithNewType(Type::getInt32Ty(BB->getContext())), 0);
+          Instruction *ShuffleVecInst =
+              new ShuffleVectorInst(InsertEltInst, ShuffleMask);
+          ShuffleVecInst->insertAfter(InsertEltInst);
+          VecReciprocalDivisor = ShuffleVecInst;
+        }
+        Instruction *Product = nullptr;
+        if (I.getOpcode() == Instruction::FDiv) {
+          Product =
+              BinaryOperator::CreateFMul(I.getOperand(0), VecReciprocalDivisor);
+        } else {
+          assert(cast<CallInst>(&I)->getIntrinsicID() == Intrinsic::vp_fdiv);
+          Module *M = I.getParent()->getModule();
+          Function *Fn =
+              Intrinsic::getDeclaration(M, Intrinsic::vp_fmul, I.getType());
+          Product = CallInst::Create(Fn,
+                                     {I.getOperand(0), VecReciprocalDivisor,
+                                      /*Mask*/ I.getOperand(2),
+                                      /*EVL*/ I.getOperand(3)},
+                                     "vp.op");
+        }
         Product->setFastMathFlags(I.getFastMathFlags());
         SafetyInfo->insertInstructionTo(Product, I.getParent());
         Product->insertAfter(&I);
         I.replaceAllUsesWith(Product);
         eraseInstruction(I, *SafetyInfo, MSSAU);
 
-        hoist(*ReciprocalDivisor, DT, CurLoop, CFH.getOrCreateHoistedBlock(BB),
-              SafetyInfo, MSSAU, SE, ORE);
-        HoistedInstructions.push_back(ReciprocalDivisor);
         Changed = true;
         continue;
       }
