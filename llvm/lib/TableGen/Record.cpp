@@ -3013,6 +3013,10 @@ std::vector<Record *> RecordKeeper::getAllDerivedDefinitions(
       Defs.push_back(OneDef.second.get());
   }
 
+  llvm::sort(Defs, [](Record *LHS, Record *RHS) {
+    return LHS->getName().compare_numeric(RHS->getName()) < 0;
+  });
+
   return Defs;
 }
 

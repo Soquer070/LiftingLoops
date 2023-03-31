@@ -48,11 +48,8 @@ void initializeRISCVMakeCompressibleOptPass(PassRegistry &);
 FunctionPass *createRISCVGatherScatterLoweringPass();
 void initializeRISCVGatherScatterLoweringPass(PassRegistry &);
 
-FunctionPass *createRISCVSExtWRemovalPass();
-void initializeRISCVSExtWRemovalPass(PassRegistry &);
-
-FunctionPass *createRISCVStripWSuffixPass();
-void initializeRISCVStripWSuffixPass(PassRegistry &);
+FunctionPass *createRISCVOptWInstrsPass();
+void initializeRISCVOptWInstrsPass(PassRegistry &);
 
 FunctionPass *createRISCVMergeBaseOffsetOptPass();
 void initializeRISCVMergeBaseOffsetOptPass(PassRegistry &);

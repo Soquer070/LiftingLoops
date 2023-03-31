@@ -88,8 +88,7 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeRISCVTarget() {
   initializeRISCVGatherScatterLoweringPass(*PR);
   initializeRISCVCodeGenPreparePass(*PR);
   initializeRISCVMergeBaseOffsetOptPass(*PR);
-  initializeRISCVSExtWRemovalPass(*PR);
-  initializeRISCVStripWSuffixPass(*PR);
+  initializeRISCVOptWInstrsPass(*PR);
   initializeRISCVPreRAExpandPseudoPass(*PR);
   initializeRISCVExpandPseudoPass(*PR);
   initializeRISCVInsertVSETVLIPass(*PR);
@@ -387,8 +386,7 @@ void RISCVPassConfig::addMachineSSAOptimization() {
     addPass(&MachineCombinerID);
 
   if (TM->getTargetTriple().getArch() == Triple::riscv64) {
-    addPass(createRISCVSExtWRemovalPass());
-    addPass(createRISCVStripWSuffixPass());
+    addPass(createRISCVOptWInstrsPass());
   }
 }
 

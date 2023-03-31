@@ -127,6 +127,8 @@ Changes to the PowerPC Backend
   RO data section. This option should be used with the ``-fdata-sections``
   option, and is not supported with ``-fno-data-sections``. The option is
   only supported on AIX.
+* On AIX, teach the profile runtime to check for a build-id string; such string
+  can be created by the -mxcoff-build-id option.
 
 Changes to the RISC-V Backend
 -----------------------------
@@ -149,6 +151,11 @@ Changes to the RISC-V Backend
 * Adds support for the vendor-defined XTHeadSync (multi-core synchronization instructions) extension.
 * Added support for the vendor-defined XTHeadFMemIdx (indexed memory operations for floating point) extension.
 * Assembler support for RV64E was added.
+* Assembler support was added for the experimental Zicond (integer conditional
+  operations) extension.
+* I, F, D, and A extension versions have been update to the 20191214 spec versions.
+  New version I2.1, F2.2, D2.2, A2.1. This should not impact code generation.
+  Immpacts versions accepted in ``-march`` and reported in ELF attributes.
 
 Changes to the WebAssembly Backend
 ----------------------------------
