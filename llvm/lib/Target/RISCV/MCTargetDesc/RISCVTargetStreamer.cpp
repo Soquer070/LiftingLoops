@@ -73,6 +73,7 @@ void RISCVTargetStreamer::emitTargetAttributes(const MCSubtargetInfo &STI) {
     FeatureBits.reset(RISCV::FeatureStdExtZve64x);
     FeatureBits.reset(RISCV::FeatureStdExtZve64f);
     FeatureBits.reset(RISCV::FeatureStdExtZve64d);
+    FeatureBits.reset(RISCV::FeatureStdExtZicsr);
     FeatureBits.reset(RISCV::FeatureEPI);
   }
 
