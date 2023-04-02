@@ -79,7 +79,7 @@ public:
   unsigned getMaxELenFp() const { return MaxELenFp; }
 
   bool hasExtension(StringRef Ext) const;
-  std::string toString() const;
+  std::string toString(bool DoNotEmitZ = false) const;
   std::vector<std::string> toFeatureVector() const;
   StringRef computeDefaultABI() const;
 

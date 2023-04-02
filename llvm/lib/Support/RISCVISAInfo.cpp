@@ -1100,7 +1100,7 @@ void RISCVISAInfo::updateMaxELen() {
   }
 }
 
-std::string RISCVISAInfo::toString() const {
+std::string RISCVISAInfo::toString(bool DoNotEmitZ) const {
   std::string Buffer;
   raw_string_ostream Arch(Buffer);
 
@@ -1110,6 +1110,10 @@ std::string RISCVISAInfo::toString() const {
   for (auto const &Ext : Exts) {
     StringRef ExtName = Ext.first;
     auto ExtInfo = Ext.second;
+    // Compatibility feature with old linkers (binutils 2.34) that error when
+    // they find 'z' extensions.
+    if (DoNotEmitZ && ExtName[0] == 'z')
+      continue;
     Arch << LS << ExtName;
     Arch << ExtInfo.MajorVersion << "p" << ExtInfo.MinorVersion;
   }
