@@ -304,11 +304,11 @@ void RISCVPassConfig::addIRPasses() {
   addPass(createEPIFoldBroadcastPass());
   addPass(createEPIFMAContractionPass());
 
-  if (getOptLevel() != CodeGenOpt::None)
+  if (getOptLevel() != CodeGenOpt::None) {
     addPass(createRISCVGatherScatterLoweringPass());
-
-  if (getOptLevel() != CodeGenOpt::None)
+    addPass(createInterleavedAccessPass());
     addPass(createRISCVCodeGenPreparePass());
+  }
 
   TargetPassConfig::addIRPasses();
 }
