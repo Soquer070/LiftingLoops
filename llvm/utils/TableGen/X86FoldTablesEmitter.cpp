@@ -29,10 +29,6 @@ struct ManualMapEntry {
   const char *RegInstStr;
   const char *MemInstStr;
   uint16_t Strategy;
-
-  ManualMapEntry(const char *RegInstStr, const char *MemInstStr,
-                 uint16_t Strategy = 0)
-      : RegInstStr(RegInstStr), MemInstStr(MemInstStr), Strategy(Strategy) {}
 };
 
 // List of instructions requiring explicitly aligned memory.
@@ -44,7 +40,16 @@ const char *ExplicitUnalign[] = {"MOVDQU", "MOVUPS", "MOVUPD",
                                  "PCMPESTRM", "PCMPESTRI",
                                  "PCMPISTRM", "PCMPISTRI" };
 
-#include "X86FoldTablesEmitterManualMapSet.inc"
+const ManualMapEntry ManualMapSet[] = {
+#define ENTRY(REG, MEM, FLAGS) {#REG, #MEM, FLAGS},
+#include "X86ManualFoldTables.def"
+};
+
+const std::set<StringRef> NoFoldSet= {
+#define NOFOLD(INSN) #INSN,
+#include "X86ManualFoldTables.def"
+};
+
 static bool isExplicitAlign(const CodeGenInstruction *Inst) {
   return any_of(ExplicitAlign, [Inst](const char *InstStr) {
     return Inst->TheDef->getName().contains(InstStr);
@@ -80,9 +85,6 @@ class X86FoldTablesEmitter {
         : RegInst(RegInst), MemInst(MemInst) {}
 
     void print(formatted_raw_ostream &OS) const {
-      // Stop printing record if it can't fold and unfold.
-      if(CannotUnfold && CannotFold)
-        return;
       OS.indent(2);
       OS << "{X86::" << RegInst->TheDef->getName() << ", ";
       OS  << "X86::" << MemInst->TheDef->getName() << ", ";
@@ -108,22 +110,23 @@ class X86FoldTablesEmitter {
 
   };
 
-  struct CodeGenInstructionComparator {
-    // Comparator function
+  // NOTE: We check the fold tables are sorted in X86InstrFoldTables.cpp by the enum of the
+  //       instruction, which is computed in CodeGenTarget::ComputeInstrsByEnum. So we should
+  //       use the same comparator here.
+  // FIXME: Could we share the code with CodeGenTarget::ComputeInstrsByEnum?
+  struct CompareInstrsByEnum {
     bool operator()(const CodeGenInstruction *LHS,
                     const CodeGenInstruction *RHS) const {
       assert(LHS && RHS && "LHS and RHS shouldn't be nullptr");
-      bool LHSpseudo = LHS->TheDef->getValueAsBit("isPseudo");
-      bool RHSpseudo = RHS->TheDef->getValueAsBit("isPseudo");
-      if (LHSpseudo != RHSpseudo)
-        return LHSpseudo;
-
-      return LHS->TheDef->getName() < RHS->TheDef->getName();
+      const auto &D1 = *LHS->TheDef;
+      const auto &D2 = *RHS->TheDef;
+      return std::make_tuple(!D1.getValueAsBit("isPseudo"), D1.getName()) <
+             std::make_tuple(!D2.getValueAsBit("isPseudo"), D2.getName());
     }
   };
 
   typedef std::map<const CodeGenInstruction *, X86FoldTableEntry,
-                   CodeGenInstructionComparator>
+                   CompareInstrsByEnum>
       FoldTable;
   // std::vector for each folding table.
   // Table2Addr - Holds instructions which their memory form performs load+store
@@ -469,7 +472,7 @@ void X86FoldTablesEmitter::updateTables(const CodeGenInstruction *RegInstr,
   unsigned RegInSize = RegRec->getValueAsDag("InOperandList")->getNumArgs();
 
   // Instructions which Read-Modify-Write should be added to Table2Addr.
-  if (MemOutSize != RegOutSize && MemInSize == RegInSize) {
+  if (!MemOutSize && RegOutSize == 1 && MemInSize == RegInSize) {
     addEntryWithFlags(Table2Addr, RegInstr, MemInstr, S, 0, IsManual);
     return;
   }
@@ -536,7 +539,9 @@ void X86FoldTablesEmitter::run(raw_ostream &o) {
     if (!Rec->isSubClassOf("X86Inst") || Rec->getValueAsBit("isAsmParserOnly"))
       continue;
 
-    // - Do not proceed if the instruction is marked as notMemoryFoldable.
+    if (NoFoldSet.find(Rec->getName()) != NoFoldSet.end())
+      continue;
+
     // - Instructions including RST register class operands are not relevant
     //   for memory folding (for further details check the explanation in
     //   lib/Target/X86/X86InstrFPStack.td file).
@@ -544,8 +549,7 @@ void X86FoldTablesEmitter::run(raw_ostream &o) {
     //   class ptr_rc_tailcall, which can be of a size 32 or 64, to ensure
     //   safe mapping of these instruction we manually map them and exclude
     //   them from the automation.
-    if (Rec->getValueAsBit("isMemoryFoldable") == false ||
-        hasRSTRegClass(Inst) || hasPtrTailcallRegClass(Inst))
+    if (hasRSTRegClass(Inst) || hasPtrTailcallRegClass(Inst))
       continue;
 
     // Add all the memory form instructions to MemInsts, and all the register
