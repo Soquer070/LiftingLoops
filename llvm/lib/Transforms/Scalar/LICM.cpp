@@ -1198,6 +1198,20 @@ bool isOnlyMemoryAccess(const Instruction *I, const Loop *L,
 }
 }
 
+static MemoryAccess *getClobberingMemoryAccess(MemorySSA &MSSA,
+                                               BatchAAResults &BAA,
+                                               SinkAndHoistLICMFlags &Flags,
+                                               MemoryUseOrDef *MA) {
+  // See declaration of SetLicmMssaOptCap for usage details.
+  if (Flags.tooManyClobberingCalls())
+    return MA->getDefiningAccess();
+
+  MemoryAccess *Source =
+      MSSA.getSkipSelfWalker()->getClobberingMemoryAccess(MA, BAA);
+  Flags.incrementClobberingCalls();
+  return Source;
+}
+
 bool llvm::canSinkOrHoistInst(Instruction &I, AAResults *AA, DominatorTree *DT,
                               Loop *CurLoop, MemorySSAUpdater &MSSAU,
                               bool TargetExecutesOncePerLoop,
@@ -1309,16 +1323,24 @@ bool llvm::canSinkOrHoistInst(Instruction &I, AAResults *AA, DominatorTree *DT,
     // arbitrary number of reads in the loop.
     if (isOnlyMemoryAccess(SI, CurLoop, MSSAU))
       return true;
-    // If there are more accesses than the Promotion cap or no "quota" to
-    // check clobber, then give up as we're not walking a list that long.
-    if (Flags.tooManyMemoryAccesses() || Flags.tooManyClobberingCalls())
+    // If there are more accesses than the Promotion cap, then give up as we're
+    // not walking a list that long.
+    if (Flags.tooManyMemoryAccesses())
       return false;
+
+    auto *SIMD = MSSA->getMemoryAccess(SI);
+    BatchAAResults BAA(*AA);
+    auto *Source = getClobberingMemoryAccess(*MSSA, BAA, Flags, SIMD);
+    // Make sure there are no clobbers inside the loop.
+    if (!MSSA->isLiveOnEntryDef(Source) &&
+           CurLoop->contains(Source->getBlock()))
+      return false;
+
     // If there are interfering Uses (i.e. their defining access is in the
     // loop), or ordered loads (stored as Defs!), don't move this store.
     // Could do better here, but this is conservatively correct.
     // TODO: Cache set of Uses on the first walk in runOnLoop, update when
     // moving accesses. Can also extend to dominating uses.
-    auto *SIMD = MSSA->getMemoryAccess(SI);
     for (auto *BB : CurLoop->getBlocks())
       if (auto *Accesses = MSSA->getBlockAccesses(BB)) {
         for (const auto &MA : *Accesses)
@@ -1344,17 +1366,13 @@ bool llvm::canSinkOrHoistInst(Instruction &I, AAResults *AA, DominatorTree *DT,
               // Check if the call may read from the memory location written
               // to by SI. Check CI's attributes and arguments; the number of
               // such checks performed is limited above by NoOfMemAccTooLarge.
-              ModRefInfo MRI = AA->getModRefInfo(CI, MemoryLocation::get(SI));
+              ModRefInfo MRI = BAA.getModRefInfo(CI, MemoryLocation::get(SI));
               if (isModOrRefSet(MRI))
                 return false;
             }
           }
       }
-    auto *Source = MSSA->getSkipSelfWalker()->getClobberingMemoryAccess(SI);
-    Flags.incrementClobberingCalls();
-    // If there are no clobbering Defs in the loop, store is safe to hoist.
-    return MSSA->isLiveOnEntryDef(Source) ||
-           !CurLoop->contains(Source->getBlock());
+    return true;
   }
 
   assert(!I.mayReadOrWriteMemory() && "unhandled aliasing");
@@ -1780,7 +1798,7 @@ static void hoist(Instruction &I, const DominatorTree *DT, const Loop *CurLoop,
       // time in isGuaranteedToExecute if we don't actually have anything to
       // drop.  It is a compile time optimization, not required for correctness.
       !SafetyInfo->isGuaranteedToExecute(I, DT, CurLoop))
-    I.dropUBImplyingAttrsAndUnknownMetadata();
+    I.dropUBImplyingAttrsAndMetadata();
 
   if (isa<PHINode>(I))
     // Move the new node to the end of the phi list in the destination block.
@@ -1966,6 +1984,8 @@ bool isNotVisibleOnUnwindInLoop(const Value *Object, const Loop *L,
          isNotCapturedBeforeOrInLoop(Object, L, DT);
 }
 
+// We don't consider globals as writable: While the physical memory is writable,
+// we may not have provenance to perform the write.
 bool isWritableObject(const Value *Object) {
   // TODO: Alloca might not be writable after its lifetime ends.
   // See https://github.com/llvm/llvm-project/issues/51838.
@@ -1975,9 +1995,6 @@ bool isWritableObject(const Value *Object) {
   // TODO: Also handle sret.
   if (auto *A = dyn_cast<Argument>(Object))
     return A->hasByValAttr();
-
-  if (auto *G = dyn_cast<GlobalVariable>(Object))
-    return !G->isConstant();
 
   // TODO: Noalias has nothing to do with writability, this should check for
   // an allocator function.
@@ -2385,14 +2402,6 @@ static bool pointerInvalidatedByLoop(MemorySSA *MSSA, MemoryUse *MU,
                                      bool InvariantGroup) {
   // For hoisting, use the walker to determine safety
   if (!Flags.getIsSink()) {
-    MemoryAccess *Source;
-    // See declaration of SetLicmMssaOptCap for usage details.
-    if (Flags.tooManyClobberingCalls())
-      Source = MU->getDefiningAccess();
-    else {
-      Source = MSSA->getSkipSelfWalker()->getClobberingMemoryAccess(MU);
-      Flags.incrementClobberingCalls();
-    }
     // If hoisting an invariant group, we only need to check that there
     // is no store to the loaded pointer between the start of the loop,
     // and the load (since all values must be the same).
@@ -2402,6 +2411,8 @@ static bool pointerInvalidatedByLoop(MemorySSA *MSSA, MemoryUse *MU,
     // 2) the earliest access is at the loop header,
     // if the memory loaded is the phi node
 
+    BatchAAResults BAA(MSSA->getAA());
+    MemoryAccess *Source = getClobberingMemoryAccess(*MSSA, BAA, Flags, MU);
     return !MSSA->isLiveOnEntryDef(Source) &&
            CurLoop->contains(Source->getBlock()) &&
            !(InvariantGroup && Source->getBlock() == CurLoop->getHeader() && isa<MemoryPhi>(Source));
