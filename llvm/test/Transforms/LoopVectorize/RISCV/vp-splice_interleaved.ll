@@ -81,9 +81,6 @@ define dso_local void @mySplice(i32 noundef signext %N, ptr noalias nocapture no
 ; CHECK-NEXT:    [[TMP34:%.*]] = call i32 @llvm.vscale.i32()
 ; CHECK-NEXT:    [[TMP35:%.*]] = sub i32 [[TMP34]], 1
 ; CHECK-NEXT:    [[VECTOR_RECUR_EXTRACT:%.*]] = extractelement <vscale x 1 x i64> [[VP_OP_LOAD5]], i32 [[TMP35]]
-; CHECK-NEXT:    [[TMP36:%.*]] = call i32 @llvm.vscale.i32()
-; CHECK-NEXT:    [[TMP37:%.*]] = sub i32 [[TMP36]], 2
-; CHECK-NEXT:    [[VECTOR_RECUR_EXTRACT_FOR_PHI:%.*]] = extractelement <vscale x 1 x i64> [[VP_OP_LOAD5]], i32 [[TMP37]]
 ; CHECK-NEXT:    br i1 true, label [[FOR_COND_CLEANUP_LOOPEXIT:%.*]], label [[SCALAR_PH]]
 ; CHECK:       scalar.ph:
 ; CHECK-NEXT:    [[SCALAR_RECUR_INIT:%.*]] = phi i64 [ [[DOTPRE]], [[FOR_BODY_PREHEADER]] ], [ [[VECTOR_RECUR_EXTRACT]], [[MIDDLE_BLOCK]] ]
@@ -94,11 +91,11 @@ define dso_local void @mySplice(i32 noundef signext %N, ptr noalias nocapture no
 ; CHECK:       for.cond.cleanup:
 ; CHECK-NEXT:    ret void
 ; CHECK:       for.body:
-; CHECK-NEXT:    [[SCALAR_RECUR:%.*]] = phi i64 [ [[SCALAR_RECUR_INIT]], [[SCALAR_PH]] ], [ [[TMP38:%.*]], [[FOR_BODY]] ]
+; CHECK-NEXT:    [[SCALAR_RECUR:%.*]] = phi i64 [ [[SCALAR_RECUR_INIT]], [[SCALAR_PH]] ], [ [[TMP36:%.*]], [[FOR_BODY]] ]
 ; CHECK-NEXT:    [[INDVARS_IV:%.*]] = phi i64 [ [[BC_RESUME_VAL]], [[SCALAR_PH]] ], [ [[INDVARS_IV_NEXT:%.*]], [[FOR_BODY]] ]
 ; CHECK-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds i64, ptr [[A]], i64 [[INDVARS_IV]]
-; CHECK-NEXT:    [[TMP38]] = load i64, ptr [[ARRAYIDX]], align 8, !tbaa [[TBAA6]]
-; CHECK-NEXT:    [[ADD:%.*]] = add nsw i64 [[SCALAR_RECUR]], [[TMP38]]
+; CHECK-NEXT:    [[TMP36]] = load i64, ptr [[ARRAYIDX]], align 8, !tbaa [[TBAA6]]
+; CHECK-NEXT:    [[ADD:%.*]] = add nsw i64 [[SCALAR_RECUR]], [[TMP36]]
 ; CHECK-NEXT:    [[ARRAYIDX4:%.*]] = getelementptr inbounds i64, ptr [[B]], i64 [[INDVARS_IV]]
 ; CHECK-NEXT:    store i64 [[ADD]], ptr [[ARRAYIDX4]], align 8, !tbaa [[TBAA6]]
 ; CHECK-NEXT:    [[INDVARS_IV_NEXT]] = add nuw nsw i64 [[INDVARS_IV]], 1

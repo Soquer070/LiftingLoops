@@ -8,6 +8,8 @@ target triple = "riscv64-unknown-linux-gnu"
 define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, double* nocapture readonly %W, i64 %rs, i64 %mb, i64 %me, i64 %ms) nounwind {
 ; CHECK-LABEL: t3fv_16:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    bge a4, a5, .LBB0_4
+; CHECK-NEXT:  # %bb.1: # %for.body.lr.ph
 ; CHECK-NEXT:    addi sp, sp, -192
 ; CHECK-NEXT:    sd ra, 184(sp) # 8-byte Folded Spill
 ; CHECK-NEXT:    sd s0, 176(sp) # 8-byte Folded Spill
@@ -25,8 +27,6 @@ define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, doub
 ; CHECK-NEXT:    csrr a1, vlenb
 ; CHECK-NEXT:    slli a1, a1, 1
 ; CHECK-NEXT:    sub sp, sp, a1
-; CHECK-NEXT:    bge a4, a5, .LBB0_3
-; CHECK-NEXT:  # %bb.1: # %for.body.lr.ph
 ; CHECK-NEXT:    slli a1, a4, 6
 ; CHECK-NEXT:    add a2, a2, a1
 ; CHECK-NEXT:    li a1, 2
@@ -382,7 +382,7 @@ define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, doub
 ; CHECK-NEXT:    addi s10, s10, -1
 ; CHECK-NEXT:    addi a2, a2, 64
 ; CHECK-NEXT:    bnez s10, .LBB0_2
-; CHECK-NEXT:  .LBB0_3: # %for.end
+; CHECK-NEXT:  # %bb.3:
 ; CHECK-NEXT:    csrr a0, vlenb
 ; CHECK-NEXT:    slli a0, a0, 1
 ; CHECK-NEXT:    add sp, sp, a0
@@ -400,6 +400,7 @@ define void @t3fv_16(double* nocapture %ri, double* nocapture readnone %ii, doub
 ; CHECK-NEXT:    ld s10, 96(sp) # 8-byte Folded Reload
 ; CHECK-NEXT:    ld s11, 88(sp) # 8-byte Folded Reload
 ; CHECK-NEXT:    addi sp, sp, 192
+; CHECK-NEXT:  .LBB0_4: # %for.end
 ; CHECK-NEXT:    ret
 entry:
   %0 = tail call <vscale x 1 x double> @llvm.epi.vfmv.v.f.nxv1f64.f64(double 0x3FED906BCF328D46, i64 2)

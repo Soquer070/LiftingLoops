@@ -14,30 +14,31 @@ target datalayout = "e-m:e-p:64:64-i64:64-i128:128-n64-S128-v128:128:128-v256:12
 target triple = "riscv64-unknown-linux-gnu"
 
 ; CHECK-LABEL: simple_add
+
 ; CHECK: VPlan 'Initial VPlan for VF={vscale x 1,vscale x 2,vscale x 4,vscale x 8,vscale x 16},UF>=1' {
-; CHECK-NEXT: Live-in vp<%1> = vector-trip-count
-; CHECK-NEXT: Live-in vp<%3> = original trip-count
-; CHECK-NEXT: Live-in vp<%2> = backedge-taken count
+; CHECK-NEXT: Live-in vp<%0> = vector-trip-count
+; CHECK-NEXT: Live-in vp<%2> = original trip-count
+; CHECK-NEXT: Live-in vp<%1> = backedge-taken count
 ; CHECK-EMPTY:
 ; CHECK-NEXT: vector.ph:
 ; CHECK-NEXT: Successor(s): vector loop
 ; CHECK-EMPTY:
 ; CHECK-NEXT: <x1> vector loop: {
 ; CHECK-NEXT:   vector.body:
-; CHECK-NEXT:     EMIT vp<%4> = CANONICAL-INDUCTION
-; CHECK-NEXT:     EMIT vp<%5> = GENERATE-EXPLICIT-VECTOR-LENGTH vp<%3>
-; CHECK-NEXT:     vp<%6>    = SCALAR-STEPS vp<%4>, ir<1>
-; CHECK-NEXT:     EMIT vp<%7> = WIDEN-CANONICAL-INDUCTION vp<%4>, vp<%5>
-; CHECK-NEXT:     EMIT vp<%8> = vp icmp ule vp<%7> vp<%2> vp<%5>
-; CHECK-NEXT:     CLONE ir<%arrayidx> = getelementptr ir<%a>, vp<%6>
-; CHECK-NEXT:     PREDICATED-WIDEN ir<%0> = load ir<%arrayidx>, vp<%8>, vp<%5> (ALL-ONES-MASK)
-; CHECK-NEXT:     CLONE ir<%arrayidx2> = getelementptr ir<%b>, vp<%6>
-; CHECK-NEXT:     PREDICATED-WIDEN ir<%1> = load ir<%arrayidx2>, vp<%8>, vp<%5> (ALL-ONES-MASK)
-; CHECK-NEXT:     PREDICATED-WIDEN ir<%add> = add ir<%1>, ir<%0>, vp<%8>, vp<%5>
-; CHECK-NEXT:     CLONE ir<%arrayidx4> = getelementptr ir<%c>, vp<%6>
-; CHECK-NEXT:     PREDICATED-WIDEN store ir<%arrayidx4>, ir<%add>, vp<%8>, vp<%5> (ALL-ONES-MASK)
-; CHECK-NEXT:     EMIT vp<%15> = VF * UF +  vp<%4> vp<%5>
-; CHECK-NEXT:     EMIT branch-on-count  vp<%15> vp<%1>
+; CHECK-NEXT:     EMIT vp<%3> = CANONICAL-INDUCTION
+; CHECK-NEXT:     EMIT vp<%4> = GENERATE-EXPLICIT-VECTOR-LENGTH vp<%2>
+; CHECK-NEXT:     vp<%5>    = SCALAR-STEPS vp<%3>, ir<1>
+; CHECK-NEXT:     EMIT vp<%6> = WIDEN-CANONICAL-INDUCTION vp<%3>, vp<%4>
+; CHECK-NEXT:     EMIT vp<%7> = vp icmp ule vp<%6> vp<%1> vp<%4>
+; CHECK-NEXT:     CLONE ir<%arrayidx> = getelementptr ir<%a>, vp<%5>
+; CHECK-NEXT:     PREDICATED-WIDEN ir<%0> = load ir<%arrayidx>, vp<%7>, vp<%4> (ALL-ONES-MASK)
+; CHECK-NEXT:     CLONE ir<%arrayidx2> = getelementptr ir<%b>, vp<%5>
+; CHECK-NEXT:     PREDICATED-WIDEN ir<%1> = load ir<%arrayidx2>, vp<%7>, vp<%4> (ALL-ONES-MASK)
+; CHECK-NEXT:     PREDICATED-WIDEN ir<%add> = add ir<%1>, ir<%0>, vp<%7>, vp<%4>
+; CHECK-NEXT:     CLONE ir<%arrayidx4> = getelementptr ir<%c>, vp<%5>
+; CHECK-NEXT:     PREDICATED-WIDEN store ir<%arrayidx4>, ir<%add>, vp<%7>, vp<%4> (ALL-ONES-MASK)
+; CHECK-NEXT:     EMIT vp<%14> = VF * UF +  vp<%3> vp<%4>
+; CHECK-NEXT:     EMIT branch-on-count  vp<%14> vp<%0>
 ; CHECK-NEXT:   No successors
 ; CHECK-NEXT: }
 ; CHECK-NEXT: Successor(s): middle.block
