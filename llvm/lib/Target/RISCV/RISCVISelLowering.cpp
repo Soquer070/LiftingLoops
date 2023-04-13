@@ -10941,19 +10941,14 @@ void RISCVTargetLowering::ReplaceNodeResults(SDNode *N,
     break;
   }
   case ISD::LRINT:
-  case ISD::LROUND:
-  case ISD::STRICT_LRINT:
-  case ISD::STRICT_LROUND: {
+  case ISD::STRICT_LRINT: {
     EVT Ty = N->getValueType(0);
     if (Subtarget.is64Bit() && Ty != Subtarget.getXLenVT()) {
       // Use fcvt.w.<fp> and truncate as needed.
       assert(Ty.isInteger() &&
              Ty.getSizeInBits() < Subtarget.getXLenVT().getSizeInBits() &&
              "Unexpected type");
-      RISCVFPRndMode::RoundingMode FRM =
-          (N->getOpcode() == ISD::LRINT || N->getOpcode() == ISD::STRICT_LRINT)
-              ? RISCVFPRndMode::DYN
-              : RISCVFPRndMode::RMM;
+      RISCVFPRndMode::RoundingMode FRM = RISCVFPRndMode::DYN;
       SDValue Res =
           DAG.getNode(RISCVISD::FCVT_W_RV64, DL, MVT::i64, N->getOperand(0),
                       DAG.getTargetConstant(FRM, DL, Subtarget.getXLenVT()));
