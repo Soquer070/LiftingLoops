@@ -103,7 +103,7 @@ class VPRecipeBuilder {
   /// induction variable.
   VPWidenIntOrFpInductionRecipe *
   tryToOptimizeInductionTruncate(TruncInst *I, ArrayRef<VPValue *> Operands,
-                                 VFRange &Range, VPlanPtr &Plan);
+                                 VFRange &Range, VPlan &Plan);
 
   /// Handle non-loop phi nodes. Return a VPValue, if all incoming values match
   /// or a new VPBlendRecipe otherwise. Currently all such phi nodes are turned

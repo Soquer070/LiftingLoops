@@ -75,16 +75,15 @@ namespace {
     }
 
   private:
-    MachineFunction *MF;
-    MachineFrameInfo *MFI;
-    MachineRegisterInfo *MRI;
-    const TargetRegisterInfo *TRI;
-    const TargetInstrInfo *TII;
+    MachineFrameInfo *MFI = nullptr;
+    MachineRegisterInfo *MRI = nullptr;
+    const TargetRegisterInfo *TRI = nullptr;
+    const TargetInstrInfo *TII = nullptr;
     RegisterClassInfo RegClassInfo;
     const RegClassFilterFunc ShouldAllocateClass;
 
     /// Basic block currently being allocated.
-    MachineBasicBlock *MBB;
+    MachineBasicBlock *MBB = nullptr;
 
     /// Maps virtual regs to the frame index where these values are spilled.
     IndexedMap<int, VirtReg2IndexFunctor> StackSlotForVirtReg;
@@ -1592,7 +1591,6 @@ void RegAllocFast::allocateBasicBlock(MachineBasicBlock &MBB) {
 bool RegAllocFast::runOnMachineFunction(MachineFunction &MF) {
   LLVM_DEBUG(dbgs() << "********** FAST REGISTER ALLOCATION **********\n"
                     << "********** Function: " << MF.getName() << '\n');
-  this->MF = &MF;
   MRI = &MF.getRegInfo();
   const TargetSubtargetInfo &STI = MF.getSubtarget();
   TRI = STI.getRegisterInfo();

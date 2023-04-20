@@ -16,15 +16,15 @@ declare <vscale x 8 x double> @llvm.rint.nxv8f64(<vscale x 8 x double>)
 define <vscale x 1 x float> @test_llvm_rint_nxv1f32(<vscale x 1 x float> %vf) {
 ; CHECK-LABEL: test_llvm_rint_nxv1f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    srli a0, a0, 3
-; CHECK-NEXT:    call __epi_frint_nxv1f32@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    vsetvli a0, zero, e32, mf2, ta, ma
+; CHECK-NEXT:    vfabs.v v9, v8
+; CHECK-NEXT:    lui a0, 307200
+; CHECK-NEXT:    fmv.w.x fa5, a0
+; CHECK-NEXT:    vmflt.vf v0, v9, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v9, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v9, v9, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e32, mf2, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v9, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 1 x float> @llvm.rint.nxv1f32(<vscale x 1 x float> %vf)
   ret <vscale x 1 x float> %res
@@ -33,15 +33,15 @@ define <vscale x 1 x float> @test_llvm_rint_nxv1f32(<vscale x 1 x float> %vf) {
 define <vscale x 2 x float> @test_llvm_rint_nxv2f32(<vscale x 2 x float> %vf) {
 ; CHECK-LABEL: test_llvm_rint_nxv2f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    srli a0, a0, 2
-; CHECK-NEXT:    call __epi_frint_nxv2f32@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    vsetvli a0, zero, e32, m1, ta, ma
+; CHECK-NEXT:    vfabs.v v9, v8
+; CHECK-NEXT:    lui a0, 307200
+; CHECK-NEXT:    fmv.w.x fa5, a0
+; CHECK-NEXT:    vmflt.vf v0, v9, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v9, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v9, v9, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e32, m1, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v9, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 2 x float> @llvm.rint.nxv2f32(<vscale x 2 x float> %vf)
   ret <vscale x 2 x float> %res
@@ -50,15 +50,15 @@ define <vscale x 2 x float> @test_llvm_rint_nxv2f32(<vscale x 2 x float> %vf) {
 define <vscale x 4 x float> @test_llvm_rint_nxv4f32(<vscale x 4 x float> %vf) {
 ; CHECK-LABEL: test_llvm_rint_nxv4f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    srli a0, a0, 1
-; CHECK-NEXT:    call __epi_frint_nxv4f32@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    vsetvli a0, zero, e32, m2, ta, ma
+; CHECK-NEXT:    vfabs.v v10, v8
+; CHECK-NEXT:    lui a0, 307200
+; CHECK-NEXT:    fmv.w.x fa5, a0
+; CHECK-NEXT:    vmflt.vf v0, v10, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v10, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v10, v10, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e32, m2, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v10, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 4 x float> @llvm.rint.nxv4f32(<vscale x 4 x float> %vf)
   ret <vscale x 4 x float> %res
@@ -67,14 +67,15 @@ define <vscale x 4 x float> @test_llvm_rint_nxv4f32(<vscale x 4 x float> %vf) {
 define <vscale x 8 x float> @test_llvm_rint_nxv8f32(<vscale x 8 x float> %vf) {
 ; CHECK-LABEL: test_llvm_rint_nxv8f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    call __epi_frint_nxv8f32@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    vsetvli a0, zero, e32, m4, ta, ma
+; CHECK-NEXT:    vfabs.v v12, v8
+; CHECK-NEXT:    lui a0, 307200
+; CHECK-NEXT:    fmv.w.x fa5, a0
+; CHECK-NEXT:    vmflt.vf v0, v12, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v12, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v12, v12, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e32, m4, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v12, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 8 x float> @llvm.rint.nxv8f32(<vscale x 8 x float> %vf)
   ret <vscale x 8 x float> %res
@@ -83,15 +84,15 @@ define <vscale x 8 x float> @test_llvm_rint_nxv8f32(<vscale x 8 x float> %vf) {
 define <vscale x 16 x float> @test_llvm_rint_nxv16f32(<vscale x 16 x float> %vf) {
 ; CHECK-LABEL: test_llvm_rint_nxv16f32:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    slli a0, a0, 1
-; CHECK-NEXT:    call __epi_frint_nxv16f32@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    vsetvli a0, zero, e32, m8, ta, ma
+; CHECK-NEXT:    vfabs.v v16, v8
+; CHECK-NEXT:    lui a0, 307200
+; CHECK-NEXT:    fmv.w.x fa5, a0
+; CHECK-NEXT:    vmflt.vf v0, v16, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v16, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v16, v16, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e32, m8, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v16, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 16 x float> @llvm.rint.nxv16f32(<vscale x 16 x float> %vf)
   ret <vscale x 16 x float> %res
@@ -100,15 +101,15 @@ define <vscale x 16 x float> @test_llvm_rint_nxv16f32(<vscale x 16 x float> %vf)
 define <vscale x 1 x double> @test_llvm_rint_nxv1f64(<vscale x 1 x double> %vd) {
 ; CHECK-LABEL: test_llvm_rint_nxv1f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    srli a0, a0, 3
-; CHECK-NEXT:    call __epi_frint_nxv1f64@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    lui a0, %hi(.LCPI5_0)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI5_0)(a0)
+; CHECK-NEXT:    vsetvli a0, zero, e64, m1, ta, ma
+; CHECK-NEXT:    vfabs.v v9, v8
+; CHECK-NEXT:    vmflt.vf v0, v9, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v9, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v9, v9, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v9, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 1 x double> @llvm.rint.nxv1f64(<vscale x 1 x double> %vd)
   ret <vscale x 1 x double> %res
@@ -117,15 +118,15 @@ define <vscale x 1 x double> @test_llvm_rint_nxv1f64(<vscale x 1 x double> %vd) 
 define <vscale x 2 x double> @test_llvm_rint_nxv2f64(<vscale x 2 x double> %vd) {
 ; CHECK-LABEL: test_llvm_rint_nxv2f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    srli a0, a0, 2
-; CHECK-NEXT:    call __epi_frint_nxv2f64@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    lui a0, %hi(.LCPI6_0)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI6_0)(a0)
+; CHECK-NEXT:    vsetvli a0, zero, e64, m2, ta, ma
+; CHECK-NEXT:    vfabs.v v10, v8
+; CHECK-NEXT:    vmflt.vf v0, v10, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v10, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v10, v10, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e64, m2, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v10, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 2 x double> @llvm.rint.nxv2f64(<vscale x 2 x double> %vd)
   ret <vscale x 2 x double> %res
@@ -134,15 +135,15 @@ define <vscale x 2 x double> @test_llvm_rint_nxv2f64(<vscale x 2 x double> %vd) 
 define <vscale x 4 x double> @test_llvm_rint_nxv4f64(<vscale x 4 x double> %vd) {
 ; CHECK-LABEL: test_llvm_rint_nxv4f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    srli a0, a0, 1
-; CHECK-NEXT:    call __epi_frint_nxv4f64@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    lui a0, %hi(.LCPI7_0)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI7_0)(a0)
+; CHECK-NEXT:    vsetvli a0, zero, e64, m4, ta, ma
+; CHECK-NEXT:    vfabs.v v12, v8
+; CHECK-NEXT:    vmflt.vf v0, v12, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v12, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v12, v12, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e64, m4, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v12, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 4 x double> @llvm.rint.nxv4f64(<vscale x 4 x double> %vd)
   ret <vscale x 4 x double> %res
@@ -151,14 +152,15 @@ define <vscale x 4 x double> @test_llvm_rint_nxv4f64(<vscale x 4 x double> %vd) 
 define <vscale x 8 x double> @test_llvm_rint_nxv8f64(<vscale x 8 x double> %vd) {
 ; CHECK-LABEL: test_llvm_rint_nxv8f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi sp, sp, -16
-; CHECK-NEXT:    .cfi_def_cfa_offset 16
-; CHECK-NEXT:    sd ra, 8(sp) # 8-byte Folded Spill
-; CHECK-NEXT:    .cfi_offset ra, -8
-; CHECK-NEXT:    csrr a0, vlenb
-; CHECK-NEXT:    call __epi_frint_nxv8f64@plt
-; CHECK-NEXT:    ld ra, 8(sp) # 8-byte Folded Reload
-; CHECK-NEXT:    addi sp, sp, 16
+; CHECK-NEXT:    lui a0, %hi(.LCPI8_0)
+; CHECK-NEXT:    fld fa5, %lo(.LCPI8_0)(a0)
+; CHECK-NEXT:    vsetvli a0, zero, e64, m8, ta, ma
+; CHECK-NEXT:    vfabs.v v16, v8
+; CHECK-NEXT:    vmflt.vf v0, v16, fa5
+; CHECK-NEXT:    vfcvt.x.f.v v16, v8, v0.t
+; CHECK-NEXT:    vfcvt.f.x.v v16, v16, v0.t
+; CHECK-NEXT:    vsetvli zero, zero, e64, m8, ta, mu
+; CHECK-NEXT:    vfsgnj.vv v8, v16, v8, v0.t
 ; CHECK-NEXT:    ret
   %res = call <vscale x 8 x double> @llvm.rint.nxv8f64(<vscale x 8 x double> %vd)
   ret <vscale x 8 x double> %res

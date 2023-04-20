@@ -21,7 +21,8 @@ def AvispadoModel : SchedMachineModel {
   let MispredictPenalty = 3;
   let UnsupportedFeatures = [HasStdExtZbkb, HasStdExtZbkc, HasStdExtZbkx,
                              HasStdExtZknd, HasStdExtZkne, HasStdExtZknh,
-                             HasStdExtZksed, HasStdExtZksh, HasStdExtZkr];
+                             HasStdExtZksed, HasStdExtZksh, HasStdExtZkr,
+                             HasStdExtZfa];
 
   // We should be able to remove this when all the instructions
   // have scheduling information.
@@ -399,15 +400,15 @@ let Latency = 10, ResourceCycles = [10] in
   defm "" : LMULWriteResFW<"WriteVFWALUF", [AvispadoVPUFArith]>;
   defm "" : LMULWriteRes<"WriteVFMulV", [AvispadoVPUFArith]>;
   defm "" : LMULWriteRes<"WriteVFMulF", [AvispadoVPUFArith]>;
-  defm "" : LMULSEWWriteRes<"WriteVFDivV", [AvispadoVPUFArith]>;
-  defm "" : LMULSEWWriteRes<"WriteVFDivF", [AvispadoVPUFArith]>;
+  defm "" : LMULSEWWriteResF<"WriteVFDivV", [AvispadoVPUFArith]>;
+  defm "" : LMULSEWWriteResF<"WriteVFDivF", [AvispadoVPUFArith]>;
   defm "" : LMULWriteResFW<"WriteVFWMulV", [AvispadoVPUFArith]>;
   defm "" : LMULWriteResFW<"WriteVFWMulF", [AvispadoVPUFArith]>;
   defm "" : LMULWriteRes<"WriteVFMulAddV", [AvispadoVPUFArith]>;
   defm "" : LMULWriteRes<"WriteVFMulAddF", [AvispadoVPUFArith]>;
   defm "" : LMULWriteResFW<"WriteVFWMulAddV", [AvispadoVPUFArith]>;
   defm "" : LMULWriteResFW<"WriteVFWMulAddF", [AvispadoVPUFArith]>;
-  defm "" : LMULSEWWriteRes<"WriteVFSqrtV", [AvispadoVPUFArith]>;
+  defm "" : LMULSEWWriteResF<"WriteVFSqrtV", [AvispadoVPUFArith]>;
   defm "" : LMULWriteRes<"WriteVFRecpV", [AvispadoVPUFArith]>;
   defm "" : LMULWriteRes<"WriteVFCmpV", [AvispadoVPUFArith]>;
   defm "" : LMULWriteRes<"WriteVFCmpF", [AvispadoVPUFArith]>;
@@ -544,15 +545,15 @@ defm "" : LMULReadAdvanceFW<"ReadVFWALUV", 0>;
 defm "" : LMULReadAdvanceFW<"ReadVFWALUF", 0>;
 defm "" : LMULReadAdvance<"ReadVFMulV", 0>;
 defm "" : LMULReadAdvance<"ReadVFMulF", 0>;
-defm "" : LMULSEWReadAdvance<"ReadVFDivV", 0>;
-defm "" : LMULSEWReadAdvance<"ReadVFDivF", 0>;
+defm "" : LMULSEWReadAdvanceF<"ReadVFDivV", 0>;
+defm "" : LMULSEWReadAdvanceF<"ReadVFDivF", 0>;
 defm "" : LMULReadAdvanceFW<"ReadVFWMulV", 0>;
 defm "" : LMULReadAdvanceFW<"ReadVFWMulF", 0>;
 defm "" : LMULReadAdvance<"ReadVFMulAddV", 0>;
 defm "" : LMULReadAdvance<"ReadVFMulAddF", 0>;
 defm "" : LMULReadAdvanceFW<"ReadVFWMulAddV", 0>;
 defm "" : LMULReadAdvanceFW<"ReadVFWMulAddF", 0>;
-defm "" : LMULSEWReadAdvance<"ReadVFSqrtV", 0>;
+defm "" : LMULSEWReadAdvanceF<"ReadVFSqrtV", 0>;
 defm "" : LMULReadAdvance<"ReadVFRecpV", 0>;
 defm "" : LMULReadAdvance<"ReadVFCmpV", 0>;
 defm "" : LMULReadAdvance<"ReadVFCmpF", 0>;
@@ -625,5 +626,6 @@ defm : UnsupportedSchedZbs;
 defm : UnsupportedSchedZbkb;
 defm : UnsupportedSchedZbkx;
 defm : UnsupportedSchedZfh;
+defm : UnsupportedSchedZfa;
 defm : UnsupportedSchedSFB;
 }

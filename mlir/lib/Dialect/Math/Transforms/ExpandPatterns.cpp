@@ -157,6 +157,19 @@ static LogicalResult convertCeilOp(math::CeilOp op, PatternRewriter &rewriter) {
   rewriter.replaceOp(op, ret);
   return success();
 }
+// Converts  Powf(float a, float b) (meaning a^b) to exp^(b * ln(a))
+static LogicalResult convertPowfOp(math::PowFOp op, PatternRewriter &rewriter) {
+  ImplicitLocOpBuilder b(op->getLoc(), rewriter);
+  Value operandA = op.getOperand(0);
+  Value operandB = op.getOperand(1);
+  Type opType = operandA.getType();
+
+  Value logA = b.create<math::LogOp>(opType, operandA);
+  Value mult = b.create<arith::MulFOp>(opType, logA, operandB);
+  Value expResult = b.create<math::ExpOp>(opType, mult);
+  rewriter.replaceOp(op, expResult);
+  return success();
+}
 
 // exp2f(float x) -> exp(x * ln(2))
 //   Proof: Let's say 2^x = y
@@ -171,6 +184,28 @@ static LogicalResult convertExp2fOp(math::Exp2Op op,
   Value mult = b.create<arith::MulFOp>(opType, operand, ln2);
   Value exp = b.create<math::ExpOp>(op->getLoc(), mult);
   rewriter.replaceOp(op, exp);
+  return success();
+}
+
+static LogicalResult convertRoundOp(math::RoundOp op,
+                                    PatternRewriter &rewriter) {
+  ImplicitLocOpBuilder b(op->getLoc(), rewriter);
+  Value operand = op.getOperand();
+  Type opType = operand.getType();
+
+  // Creating constants for later use.
+  Value zero = createFloatConst(op->getLoc(), opType, 0.00, rewriter);
+  Value half = createFloatConst(op->getLoc(), opType, 0.5, rewriter);
+  Value negHalf = createFloatConst(op->getLoc(), opType, -0.5, rewriter);
+
+  Value posCheck =
+      b.create<arith::CmpFOp>(arith::CmpFPredicate::OGE, operand, zero);
+  Value incrValue =
+      b.create<arith::SelectOp>(op->getLoc(), posCheck, half, negHalf);
+  Value add = b.create<arith::AddFOp>(opType, operand, incrValue);
+
+  Value fpFixedConvert = createTruncatedFPValue(add, b);
+  rewriter.replaceOp(op, fpFixedConvert);
   return success();
 }
 
@@ -240,6 +275,14 @@ void mlir::populateExpandCeilFPattern(RewritePatternSet &patterns) {
 
 void mlir::populateExpandExp2FPattern(RewritePatternSet &patterns) {
   patterns.add(convertExp2fOp);
+}
+
+void mlir::populateExpandPowFPattern(RewritePatternSet &patterns) {
+  patterns.add(convertPowfOp);
+}
+
+void mlir::populateExpandRoundFPattern(RewritePatternSet &patterns) {
+  patterns.add(convertRoundOp);
 }
 
 void mlir::populateExpandFloorFPattern(RewritePatternSet &patterns) {
