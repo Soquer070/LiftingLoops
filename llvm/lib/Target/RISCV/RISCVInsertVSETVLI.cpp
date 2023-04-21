@@ -940,11 +940,28 @@ void RISCVInsertVSETVLI::insertVSETVLI(MachineBasicBlock &MBB, MachineInstr &MI,
   insertVSETVLI(MBB, MachineBasicBlock::iterator(&MI), DL, Info, PrevInfo);
 }
 
-void RISCVInsertVSETVLI::insertVSETVLI(
-    MachineBasicBlock &MBB, MachineBasicBlock::iterator InsertPt, DebugLoc DL,
-    const VSETVLIInfo &Info, const VSETVLIInfo &PrevInfo) {
-  unsigned InfoVTYPE = Info.encodeVTYPE();
+// Return a VSETVLIInfo representing the changes made by this VSETVLI or
+// VSETIVLI instruction.
+static VSETVLIInfo getInfoForVSETVLI(const MachineInstr &MI) {
+  VSETVLIInfo NewInfo;
+  if (MI.getOpcode() == RISCV::PseudoVSETIVLI) {
+    NewInfo.setAVLImm(MI.getOperand(1).getImm());
+  } else {
+    assert(MI.getOpcode() == RISCV::PseudoVSETVLI ||
+           MI.getOpcode() == RISCV::PseudoVSETVLIX0);
+    Register AVLReg = MI.getOperand(1).getReg();
+    assert((AVLReg != RISCV::X0 || MI.getOperand(0).getReg() != RISCV::X0) &&
+           "Can't handle X0, X0 vsetvli yet");
+    NewInfo.setAVLReg(AVLReg);
+  }
+  NewInfo.setVTYPE(MI.getOperand(2).getImm());
 
+  return NewInfo;
+}
+
+void RISCVInsertVSETVLI::insertVSETVLI(MachineBasicBlock &MBB,
+                     MachineBasicBlock::iterator InsertPt, DebugLoc DL,
+                     const VSETVLIInfo &Info, const VSETVLIInfo &PrevInfo) {
   if (Info.isTemporalRegister()) {
     Register AVLReg = Info.getAVLReg();
     assert(AVLReg != RISCV::NoRegister);
@@ -953,7 +970,7 @@ void RISCVInsertVSETVLI::insertVSETVLI(
     BuildMI(MBB, InsertPt, DL, TII->get(RISCV::ORI))
         .addReg(TmpReg, RegState::Define)
         .addReg(Info.getTemporalRegister())
-        .addImm(InfoVTYPE);
+        .addImm(Info.encodeVTYPE());
     BuildMI(MBB, InsertPt, DL, TII->get(RISCV::VSETVL))
         .addReg(RISCV::X0, RegState::Define | RegState::Dead)
         .addReg(AVLReg)
@@ -961,24 +978,44 @@ void RISCVInsertVSETVLI::insertVSETVLI(
     return;
   }
 
-  // Use X0, X0 form if the AVL is the same and the SEW+LMUL gives the same
-  // VLMAX.
-  if (PrevInfo.isValid() && !PrevInfo.isUnknown() &&
-      Info.hasSameAVL(PrevInfo) && Info.hasSameVLMAX(PrevInfo)) {
-    BuildMI(MBB, InsertPt, DL, TII->get(RISCV::PseudoVSETVLIX0))
-        .addReg(RISCV::X0, RegState::Define | RegState::Dead)
-        .addReg(RISCV::X0, RegState::Kill)
-        .addImm(InfoVTYPE)
-        .addReg(RISCV::VL, RegState::Implicit)
-        .getInstr();
-    return;
+  if (PrevInfo.isValid() && !PrevInfo.isUnknown()) {
+    // Use X0, X0 form if the AVL is the same and the SEW+LMUL gives the same
+    // VLMAX.
+    if (Info.hasSameAVL(PrevInfo) && Info.hasSameVLMAX(PrevInfo)) {
+      BuildMI(MBB, InsertPt, DL, TII->get(RISCV::PseudoVSETVLIX0))
+          .addReg(RISCV::X0, RegState::Define | RegState::Dead)
+          .addReg(RISCV::X0, RegState::Kill)
+          .addImm(Info.encodeVTYPE())
+          .addReg(RISCV::VL, RegState::Implicit);
+      return;
+    }
+
+    // If our AVL is a virtual register, it might be defined by a VSET(I)VLI. If
+    // it has the same VLMAX we want and the last VL/VTYPE we observed is the
+    // same, we can use the X0, X0 form.
+    if (Info.hasSameVLMAX(PrevInfo) && Info.hasAVLReg() &&
+        Info.getAVLReg().isVirtual()) {
+      if (MachineInstr *DefMI = MRI->getVRegDef(Info.getAVLReg())) {
+        if (isVectorConfigInstr(*DefMI)) {
+          VSETVLIInfo DefInfo = getInfoForVSETVLI(*DefMI);
+          if (DefInfo.hasSameAVL(PrevInfo) && DefInfo.hasSameVLMAX(PrevInfo)) {
+            BuildMI(MBB, InsertPt, DL, TII->get(RISCV::PseudoVSETVLIX0))
+                .addReg(RISCV::X0, RegState::Define | RegState::Dead)
+                .addReg(RISCV::X0, RegState::Kill)
+                .addImm(Info.encodeVTYPE())
+                .addReg(RISCV::VL, RegState::Implicit);
+            return;
+          }
+        }
+      }
+    }
   }
 
   if (Info.hasAVLImm()) {
     BuildMI(MBB, InsertPt, DL, TII->get(RISCV::PseudoVSETIVLI))
         .addReg(RISCV::X0, RegState::Define | RegState::Dead)
         .addImm(Info.getAVLImm())
-        .addImm(InfoVTYPE)
+        .addImm(Info.encodeVTYPE())
         .getInstr();
     return;
   }
@@ -992,7 +1029,7 @@ void RISCVInsertVSETVLI::insertVSETVLI(
       BuildMI(MBB, InsertPt, DL, TII->get(RISCV::PseudoVSETVLIX0))
           .addReg(RISCV::X0, RegState::Define | RegState::Dead)
           .addReg(RISCV::X0, RegState::Kill)
-          .addImm(InfoVTYPE)
+          .addImm(Info.encodeVTYPE())
           .addReg(RISCV::VL, RegState::Implicit)
           .getInstr();
       return;
@@ -1001,7 +1038,7 @@ void RISCVInsertVSETVLI::insertVSETVLI(
     BuildMI(MBB, InsertPt, DL, TII->get(RISCV::PseudoVSETIVLI))
         .addReg(RISCV::X0, RegState::Define | RegState::Dead)
         .addImm(0)
-        .addImm(InfoVTYPE)
+        .addImm(Info.encodeVTYPE())
         .getInstr();
     return;
   }
@@ -1021,27 +1058,8 @@ void RISCVInsertVSETVLI::insertVSETVLI(
   BuildMI(MBB, InsertPt, DL, TII->get(Opcode))
       .addReg(DestReg, RegState::Define | RegState::Dead)
       .addReg(AVLReg)
-      .addImm(InfoVTYPE)
+      .addImm(Info.encodeVTYPE())
       .getInstr();
-}
-
-// Return a VSETVLIInfo representing the changes made by this VSETVLI or
-// VSETIVLI instruction.
-static VSETVLIInfo getInfoForVSETVLI(const MachineInstr &MI) {
-  VSETVLIInfo NewInfo;
-  if (MI.getOpcode() == RISCV::PseudoVSETIVLI) {
-    NewInfo.setAVLImm(MI.getOperand(1).getImm());
-  } else {
-    assert(MI.getOpcode() == RISCV::PseudoVSETVLI ||
-           MI.getOpcode() == RISCV::PseudoVSETVLIX0);
-    Register AVLReg = MI.getOperand(1).getReg();
-    assert((AVLReg != RISCV::X0 || MI.getOperand(0).getReg() != RISCV::X0) &&
-           "Can't handle X0, X0 vsetvli yet");
-    NewInfo.setAVLReg(AVLReg);
-  }
-  NewInfo.setVTYPE(MI.getOperand(2).getImm());
-
-  return NewInfo;
 }
 
 void RISCVInsertVSETVLI::forwardPropagateAVL(MachineBasicBlock &MBB) {
