@@ -537,6 +537,18 @@ enum _reduction_method {
   empty_reduce_block = (4 << 8)
 };
 
+typedef enum omp_role{
+	OMP_ROLE_NONE = 0,
+	OMP_ROLE_FREE_AGENT = 1 << 0,
+	OMP_ROLE_COMMUNICATOR = 1 << 1
+} omp_role_t;
+
+typedef enum fa_clause{
+    FREE_AGENT_CLAUSE_UNSET = 0,
+    FREE_AGENT_CLAUSE_FALSE = 1,
+    FREE_AGENT_CLAUSE_TRUE = 2,
+} fa_clause_t;
+
 // Description of the packed_reduction_method variable:
 // The packed_reduction_method variable consists of two enum types variables
 // that are packed together into 0-th byte and 1-st byte:
@@ -2198,6 +2210,7 @@ typedef struct kmp_desc_base {
   kmp_thread_t ds_thread;
   volatile int ds_tid;
   int ds_gtid;
+  int ds_thread_id; //Global thread id from 0 to n-1. For role purposes.
 #if KMP_OS_WINDOWS
   volatile int ds_alive;
   DWORD ds_thread_id;
@@ -2468,14 +2481,8 @@ typedef struct kmp_task_affinity_info {
   } flags;
 } kmp_task_affinity_info_t;
 
-typedef enum kmp_event_type_t {
-  KMP_EVENT_UNINITIALIZED = 0,
-  KMP_EVENT_ALLOW_COMPLETION = 1
-} kmp_event_type_t;
-
 typedef struct {
-  kmp_event_type_t type;
-  kmp_tas_lock_t lock;
+  kmp_uint32 pending_events_count;
   union {
     kmp_task_t *task;
   } ed;
@@ -2512,7 +2519,11 @@ typedef struct kmp_tasking_flags { /* Total struct must be exactly 32 bits */
                                       setting for the task */
   unsigned detachable : 1; /* 1 == can detach */
   unsigned hidden_helper : 1; /* 1 == hidden helper task */
-  unsigned reserved : 8; /* reserved for compiler use */
+  unsigned free_agent : 2; /* 0 == unset in the task construct
+                            * 1 == cannot be executed by free agent 
+                            * 2 == can be executed by free agent
+                            * 3 == not used by now */
+  unsigned reserved : 6; /* reserved for compiler use */
 
   /* Library flags */ /* Total library flags must be 16 bits */
   unsigned tasktype : 1; /* task is either explicit(1) or implicit (0) */
@@ -2650,6 +2661,9 @@ typedef struct kmp_base_task_team {
 
   KMP_ALIGN_CACHE
   std::atomic<kmp_int32> tt_unfinished_threads; /* #threads still active */
+
+  KMP_ALIGN_CACHE
+  std::atomic<kmp_int32> tt_unfinished_free_agents; /* #free agent threads still active */
 
   KMP_ALIGN_CACHE
   volatile kmp_uint32
@@ -2852,7 +2866,23 @@ typedef struct KMP_ALIGN_CACHE kmp_base_info {
 #if KMP_OS_UNIX
   std::atomic<bool> th_blocking;
 #endif
-  kmp_cg_root_t *th_cg_roots; // list of cg_roots associated with this thread
+  kmp_cg_root_t *th_cg_roots; //List of cg_roots associated with this thread
+  
+  kmp_info_p* th_next_free_agent; //Pointer to the next free agent in the free agents list
+
+  omp_role_t th_potential_roles; //Enum with all the roles this thread can have
+  std::atomic<omp_role_t> th_active_role; //Current role of this thread
+  omp_role_t th_pending_role;
+  std::atomic<bool> th_change_role; //Indicates the thread to change the role to th_pending_role ASAP
+  kmp_taskdata_t *th_next_task; // Implicit task when shifting from FA to worker.
+
+  // List of teams we can enter as a free agent thread
+  kmp_bootstrap_lock_t allowed_teams_lock;
+  int allowed_teams_capacity;
+  int allowed_teams_length;
+  kmp_task_team_t** allowed_teams;
+  int victim_tid; //Id of the owner thread of the last stolen task
+
 } kmp_base_info_t;
 
 typedef union KMP_ALIGN_CACHE kmp_info {
@@ -3363,9 +3393,24 @@ extern volatile int __kmp_all_nth;
 extern std::atomic<int> __kmp_thread_pool_active_nth;
 
 extern kmp_root_t **__kmp_root; /* root of thread hierarchy */
-/* end data protected by fork/join lock */
-/* ------------------------------------------------------------------------- */
 
+extern volatile kmp_info_t *__kmp_free_agent_list; /*First element of the free agent
+thread list. Next element is pointed by the thread itself */
+extern kmp_info_t *__kmp_free_agent_list_insert_pt;
+/* end data protected by fork/join lock */
+extern int __kmp_free_agent_num_threads; /*Max number of free agents allowed. Initialized with
+env variable KMP_FREE_AGENT_NUM_THREADS */
+extern std::atomic<int> __kmp_free_agent_active_nth; //Actual number of free agents active
+extern int __kmp_free_agent_clause_dflt; //Value obtained from env variable KMP_FREE_AGENT_DEFAULT_CLAUSE
+/* -------------------------------------------------------------------------- */
+/* Global list of allowed teams for the free agent threads. All elements are  */
+/* read/write protected. Active free agents have a copy of this list in       */
+/* their on structure. This should keep the contention low on the global lock */
+extern kmp_bootstrap_lock_t __kmp_free_agent_allowed_teams_lock;
+extern int __kmp_free_agent_allowed_teams_capacity;
+extern int __kmp_free_agent_allowed_teams_length;
+extern kmp_task_team_t** __kmp_free_agent_allowed_teams;
+/* -------------------------------------------------------------------------- */
 #define __kmp_get_gtid() __kmp_get_global_thread_id()
 #define __kmp_entry_gtid() __kmp_get_global_thread_id_reg()
 #define __kmp_get_tid() (__kmp_tid_from_gtid(__kmp_get_gtid()))
@@ -3775,7 +3820,7 @@ extern void __kmp_suspend_initialize_thread(kmp_info_t *th);
 extern void __kmp_suspend_uninitialize_thread(kmp_info_t *th);
 
 extern kmp_info_t *__kmp_allocate_thread(kmp_root_t *root, kmp_team_t *team,
-                                         int tid);
+                                         int tid, omp_role_t role);
 extern kmp_team_t *
 __kmp_allocate_team(kmp_root_t *root, int new_nproc, int max_nproc,
 #if OMPT_SUPPORT
@@ -3917,6 +3962,29 @@ extern int __kmp_invoke_microtask(microtask_t pkfn, int gtid, int npr, int argc,
 );
 
 /* ------------------------------------------------------------------------ */
+//
+// Polling service API
+//
+typedef int (*nanos6_polling_service_t)(void *data);
+KMP_EXPORT void nanos6_register_polling_service(char const *name,
+                                                nanos6_polling_service_t service,
+                                                void *data);
+KMP_EXPORT void nanos6_unregister_polling_service(char const *name,
+                                                  nanos6_polling_service_t service,
+                                                  void *data);
+
+/* Events API */
+KMP_EXPORT void *nanos6_get_current_event_counter();
+KMP_EXPORT void nanos6_increase_current_task_event_counter(void *event_counter,
+                                                           unsigned int increment);
+KMP_EXPORT void nanos6_decrease_task_event_counter(void *event_counter,
+                                                   unsigned int decrement);
+KMP_EXPORT void nanos6_notify_task_event_counter_api();
+
+/* ------------------------------------------------------------------------ */
+
+
+
 
 KMP_EXPORT void __kmpc_begin(ident_t *, kmp_int32 flags);
 KMP_EXPORT void __kmpc_end(ident_t *);
@@ -3992,6 +4060,10 @@ KMP_EXPORT void __kmpc_copyprivate(ident_t *loc, kmp_int32 global_tid,
 
 KMP_EXPORT void *__kmpc_copyprivate_light(ident_t *loc, kmp_int32 gtid,
                                           void *cpy_data);
+
+KMP_EXPORT void __kmp_enable_tasking_in_serial_mode(
+  ident_t *loc_ref, kmp_int32 gtid,
+  bool proxy, bool detachable, bool hidden_helper);
 
 extern void KMPC_SET_NUM_THREADS(int arg);
 extern void KMPC_SET_DYNAMIC(int flag);
@@ -4338,6 +4410,26 @@ typedef enum kmp_severity_t {
 } kmp_severity_t;
 extern void __kmpc_error(ident_t *loc, int severity, const char *message);
 
+//Role-shifting threads APIs
+extern int __kmp_get_num_threads_role(omp_role_t r); //returns how many threads have the role r
+extern int __kmp_get_thread_roles(int tid, omp_role_t *r); //returns the number of roles of the thread with thread_id==tid,
+  														   //and r holds the actual potential roles of the thread.
+extern void __kmp_set_thread_roles1(int how_many, omp_role_t r); //Gives the roles r to how_many threads, if possible. 
+																 //It overrides the previous roles of the threads.
+extern void __kmp_set_thread_roles2(int tid, omp_role_t r); //Gives the roles r to the thread with thread_id==tid.
+															//It overrides the previous roles of the thread.
+extern int __kmp_get_thread_id(); //Returns the (global) thread id of the calling thread. Doesn't correspond to the gtid of the runtime.
+
+void __kmp_copy_global_allowed_teams_to_thread(kmp_info_t *this_thr);
+void __kmp_realloc_global_allowed_task_team();
+void __kmp_add_global_allowed_task_team(kmp_task_team_t *task_team);
+void __kmp_remove_global_allowed_task_team(kmp_task_team_t *task_team);
+void __kmp_realloc_thread_allowed_task_team(kmp_info_t *this_thr, int capacity, int copy);
+void __kmp_add_allowed_task_team(kmp_info_t *free_agent,
+                                 kmp_task_team_t *task_team);
+void __kmp_remove_allowed_task_team(kmp_info_t *free_agent,
+                                    kmp_task_team_t *task_team);
+
 // Support for scope directive
 KMP_EXPORT void __kmpc_scope(ident_t *loc, kmp_int32 gtid, void *reserved);
 KMP_EXPORT void __kmpc_end_scope(ident_t *loc, kmp_int32 gtid, void *reserved);
@@ -4585,5 +4677,66 @@ template <typename T1, typename T2>
 static inline void __kmp_type_convert(T1 src, T2 *dest) {
   *dest = kmp_convert<T1, T2>::to(src);
 }
+#if KMP_ARCH_X86 || KMP_ARCH_X86_64
+// Propagate any changes to the floating point control registers out to the team
+// We try to avoid unnecessary writes to the relevant cache line in the team
+// structure, so we don't make changes unless they are needed.
+inline static void propagateFPControl(kmp_team_t *team) {
+  if (__kmp_inherit_fp_control) {
+    kmp_int16 x87_fpu_control_word;
+    kmp_uint32 mxcsr;
+
+    // Get primary thread's values of FPU control flags (both X87 and vector)
+    __kmp_store_x87_fpu_control_word(&x87_fpu_control_word);
+    __kmp_store_mxcsr(&mxcsr);
+    mxcsr &= KMP_X86_MXCSR_MASK;
+
+    // There is no point looking at t_fp_control_saved here.
+    // If it is TRUE, we still have to update the values if they are different
+    // from those we now have. If it is FALSE we didn't save anything yet, but
+    // our objective is the same. We have to ensure that the values in the team
+    // are the same as those we have.
+    // So, this code achieves what we need whether or not t_fp_control_saved is
+    // true. By checking whether the value needs updating we avoid unnecessary
+    // writes that would put the cache-line into a written state, causing all
+    // threads in the team to have to read it again.
+    KMP_CHECK_UPDATE(team->t.t_x87_fpu_control_word, x87_fpu_control_word);
+    KMP_CHECK_UPDATE(team->t.t_mxcsr, mxcsr);
+    // Although we don't use this value, other code in the runtime wants to know
+    // whether it should restore them. So we must ensure it is correct.
+    KMP_CHECK_UPDATE(team->t.t_fp_control_saved, TRUE);
+  } else {
+    // Similarly here. Don't write to this cache-line in the team structure
+    // unless we have to.
+    KMP_CHECK_UPDATE(team->t.t_fp_control_saved, FALSE);
+  }
+}
+
+// Do the opposite, setting the hardware registers to the updated values from
+// the team.
+inline static void updateHWFPControl(kmp_team_t *team) {
+  if (__kmp_inherit_fp_control && team->t.t_fp_control_saved) {
+    // Only reset the fp control regs if they have been changed in the team.
+    // the parallel region that we are exiting.
+    kmp_int16 x87_fpu_control_word;
+    kmp_uint32 mxcsr;
+    __kmp_store_x87_fpu_control_word(&x87_fpu_control_word);
+    __kmp_store_mxcsr(&mxcsr);
+    mxcsr &= KMP_X86_MXCSR_MASK;
+
+    if (team->t.t_x87_fpu_control_word != x87_fpu_control_word) {
+      __kmp_clear_x87_fpu_status_word();
+      __kmp_load_x87_fpu_control_word(&team->t.t_x87_fpu_control_word);
+    }
+
+    if (team->t.t_mxcsr != mxcsr) {
+      __kmp_load_mxcsr(&team->t.t_mxcsr);
+    }
+  }
+}
+#else
+#define propagateFPControl(x) ((void)0)
+#define updateHWFPControl(x) ((void)0)
+#endif /* KMP_ARCH_X86 || KMP_ARCH_X86_64 */
 
 #endif /* KMP_H */

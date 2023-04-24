@@ -3204,6 +3204,7 @@ OMPClause *Parser::ParseOpenMPClause(OpenMPDirectiveKind DKind,
   case OMPC_novariants:
   case OMPC_nocontext:
   case OMPC_filter:
+  case OMPC_free_agent:
   case OMPC_partial:
   case OMPC_align:
   case OMPC_message:
@@ -3539,6 +3540,9 @@ OMPClause *Parser::ParseOpenMPSimdlen(OpenMPClauseKind Kind, bool ParseOnly) {
 ///
 ///    detach-clause:
 ///      'detach' '(' event-handler-expression ')'
+///
+///    free_agent-clause:
+///      'free_agent' '(' expression ')'
 ///
 ///    align-clause
 ///      'align' '(' positive-integer-constant ')'

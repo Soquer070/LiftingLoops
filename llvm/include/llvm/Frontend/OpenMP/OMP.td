@@ -430,6 +430,10 @@ def OMPC_Filter : Clause<"filter"> {
   let clangClass = "OMPFilterClause";
   let flangClass = "ScalarIntExpr";
 }
+def OMPC_FreeAgent : Clause<"free_agent"> {
+    let clangClass = "OMPFreeAgentClause";
+    let flangClass = "ScalarLogicalExpr";
+}
 def OMPC_Align : Clause<"align"> {
   let clangClass = "OMPAlignClause";
 }
@@ -482,7 +486,8 @@ def OMP_Task : Directive<"task"> {
     VersionedClause<OMPC_Default>,
     VersionedClause<OMPC_If>,
     VersionedClause<OMPC_Final>,
-    VersionedClause<OMPC_Priority>
+    VersionedClause<OMPC_Priority>,
+    VersionedClause<OMPC_FreeAgent>
   ];
 }
 def OMP_Simd : Directive<"simd"> {
@@ -1038,6 +1043,7 @@ def OMP_TaskLoop : Directive<"taskloop"> {
     VersionedClause<OMPC_Collapse>,
     VersionedClause<OMPC_Final>,
     VersionedClause<OMPC_Priority>,
+    VersionedClause<OMPC_FreeAgent>,
   ];
   let allowedExclusiveClauses = [
     VersionedClause<OMPC_GrainSize>,
@@ -1068,6 +1074,7 @@ def OMP_TaskLoopSimd : Directive<"taskloop simd"> {
     VersionedClause<OMPC_SimdLen>,
     VersionedClause<OMPC_Final>,
     VersionedClause<OMPC_Priority>,
+    VersionedClause<OMPC_FreeAgent>,
     VersionedClause<OMPC_Order, 50>
   ];
   let allowedExclusiveClauses = [
@@ -1717,6 +1724,7 @@ def OMP_MasterTaskloop : Directive<"master taskloop"> {
     VersionedClause<OMPC_Untied>,
     VersionedClause<OMPC_Mergeable>,
     VersionedClause<OMPC_Priority>,
+    VersionedClause<OMPC_FreeAgent>,
     VersionedClause<OMPC_GrainSize>,
     VersionedClause<OMPC_NoGroup>,
     VersionedClause<OMPC_NumTasks>,
@@ -1761,6 +1769,7 @@ def OMP_ParallelMasterTaskloop :
     VersionedClause<OMPC_Untied>,
     VersionedClause<OMPC_Mergeable>,
     VersionedClause<OMPC_Priority>,
+    VersionedClause<OMPC_FreeAgent>,
     VersionedClause<OMPC_GrainSize>,
     VersionedClause<OMPC_NoGroup>,
     VersionedClause<OMPC_NumTasks>,
@@ -1809,6 +1818,7 @@ def OMP_MasterTaskloopSimd : Directive<"master taskloop simd"> {
     VersionedClause<OMPC_Untied>,
     VersionedClause<OMPC_Mergeable>,
     VersionedClause<OMPC_Priority>,
+    VersionedClause<OMPC_FreeAgent>,
     VersionedClause<OMPC_Linear>,
     VersionedClause<OMPC_Aligned>,
     VersionedClause<OMPC_SafeLen>,
@@ -1865,6 +1875,7 @@ def OMP_ParallelMasterTaskloopSimd :
     VersionedClause<OMPC_Untied>,
     VersionedClause<OMPC_Mergeable>,
     VersionedClause<OMPC_Priority>,
+    VersionedClause<OMPC_FreeAgent>,
     VersionedClause<OMPC_GrainSize>,
     VersionedClause<OMPC_NoGroup>,
     VersionedClause<OMPC_NumTasks>,

@@ -355,6 +355,20 @@ static void __ompt_implicit_task_end(kmp_info_t *this_thr,
 }
 #endif
 
+static void kmp_compact_allowed_teams(kmp_info_t *this_thr) {
+  __kmp_acquire_bootstrap_lock(&this_thr->th.allowed_teams_lock);
+  int new_allowed_teams_length = 0;
+  kmp_task_team_t** allowed_teams = this_thr->th.allowed_teams;
+  for (int i = 0; i < this_thr->th.allowed_teams_length; i++) {
+    kmp_task_team_t *task_team = allowed_teams[i];
+    // Keep only alive task_teams
+    if (task_team != NULL)
+      allowed_teams[new_allowed_teams_length++] = task_team;
+  }
+  this_thr->th.allowed_teams_length = new_allowed_teams_length;
+  __kmp_release_bootstrap_lock(&this_thr->th.allowed_teams_lock);
+}
+
 /* Spin wait loop that first does pause/yield, then sleep. A thread that calls
    __kmp_wait_*  must make certain that another thread calls __kmp_release
    to wake it back up to prevent deadlocks!
@@ -379,9 +393,35 @@ __kmp_wait_template(kmp_info_t *this_thr,
 #endif
   kmp_uint64 time;
 
+  __kmp_suspend_initialize_thread(this_thr);
   KMP_FSYNC_SPIN_INIT(spin, NULL);
   if (flag->done_check()) {
     KMP_FSYNC_SPIN_ACQUIRED(CCAST(void *, spin));
+    __kmp_lock_suspend_mx(this_thr);
+    if(this_thr->th.th_change_role){
+    	omp_role_t prv_role = KMP_ATOMIC_LD_RLX(&this_thr->th.th_active_role);
+    	omp_role_t nxt_role = this_thr->th.th_pending_role;
+    	if(prv_role == OMP_ROLE_FREE_AGENT && nxt_role == OMP_ROLE_NONE){
+    	    this_thr->th.th_current_task = this_thr->th.th_next_task;
+    	    this_thr->th.th_next_task = NULL;
+    	}
+    	KMP_ATOMIC_ST_RLX(&this_thr->th.th_change_role, false);
+    	KMP_ATOMIC_ST_RLX(&this_thr->th.th_active_role, nxt_role);
+        __kmp_unlock_suspend_mx(this_thr);
+#if OMPT_SUPPORT
+		ompt_data_t *thread_data = nullptr;
+		if(ompt_enabled.enabled){
+			thread_data = &(this_thr->th.ompt_thread_info.thread_data);
+			if(ompt_enabled.ompt_callback_thread_role_shift){
+				//thread_data, prior_thread_role, next_thread_role
+				ompt_callbacks.ompt_callback(ompt_callback_thread_role_shift)(
+						thread_data, (ompt_role_t)prv_role, (ompt_role_t)nxt_role);
+			}
+		}
+#endif
+    }
+    else
+      __kmp_unlock_suspend_mx(this_thr);
     return false;
   }
   th_gtid = this_thr->th.th_info.ds.ds_gtid;
@@ -453,7 +493,8 @@ final_spin=FALSE)
 #if OMPT_SUPPORT
   ompt_state_t ompt_entry_state;
   ompt_data_t *tId;
-  if (ompt_enabled.enabled) {
+  if (ompt_enabled.enabled
+      && this_thr->th.th_active_role != OMP_ROLE_FREE_AGENT) {
     ompt_entry_state = this_thr->th.ompt_thread_info.state;
     if (!final_spin || ompt_entry_state != ompt_state_wait_barrier_implicit ||
         KMP_MASTER_TID(this_thr->th.th_info.ds.ds_tid)) {
@@ -521,9 +562,36 @@ final_spin=FALSE)
 
   KMP_MB();
 
+
   // Main wait spin loop
   while (flag->notdone_check()) {
     kmp_task_team_t *task_team = NULL;
+    __kmp_lock_suspend_mx(this_thr);
+    if(this_thr->th.th_change_role){
+    	omp_role_t prv_role = KMP_ATOMIC_LD_RLX(&this_thr->th.th_active_role);
+    	omp_role_t nxt_role = this_thr->th.th_pending_role;
+    	if(prv_role == OMP_ROLE_FREE_AGENT && nxt_role == OMP_ROLE_NONE){
+    	    this_thr->th.th_current_task = this_thr->th.th_next_task;
+    	    this_thr->th.th_next_task = NULL;
+    	}
+    	KMP_ATOMIC_ST_RLX(&this_thr->th.th_change_role, false);
+    	KMP_ATOMIC_ST_RLX(&this_thr->th.th_active_role, nxt_role);
+        __kmp_unlock_suspend_mx(this_thr);
+#if OMPT_SUPPORT
+		ompt_data_t *thread_data = nullptr;
+		if(ompt_enabled.enabled){
+			thread_data = &(this_thr->th.ompt_thread_info.thread_data);
+			
+			if(ompt_enabled.ompt_callback_thread_role_shift){
+				//thread_data, prior_thread_role, next_thread_role
+				ompt_callbacks.ompt_callback(ompt_callback_thread_role_shift)(
+						thread_data, (ompt_role_t)prv_role, (ompt_role_t)nxt_role);
+			}
+		}
+#endif
+    	continue;
+    }
+    __kmp_unlock_suspend_mx(this_thr);
     if (__kmp_tasking_mode != tskm_immediate_exec) {
       task_team = this_thr->th.th_task_team;
       /* If the thread's task team pointer is NULL, it means one of 3 things:
@@ -533,28 +601,95 @@ final_spin=FALSE)
          3) Tasking is off for this region.  This could be because we are in a
          serialized region (perhaps the outer one), or else tasking was manually
          disabled (KMP_TASKING=0).  */
-      if (task_team != NULL) {
-        if (TCR_SYNC_4(task_team->tt.tt_active)) {
-          if (KMP_TASKING_ENABLED(task_team)) {
-            flag->execute_tasks(
+      if (this_thr->th.th_active_role == OMP_ROLE_FREE_AGENT
+      		&& !KMP_ATOMIC_LD_ACQ(&this_thr->th.th_change_role)) {
+        this_thr->th.th_reap_state = KMP_NOT_SAFE_TO_REAP;
+        int empty_task_teams_cnt = 0;
+        int team_task_to_pick = 0;
+        while (team_task_to_pick < this_thr->th.allowed_teams_length &&
+                this_thr->th.th_active_role == OMP_ROLE_FREE_AGENT &&
+                !KMP_ATOMIC_LD_ACQ(&this_thr->th.th_change_role)){
+          __kmp_acquire_bootstrap_lock(&this_thr->th.allowed_teams_lock);
+          task_team = this_thr->th.allowed_teams[team_task_to_pick];
+          if (task_team == NULL) {
+            // task_team marked as dead, skip
+            empty_task_teams_cnt++;
+            __kmp_release_bootstrap_lock(&this_thr->th.allowed_teams_lock);
+          } else if (KMP_TASKING_ENABLED(task_team) && TCR_SYNC_4(task_team->tt.tt_active)) {
+            this_thr->th.th_task_team = task_team;
+            // FIXME - Why we need this :(
+            // x86 needs this?
+            updateHWFPControl(
+                task_team->tt.tt_threads_data[0].td.td_thr->th.th_team);
+
+            std::atomic<kmp_int32> *unfinished_free_agents;
+            unfinished_free_agents = &(task_team->tt.tt_unfinished_free_agents);
+            /* kmp_int32 count = */ KMP_ATOMIC_INC(unfinished_free_agents);
+
+            // Take the lock and release the list
+            __kmp_release_bootstrap_lock(&this_thr->th.allowed_teams_lock);
+
+            /*int ret =*/ flag->execute_tasks(
                 this_thr, th_gtid, final_spin,
                 &tasks_completed USE_ITT_BUILD_ARG(itt_sync_obj), 0);
-          } else
+
+            // TODO: execute_tasks does not return if task was executed
+            //
+            // empty_task_teams_cnt += !ret;
+            empty_task_teams_cnt += 1;
+
+            /* kmp_int32 count = */KMP_ATOMIC_DEC(unfinished_free_agents);
+            this_thr->th.th_task_team = NULL;
             this_thr->th.th_reap_state = KMP_SAFE_TO_REAP;
-        } else {
-          KMP_DEBUG_ASSERT(!KMP_MASTER_TID(this_thr->th.th_info.ds.ds_tid));
-#if OMPT_SUPPORT
-          // task-team is done now, other cases should be catched above
-          if (final_spin && ompt_enabled.enabled)
-            __ompt_implicit_task_end(this_thr, ompt_entry_state, tId);
-#endif
-          this_thr->th.th_task_team = NULL;
-          this_thr->th.th_reap_state = KMP_SAFE_TO_REAP;
-        }
-      } else {
+          } else {
+            // If tasking is not enabled for this task team,
+            // there is no point in entering it to execute tasks.
+            // Also skip inactive task teams.
+            empty_task_teams_cnt += 1;
+            __kmp_release_bootstrap_lock(&this_thr->th.allowed_teams_lock);
+          }
+
+          team_task_to_pick++;
+          if (empty_task_teams_cnt == this_thr->th.allowed_teams_length) {
+            // Not able to execute any task.
+            kmp_compact_allowed_teams(this_thr);
+            break;
+          }
+          // Processed all task teams, keep going since
+          // we have not executed the break of above
+          if (team_task_to_pick == this_thr->th.allowed_teams_length) {
+            team_task_to_pick = 0;
+            empty_task_teams_cnt = 0;
+          }
+        } //while (team_task_to_pick < this_thr->th.allowed_teams_length);
+        // Reset task_team to 0 to make free agent thread able to suspend
+        task_team = NULL;
         this_thr->th.th_reap_state = KMP_SAFE_TO_REAP;
+      } else if (KMP_ATOMIC_LD_RLX(&this_thr->th.th_active_role) != OMP_ROLE_FREE_AGENT &&
+                 !KMP_ATOMIC_LD_RLX(&this_thr->th.th_change_role) ) {
+        if (task_team != NULL) {
+          if (TCR_SYNC_4(task_team->tt.tt_active)) {
+            if (KMP_TASKING_ENABLED(task_team)) {
+              flag->execute_tasks(
+                  this_thr, th_gtid, final_spin,
+                  &tasks_completed USE_ITT_BUILD_ARG(itt_sync_obj), 0);
+            } else
+              this_thr->th.th_reap_state = KMP_SAFE_TO_REAP;
+          } else {
+            KMP_DEBUG_ASSERT(!KMP_MASTER_TID(this_thr->th.th_info.ds.ds_tid));
+#if OMPT_SUPPORT
+            // task-team is done now, other cases should be catched above
+            if (final_spin && ompt_enabled.enabled)
+              __ompt_implicit_task_end(this_thr, ompt_entry_state, tId);
+#endif
+            this_thr->th.th_task_team = NULL;
+            this_thr->th.th_reap_state = KMP_SAFE_TO_REAP;
+          }
+        } else {
+          this_thr->th.th_reap_state = KMP_SAFE_TO_REAP;
+        } // if
       } // if
-    } // if
+    }
 
     KMP_FSYNC_SPIN_PREPARE(CCAST(void *, spin));
     if (TCR_4(__kmp_global.g.g_done)) {
@@ -637,7 +772,63 @@ final_spin=FALSE)
       if (final_spin)
         KMP_ATOMIC_ST_REL(&this_thr->th.th_blocking, false);
 #endif
-      flag->suspend(th_gtid);
+      __kmp_lock_suspend_mx(this_thr);
+      if(this_thr->th.th_change_role && this_thr->th.th_pending_role == OMP_ROLE_FREE_AGENT){
+    	    omp_role_t prv_role = KMP_ATOMIC_LD_RLX(&this_thr->th.th_active_role);
+    		omp_role_t nxt_role =  this_thr->th.th_pending_role;
+    	    if(prv_role == OMP_ROLE_FREE_AGENT && nxt_role == OMP_ROLE_NONE){
+    	        this_thr->th.th_current_task = this_thr->th.th_next_task;
+        	    this_thr->th.th_next_task = NULL;
+        	}
+    		KMP_ATOMIC_ST_RLX(&this_thr->th.th_change_role, false);
+    		KMP_ATOMIC_ST_RLX(&this_thr->th.th_active_role, nxt_role);
+            __kmp_unlock_suspend_mx(this_thr);
+#if OMPT_SUPPORT
+			ompt_data_t *thread_data = nullptr;
+			if(ompt_enabled.enabled){
+				thread_data = &(this_thr->th.ompt_thread_info.thread_data);
+			
+				if(ompt_enabled.ompt_callback_thread_role_shift){
+					//thread_data, prior_thread_role, next_thread_role
+					ompt_callbacks.ompt_callback(ompt_callback_thread_role_shift)(
+							thread_data, (ompt_role_t)prv_role, (ompt_role_t)nxt_role);
+				}
+			}
+#endif
+      }
+      else{
+          __kmp_unlock_suspend_mx(this_thr);
+          flag->suspend(th_gtid);
+      }
+    	//TODO:A worker may change its role here too!
+    	//Check if the master requested this thread to change its role while suspended
+    	__kmp_lock_suspend_mx(this_thr);
+    	if(this_thr->th.th_change_role){
+    	    omp_role_t prv_role = KMP_ATOMIC_LD_RLX(&this_thr->th.th_active_role);
+    		omp_role_t nxt_role =  this_thr->th.th_pending_role;
+    	    if(prv_role == OMP_ROLE_FREE_AGENT && nxt_role == OMP_ROLE_NONE){
+    	        this_thr->th.th_current_task = this_thr->th.th_next_task;
+        	    this_thr->th.th_next_task = NULL;
+        	}
+    		KMP_ATOMIC_ST_RLX(&this_thr->th.th_change_role, false);
+    		KMP_ATOMIC_ST_RLX(&this_thr->th.th_active_role, nxt_role);
+            __kmp_unlock_suspend_mx(this_thr);
+#if OMPT_SUPPORT
+			ompt_data_t *thread_data = nullptr;
+			if(ompt_enabled.enabled){
+				thread_data = &(this_thr->th.ompt_thread_info.thread_data);
+			
+				if(ompt_enabled.ompt_callback_thread_role_shift){
+					//thread_data, prior_thread_role, next_thread_role
+					ompt_callbacks.ompt_callback(ompt_callback_thread_role_shift)(
+							thread_data, (ompt_role_t)prv_role, (ompt_role_t)nxt_role);
+				}
+			}
+#endif
+    	}
+    	else{
+        	__kmp_unlock_suspend_mx(this_thr);
+        }
 #if KMP_OS_UNIX
       if (final_spin)
         KMP_ATOMIC_ST_REL(&this_thr->th.th_blocking, true);
@@ -656,6 +847,31 @@ final_spin=FALSE)
     }
     // TODO: If thread is done with work and times out, disband/free
   }
+  __kmp_lock_suspend_mx(this_thr);
+  if(this_thr->th.th_change_role){
+    omp_role_t prv_role = KMP_ATOMIC_LD_RLX(&this_thr->th.th_active_role);
+    omp_role_t nxt_role = this_thr->th.th_pending_role;
+    if(prv_role == OMP_ROLE_FREE_AGENT && nxt_role == OMP_ROLE_NONE){
+        this_thr->th.th_current_task = this_thr->th.th_next_task;
+        this_thr->th.th_next_task = NULL;
+    }
+    KMP_ATOMIC_ST_RLX(&this_thr->th.th_change_role, false);
+    KMP_ATOMIC_ST_RLX(&this_thr->th.th_active_role, nxt_role);
+    __kmp_unlock_suspend_mx(this_thr);
+#if OMPT_SUPPORT
+	ompt_data_t *thread_data = nullptr;
+	if(ompt_enabled.enabled){
+		thread_data = &(this_thr->th.ompt_thread_info.thread_data);
+		if(ompt_enabled.ompt_callback_thread_role_shift){
+			//thread_data, prior_thread_role, next_thread_role
+			ompt_callbacks.ompt_callback(ompt_callback_thread_role_shift)(
+					thread_data, (ompt_role_t)prv_role, (ompt_role_t)nxt_role);
+		}
+	}
+#endif
+  }
+  else
+    __kmp_unlock_suspend_mx(this_thr);
 
 #if OMPT_SUPPORT
   ompt_state_t ompt_exit_state = this_thr->th.ompt_thread_info.state;
@@ -694,6 +910,7 @@ final_spin=FALSE)
         kmp_task_team_t *task_team = this_thr->th.th_task_team;
         std::atomic<kmp_int32> *unfinished_threads =
             &(task_team->tt.tt_unfinished_threads);
+        KMP_DEBUG_ASSERT(*unfinished_threads >= 0);
         KMP_ATOMIC_INC(unfinished_threads);
       }
       return true;

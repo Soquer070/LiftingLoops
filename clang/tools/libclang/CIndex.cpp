@@ -2707,6 +2707,12 @@ void OMPClauseEnqueue::VisitOMPAffinityClause(const OMPAffinityClause *C) {
   for (const Expr *E : C->varlists())
     Visitor->AddStmt(E);
 }
+
+void OMPClauseEnqueue::VisitOMPFreeAgentClause(const OMPFreeAgentClause *C) {
+    VisitOMPClauseWithPreInit(C);
+    Visitor->AddStmt(C->getFreeAgent());
+}
+
 void OMPClauseEnqueue::VisitOMPBindClause(const OMPBindClause *C) {}
 void OMPClauseEnqueue::VisitOMPXDynCGroupMemClause(
     const OMPXDynCGroupMemClause *C) {

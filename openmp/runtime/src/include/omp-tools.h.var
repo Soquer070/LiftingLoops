@@ -152,7 +152,8 @@
     macro (ompt_callback_reduction,         ompt_callback_sync_region_t,       31) /* reduction                       */ \
                                                                                                                          \
     macro (ompt_callback_dispatch,          ompt_callback_dispatch_t,          32) /* dispatch of work                */ \
-    macro (ompt_callback_error,             ompt_callback_error_t,             37) /* error                           */
+    macro (ompt_callback_error,             ompt_callback_error_t,             37) /* error                           */ \
+    macro (ompt_callback_thread_role_shift, ompt_callback_thread_role_shift_t, 38) /* thread shifting role            */
 
 #define FOREACH_OMPT_DEVICE_EVENT(macro)                                                                                 \
     /*--- Mandatory Events ---*/                                                                                         \
@@ -249,7 +250,8 @@ typedef enum ompt_callbacks_t {
   ompt_callback_target_data_op_emi       = 34,
   ompt_callback_target_submit_emi        = 35,
   ompt_callback_target_map_emi           = 36,
-  ompt_callback_error                    = 37
+  ompt_callback_error                    = 37,
+  ompt_callback_thread_role_shift        = 38
 } ompt_callbacks_t;
 
 typedef enum ompt_record_t {
@@ -436,6 +438,12 @@ typedef enum ompt_cancel_flag_t {
   ompt_cancel_detected       = 0x20,
   ompt_cancel_discarded_task = 0x40
 } ompt_cancel_flag_t;
+
+typedef enum ompt_role_t {
+	ompt_role_none         = 0,
+	ompt_role_free_agent   = 1 << 0,
+	ompt_role_communicator = 1 << 1
+} ompt_role_t;
 
 typedef uint64_t ompt_hwid_t;
 
@@ -1138,6 +1146,12 @@ typedef void (*ompt_callback_error_t) (
   ompt_severity_t severity,
   const char *message, size_t length,
   const void *codeptr_ra
+);
+
+typedef void (*ompt_callback_thread_role_shift_t) (
+  ompt_data_t *thread_data,
+  ompt_role_t prior_role,
+  ompt_role_t next_role
 );
 
 typedef struct ompt_record_error_t {

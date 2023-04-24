@@ -2386,6 +2386,17 @@ public:
     return getSema().ActOnOpenMPAlignClause(A, StartLoc, LParenLoc, EndLoc);
   }
 
+  /// Build a new OpenMP 'free_agent' clause
+  ///
+  /// By default, performs semantic analysis to build the new OpenMP clause.
+  /// Subclasses may override this routine to provide different behavior.
+  OMPClause *RebuildOMPFreeAgentClause(Expr *FreeAgent, SourceLocation StartLoc,
+                                       SourceLocation LParenLoc,
+                                       SourceLocation EndLoc) {
+    return getSema().ActOnOpenMPFreeAgentClause(FreeAgent, StartLoc, LParenLoc,
+                                                EndLoc);
+  }
+
   /// Build a new OpenMP 'at' clause.
   ///
   /// By default, performs semantic analysis to build the new OpenMP clause.
@@ -10707,6 +10718,15 @@ OMPClause *TreeTransform<Derived>::TransformOMPXDynCGroupMemClause(
     return nullptr;
   return getDerived().RebuildOMPXDynCGroupMemClause(
       Size.get(), C->getBeginLoc(), C->getLParenLoc(), C->getEndLoc());
+}
+
+template <typename Derived>
+OMPClause *TreeTransform<Derived>::TransformOMPFreeAgentClause(OMPFreeAgentClause *C){
+    ExprResult FreeAgent = getDerived().TransformExpr(C->getFreeAgent());
+    if(FreeAgent.isInvalid())
+        return nullptr;
+    return getDerived().RebuildOMPFreeAgentClause(
+        FreeAgent.get(), C->getBeginLoc(), C->getLParenLoc(), C->getEndLoc());
 }
 
 //===----------------------------------------------------------------------===//

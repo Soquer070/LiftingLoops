@@ -6706,6 +6706,7 @@ StmtResult Sema::ActOnOpenMPExecutableDirective(
       case OMPC_num_tasks:
       case OMPC_final:
       case OMPC_priority:
+      case OMPC_free_agent:
       case OMPC_novariants:
       case OMPC_nocontext:
         // Do not analyze if no parent parallel directive.
@@ -15228,6 +15229,9 @@ OMPClause *Sema::ActOnOpenMPSingleExprClause(OpenMPClauseKind Kind, Expr *Expr,
   case OMPC_filter:
     Res = ActOnOpenMPFilterClause(Expr, StartLoc, LParenLoc, EndLoc);
     break;
+  case OMPC_free_agent:
+    Res = ActOnOpenMPFreeAgentClause(Expr, StartLoc, LParenLoc, EndLoc);
+    break;
   case OMPC_partial:
     Res = ActOnOpenMPPartialClause(Expr, StartLoc, LParenLoc, EndLoc);
     break;
@@ -16074,6 +16078,7 @@ static OpenMPDirectiveKind getOpenMPCaptureRegionForClause(
   case OMPC_num_tasks:
   case OMPC_final:
   case OMPC_priority:
+  case OMPC_free_agent:
     switch (DKind) {
     case OMPD_task:
     case OMPD_taskloop:
@@ -16742,6 +16747,7 @@ OMPClause *Sema::ActOnOpenMPSimpleClause(
   case OMPC_exclusive:
   case OMPC_uses_allocators:
   case OMPC_affinity:
+  case OMPC_free_agent:
   case OMPC_when:
   case OMPC_message:
   default:
@@ -17140,6 +17146,7 @@ OMPClause *Sema::ActOnOpenMPSingleExprWithArgClause(
   case OMPC_exclusive:
   case OMPC_uses_allocators:
   case OMPC_affinity:
+  case OMPC_free_agent:
   case OMPC_when:
   case OMPC_bind:
   default:
@@ -17398,6 +17405,7 @@ OMPClause *Sema::ActOnOpenMPClause(OpenMPClauseKind Kind,
   case OMPC_exclusive:
   case OMPC_uses_allocators:
   case OMPC_affinity:
+  case OMPC_free_agent:
   case OMPC_when:
   case OMPC_ompx_dyn_cgroup_mem:
   default:
@@ -17961,6 +17969,7 @@ OMPClause *Sema::ActOnOpenMPVarListClause(OpenMPClauseKind Kind,
   case OMPC_nocontext:
   case OMPC_detach:
   case OMPC_uses_allocators:
+  case OMPC_free_agent:
   case OMPC_when:
   case OMPC_bind:
   default:
@@ -23840,6 +23849,39 @@ OMPClause *Sema::ActOnOpenMPAffinityClause(
 
   return OMPAffinityClause::Create(Context, StartLoc, LParenLoc, ColonLoc,
                                    EndLoc, Modifier, Vars);
+}
+
+OMPClause *Sema::ActOnOpenMPFreeAgentClause(Expr *FreeAgent,
+                                            SourceLocation StartLoc,
+                                            SourceLocation LParenLoc,
+                                            SourceLocation EndLoc) {
+  Expr *ValExpr = FreeAgent;
+  Stmt *HelperValStmt = nullptr;
+  OpenMPDirectiveKind CaptureRegion = OMPD_unknown;
+
+  // The free_agent-value is a boolean expression.
+  // FIXME: Modelled after final clause.
+  if (!FreeAgent->isValueDependent() && !FreeAgent->isTypeDependent() &&
+      !FreeAgent->isInstantiationDependent() &&
+      !FreeAgent->containsUnexpandedParameterPack()) {
+    ExprResult Val = CheckBooleanCondition(StartLoc, FreeAgent);
+    if (Val.isInvalid())
+      return nullptr;
+
+    ValExpr = MakeFullExpr(Val.get()).get();
+
+    OpenMPDirectiveKind DKind = DSAStack->getCurrentDirective();
+    CaptureRegion = getOpenMPCaptureRegionForClause(DKind, OMPC_free_agent,
+                                                    LangOpts.OpenMP);
+    if (CaptureRegion != OMPD_unknown && !CurContext->isDependentContext()) {
+      ValExpr = MakeFullExpr(ValExpr).get();
+      llvm::MapVector<const Expr *, DeclRefExpr *> Captures;
+      ValExpr = tryBuildCapture(*this, ValExpr, Captures).get();
+      HelperValStmt = buildPreInits(Context, Captures);
+    }
+  }
+  return new (Context) OMPFreeAgentClause(ValExpr, HelperValStmt, CaptureRegion,
+                                          StartLoc, LParenLoc, EndLoc);
 }
 
 OMPClause *Sema::ActOnOpenMPBindClause(OpenMPBindClauseKind Kind,

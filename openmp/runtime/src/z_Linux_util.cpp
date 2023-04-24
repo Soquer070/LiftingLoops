@@ -713,7 +713,9 @@ void __kmp_create_worker(int gtid, kmp_info_t *th, size_t stack_size) {
   int status;
 
   th->th.th_info.ds.ds_gtid = gtid;
-
+	if(gtid != 0)th->th.th_info.ds.ds_thread_id = TCR_4(__kmp_init_hidden_helper_threads)
+																	 ? gtid
+																	 : gtid - __kmp_hidden_helper_threads_num;
 #if KMP_STATS_ENABLED
   // sets up worker thread stats
   __kmp_acquire_tas_lock(&__kmp_stats_lock, gtid);
@@ -1528,9 +1530,11 @@ static inline void __kmp_suspend_template(int th_gtid, C *flag) {
     if (deactivated) {
       th->th.th_active = TRUE;
       if (TCR_4(th->th.th_in_pool)) {
+        //printf("Thread %d in the thread pool\n", th_gtid);
         KMP_ATOMIC_INC(&__kmp_thread_pool_active_nth);
         th->th.th_active_in_pool = TRUE;
       }
+      //else  printf("Thread %d not in the thread pool\n", th_gtid);
     }
   }
   // We may have had the loop variable set before entering the loop body;

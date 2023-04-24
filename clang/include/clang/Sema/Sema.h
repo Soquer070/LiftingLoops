@@ -12251,6 +12251,11 @@ public:
                                             SourceLocation LParenLoc,
                                             SourceLocation EndLoc);
 
+  /// Called on well-formed 'free_agent' clause
+  OMPClause *ActOnOpenMPFreeAgentClause(Expr *FreeAgent, SourceLocation StartLoc,
+                                        SourceLocation LParenLoc,
+                                        SourceLocation EndLoc);
+
   /// The kind of conversion being performed.
   enum CheckedConversionKind {
     /// An implicit conversion.

@@ -7096,6 +7096,12 @@ void OMPClauseWriter::VisitOMPAffinityClause(OMPAffinityClause *C) {
     Record.AddStmt(E);
 }
 
+void OMPClauseWriter::VisitOMPFreeAgentClause(OMPFreeAgentClause *C) {
+    VisitOMPClauseWithPreInit(C);
+    Record.AddStmt(C->getFreeAgent());
+    Record.AddSourceLocation(C->getLParenLoc());
+}
+
 void OMPClauseWriter::VisitOMPBindClause(OMPBindClause *C) {
   Record.writeEnum(C->getBindKind());
   Record.AddSourceLocation(C->getLParenLoc());

@@ -11384,6 +11384,12 @@ void OMPClauseReader::VisitOMPFilterClause(OMPFilterClause *C) {
   C->setLParenLoc(Record.readSourceLocation());
 }
 
+void OMPClauseReader::VisitOMPFreeAgentClause(OMPFreeAgentClause *C){
+    VisitOMPClauseWithPreInit(C);
+    C->setFreeAgent(Record.readSubExpr());
+    C->setLParenLoc(Record.readSourceLocation());
+}
+
 void OMPClauseReader::VisitOMPBindClause(OMPBindClause *C) {
   C->setBindKind(Record.readEnum<OpenMPBindClauseKind>());
   C->setLParenLoc(Record.readSourceLocation());

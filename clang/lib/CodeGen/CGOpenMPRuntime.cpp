@@ -3945,6 +3945,9 @@ CGOpenMPRuntime::emitTaskInit(CodeGenFunction &CGF, SourceLocation Loc,
                                      CGF.Builder.getInt32(/*C=*/0))
           : CGF.Builder.getInt32(Data.Final.getInt() ? FinalFlag : 0);
   TaskFlags = CGF.Builder.CreateOr(TaskFlags, CGF.Builder.getInt32(Flags));
+  if (Data.FreeAgent) {
+    TaskFlags = CGF.Builder.CreateOr(TaskFlags, Data.FreeAgent);
+  }
   llvm::Value *SharedsSize = CGM.getSize(C.getTypeSizeInChars(SharedsTy));
   SmallVector<llvm::Value *, 8> AllocArgs = {emitUpdateLocation(CGF, Loc),
       getThreadID(CGF, Loc), TaskFlags, KmpTaskTWithPrivatesTySize,

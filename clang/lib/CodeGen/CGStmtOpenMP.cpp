@@ -4647,6 +4647,21 @@ void CodeGenFunction::EmitOMPTaskBasedDirective(
         getContext().getIntTypeForBitwidth(/*DestWidth=*/32, /*Signed=*/1),
         Prio->getExprLoc()));
   }
+  // Check if the task has 'free_agent' clause.
+  if (const auto *Clause = S.getSingleClause<OMPFreeAgentClause>()) {
+    enum { FREE_AGENT_CLAUSE_TRUE = 0x200, FREE_AGENT_CLAUSE_FALSE = 0x100 };
+    const Expr *FreeAgent = Clause->getFreeAgent();
+    bool CondConstant;
+    if (ConstantFoldsToSimpleInteger(FreeAgent, CondConstant)) {
+      Data.FreeAgent = CondConstant ? Builder.getInt32(FREE_AGENT_CLAUSE_TRUE)
+                                    : Builder.getInt32(FREE_AGENT_CLAUSE_FALSE);
+    } else {
+      llvm::Value *B = EvaluateExprAsBool(FreeAgent);
+      Data.FreeAgent = Builder.CreateSelect(
+          B, Builder.getInt32(FREE_AGENT_CLAUSE_TRUE),
+          Builder.getInt32(FREE_AGENT_CLAUSE_FALSE));
+    }
+  }
   // The first function argument for tasks is a thread id, the second one is a
   // part id (0 for tied tasks, >=0 for untied task).
   llvm::DenseSet<const VarDecl *> EmittedAsPrivate;

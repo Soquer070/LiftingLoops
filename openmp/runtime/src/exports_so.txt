@@ -84,6 +84,13 @@ VERSION {
         __kmp_itt_init_ittlib;
 #endif /* USE_ITT_BUILD */
 
+    # Free agent threads API
+    __kmp_get_num_threads_role;
+    __kmp_get_thread_roles;
+    __kmp_set_thread_roles1;
+    __kmp_set_thread_roles2;
+    __kmp_get_thread_id;
+
     local: # Non-exported symbols.
 
         *;         # All other symbols are not exported.

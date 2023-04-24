@@ -444,6 +444,7 @@ kmp_uint64 __kmp_pause_init = 1; // for tpause
 KMP_ALIGN_CACHE
 kmp_info_t **__kmp_threads = NULL;
 kmp_root_t **__kmp_root = NULL;
+kmp_task_team_t **__kmp_free_agent_allowed_teams = NULL;
 kmp_old_threads_list_t *__kmp_old_threads_list = NULL;
 
 /* data read/written to often by primary threads */
@@ -452,9 +453,12 @@ volatile int __kmp_nth = 0;
 volatile int __kmp_all_nth = 0;
 volatile kmp_info_t *__kmp_thread_pool = NULL;
 volatile kmp_team_t *__kmp_team_pool = NULL;
+volatile kmp_info_t *__kmp_free_agent_list = NULL;
 
 KMP_ALIGN_CACHE
 std::atomic<int> __kmp_thread_pool_active_nth = 0;
+KMP_ALIGN_CACHE
+std::atomic<int> __kmp_free_agent_active_nth = 0;
 
 /* -------------------------------------------------
  * GLOBAL/ROOT STATE */
@@ -475,6 +479,8 @@ KMP_ALIGN_CACHE_INTERNODE
 KMP_BOOTSTRAP_LOCK_INIT(__kmp_forkjoin_lock); /* control fork/join access */
 KMP_ALIGN_CACHE_INTERNODE
 KMP_BOOTSTRAP_LOCK_INIT(__kmp_exit_lock); /* exit() is not always thread-safe */
+KMP_ALIGN_CACHE_INTERNODE
+KMP_BOOTSTRAP_LOCK_INIT(__kmp_free_agent_allowed_teams_lock);
 #if KMP_USE_MONITOR
 /* control monitor thread creation */
 KMP_ALIGN_CACHE_INTERNODE
@@ -497,6 +503,7 @@ KMP_ALIGN_CACHE
 KMP_BOOTSTRAP_LOCK_INIT(__kmp_initz_lock); /* Control initializations */
 KMP_BOOTSTRAP_LOCK_INIT(__kmp_forkjoin_lock); /* control fork/join access */
 KMP_BOOTSTRAP_LOCK_INIT(__kmp_exit_lock); /* exit() is not always thread-safe */
+KMP_BOOTSTRAP_LOCK_INIT(__kmp_free_agent_allowed_teams_lock);
 #if KMP_USE_MONITOR
 /* control monitor thread creation */
 KMP_BOOTSTRAP_LOCK_INIT(__kmp_monitor_lock);
@@ -556,5 +563,11 @@ kmp_pause_status_t __kmp_pause_status = kmp_not_paused;
 int __kmp_nesting_mode = 0;
 int __kmp_nesting_mode_nlevels = 1;
 int *__kmp_nesting_nth_level;
+
+// Free agent threads
+int __kmp_free_agent_num_threads = 0;
+int __kmp_free_agent_clause_dflt = FALSE;
+int __kmp_free_agent_allowed_teams_capacity = 0;
+int __kmp_free_agent_allowed_teams_length = 0;
 
 // end of file //

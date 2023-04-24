@@ -4758,7 +4758,8 @@ void __kmp_affinity_set_init_mask(int gtid, int isa_root) {
       __kmp_select_mask_by_gtid(gtid, affinity, &i, &mask);
     }
   } else {
-    if (!isa_root || __kmp_nested_proc_bind.bind_types[0] == proc_bind_false) {
+    if ((!isa_root || __kmp_nested_proc_bind.bind_types[0] == proc_bind_false) &&
+        (th->th.th_active_role != OMP_ROLE_FREE_AGENT)) {
 #if KMP_GROUP_AFFINITY
       if (__kmp_num_proc_groups > 1) {
         return;
