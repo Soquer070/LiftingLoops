@@ -746,22 +746,17 @@ bool VPlanTransforms::adjustFixedOrderRecurrences(VPlan &Plan,
       Previous = PrevPhi->getBackedgeValue()->getDefiningRecipe();
     }
 
-    sinkRecurrenceUsersAfterPrevious(PredFOR, Previous, VPDT);
+    if (!sinkRecurrenceUsersAfterPrevious(PredFOR, Previous, VPDT))
+      return false;
 
     // Introduce a recipe to combine the incoming and previous values of a
     // fixed-order recurrence.
     VPBasicBlock *InsertBlock = Previous->getParent();
-    auto *Region = GetReplicateRegion(Previous);
-    if (Region)
-      InsertBlock = dyn_cast<VPBasicBlock>(Region->getSingleSuccessor());
-    if (!InsertBlock) {
-      InsertBlock = new VPBasicBlock(Region->getName() + ".succ");
-      VPBlockUtils::insertBlockAfter(InsertBlock, Region);
-    }
-    if (Region || Previous->isPhi())
+    if (isa<VPHeaderPHIRecipe>(Previous))
       Builder.setInsertPoint(InsertBlock, InsertBlock->getFirstNonPhi());
     else
       Builder.setInsertPoint(InsertBlock, std::next(Previous->getIterator()));
+
     auto *RecurSplice = cast<VPInstruction>(Builder.createNaryOp(
         VPInstruction::PredicatedFirstOrderRecurrenceSplice,
         {PredFOR, PredFOR->getBackedgeValue(), EVLRecipe}));
