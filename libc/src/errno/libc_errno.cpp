@@ -10,6 +10,12 @@
 
 namespace __llvm_libc {
 
+#ifdef LIBC_TARGET_ARCH_IS_GPU
+struct ErrnoConsumer {
+  void operator=(int) {}
+};
+#endif
+
 extern "C" {
 #ifdef LIBC_COPT_PUBLIC_PACKAGING
 // TODO: Declare __llvmlibc_errno only under LIBC_COPT_PUBLIC_PACKAGING and
