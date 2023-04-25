@@ -8911,9 +8911,11 @@ Instruction &BoUpSLP::getLastInstructionInBundle(const TreeEntry *E) {
           FirstInst = I;
         continue;
       }
-      assert(isVectorLikeInstWithConstOps(FirstInst) &&
-             isVectorLikeInstWithConstOps(I) &&
-             "Expected vector-like insts only.");
+      assert((E->getOpcode() == Instruction::GetElementPtr &&
+              !isa<GetElementPtrInst>(I)) ||
+             (isVectorLikeInstWithConstOps(FirstInst) &&
+              isVectorLikeInstWithConstOps(I)) &&
+                 "Expected vector-like or non-GEP in GEP node insts only.");
       if (!DT->isReachableFromEntry(FirstInst->getParent())) {
         FirstInst = I;
         continue;
@@ -12914,6 +12916,39 @@ public:
     DenseMap<Value *, SmallVector<LoadInst *>> LoadsMap;
     SmallSet<size_t, 2> LoadKeyUsed;
     SmallPtrSet<Value *, 4> DoNotReverseVals;
+
+    auto GenerateLoadsSubkey = [&](size_t Key, LoadInst *LI) {
+      Value *Ptr = getUnderlyingObject(LI->getPointerOperand());
+      if (LoadKeyUsed.contains(Key)) {
+        auto LIt = LoadsMap.find(Ptr);
+        if (LIt != LoadsMap.end()) {
+          for (LoadInst *RLI : LIt->second) {
+            if (getPointersDiff(RLI->getType(), RLI->getPointerOperand(),
+                                LI->getType(), LI->getPointerOperand(), DL, SE,
+                                /*StrictCheck=*/true))
+              return hash_value(RLI->getPointerOperand());
+          }
+          for (LoadInst *RLI : LIt->second) {
+            if (arePointersCompatible(RLI->getPointerOperand(),
+                                      LI->getPointerOperand(), TLI)) {
+              hash_code SubKey = hash_value(RLI->getPointerOperand());
+              DoNotReverseVals.insert(RLI);
+              return SubKey;
+            }
+          }
+          if (LIt->second.size() > 2) {
+            hash_code SubKey =
+                hash_value(LIt->second.back()->getPointerOperand());
+            DoNotReverseVals.insert(LIt->second.back());
+            return SubKey;
+          }
+        }
+      }
+      LoadKeyUsed.insert(Key);
+      LoadsMap.try_emplace(Ptr).first->second.push_back(LI);
+      return hash_value(LI->getPointerOperand());
+    };
+
     while (!Worklist.empty()) {
       Instruction *TreeN = Worklist.pop_back_val();
       SmallVector<Value *> Args;
@@ -12933,41 +12968,8 @@ public:
         // results.
         for (Value *V : PossibleRedVals) {
           size_t Key, Idx;
-          std::tie(Key, Idx) = generateKeySubkey(
-              V, &TLI,
-              [&](size_t Key, LoadInst *LI) {
-                Value *Ptr = getUnderlyingObject(LI->getPointerOperand());
-                if (LoadKeyUsed.contains(Key)) {
-                  auto LIt = LoadsMap.find(Ptr);
-                  if (LIt != LoadsMap.end()) {
-                    for (LoadInst *RLI: LIt->second) {
-                      if (getPointersDiff(
-                              RLI->getType(), RLI->getPointerOperand(),
-                              LI->getType(), LI->getPointerOperand(), DL, SE,
-                              /*StrictCheck=*/true))
-                        return hash_value(RLI->getPointerOperand());
-                    }
-                    for (LoadInst *RLI : LIt->second) {
-                      if (arePointersCompatible(RLI->getPointerOperand(),
-                                                LI->getPointerOperand(), TLI)) {
-                        hash_code SubKey = hash_value(RLI->getPointerOperand());
-                        DoNotReverseVals.insert(RLI);
-                        return SubKey;
-                      }
-                    }
-                    if (LIt->second.size() > 2) {
-                      hash_code SubKey =
-                          hash_value(LIt->second.back()->getPointerOperand());
-                      DoNotReverseVals.insert(LIt->second.back());
-                      return SubKey;
-                    }
-                  }
-                }
-                LoadKeyUsed.insert(Key);
-                LoadsMap.try_emplace(Ptr).first->second.push_back(LI);
-                return hash_value(LI->getPointerOperand());
-              },
-              /*AllowAlternate=*/false);
+          std::tie(Key, Idx) = generateKeySubkey(V, &TLI, GenerateLoadsSubkey,
+                                                 /*AllowAlternate=*/false);
           ++PossibleReducedVals[Key][Idx]
                 .insert(std::make_pair(V, 0))
                 .first->second;
@@ -12976,40 +12978,8 @@ public:
                         PossibleReductionOps.rend());
       } else {
         size_t Key, Idx;
-        std::tie(Key, Idx) = generateKeySubkey(
-            TreeN, &TLI,
-            [&](size_t Key, LoadInst *LI) {
-              Value *Ptr = getUnderlyingObject(LI->getPointerOperand());
-              if (LoadKeyUsed.contains(Key)) {
-                auto LIt = LoadsMap.find(Ptr);
-                if (LIt != LoadsMap.end()) {
-                  for (LoadInst *RLI: LIt->second) {
-                    if (getPointersDiff(RLI->getType(),
-                                        RLI->getPointerOperand(), LI->getType(),
-                                        LI->getPointerOperand(), DL, SE,
-                                        /*StrictCheck=*/true))
-                      return hash_value(RLI->getPointerOperand());
-                  }
-                  for (LoadInst *RLI : LIt->second) {
-                    if (arePointersCompatible(RLI->getPointerOperand(),
-                                              LI->getPointerOperand(), TLI)) {
-                      hash_code SubKey = hash_value(RLI->getPointerOperand());
-                      DoNotReverseVals.insert(RLI);
-                      return SubKey;
-                    }
-                  }
-                  if (LIt->second.size() > 2) {
-                    hash_code SubKey = hash_value(LIt->second.back()->getPointerOperand());
-                    DoNotReverseVals.insert(LIt->second.back());
-                    return SubKey;
-                  }
-                }
-              }
-              LoadKeyUsed.insert(Key);
-              LoadsMap.try_emplace(Ptr).first->second.push_back(LI);
-              return hash_value(LI->getPointerOperand());
-            },
-            /*AllowAlternate=*/false);
+        std::tie(Key, Idx) = generateKeySubkey(TreeN, &TLI, GenerateLoadsSubkey,
+                                               /*AllowAlternate=*/false);
         ++PossibleReducedVals[Key][Idx]
               .insert(std::make_pair(TreeN, 0))
               .first->second;

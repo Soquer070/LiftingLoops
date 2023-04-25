@@ -217,7 +217,7 @@ VPBasicBlock::iterator VPBasicBlock::getFirstNonPhi() {
 }
 
 Value *VPTransformState::get(VPValue *Def, const VPIteration &Instance) {
-  if (!Def->hasDefiningRecipe())
+  if (Def->isLiveIn())
     return Def->getLiveInIRValue();
 
   if (hasScalarValue(Def, Instance)) {

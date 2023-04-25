@@ -4426,8 +4426,28 @@ static void computeKnownFPClass(const Value *V, KnownFPClass &Known,
   computeKnownFPClass(V, DemandedElts, InterestedClasses, Known, Depth, Q, TLI);
 }
 
+static void computeKnownFPClassForFPTrunc(const Operator *Op,
+                                          const APInt &DemandedElts,
+                                          FPClassTest InterestedClasses,
+                                          KnownFPClass &Known, unsigned Depth,
+                                          const Query &Q,
+                                          const TargetLibraryInfo *TLI) {
+  if ((InterestedClasses & fcNan) == fcNone)
+    return;
+
+  KnownFPClass KnownSrc;
+  computeKnownFPClass(Op->getOperand(0), DemandedElts, InterestedClasses,
+                      KnownSrc, Depth + 1, Q, TLI);
+  if (KnownSrc.isKnownNeverNaN())
+    Known.knownNot(fcNan);
+
+  // Infinity needs a range check.
+  // TODO: Sign bit should be preserved
+}
+
 // TODO: Merge implementations of isKnownNeverNaN, isKnownNeverInfinity,
 // CannotBeNegativeZero, cannotBeOrderedLessThanZero into here.
+
 void computeKnownFPClass(const Value *V, const APInt &DemandedElts,
                          FPClassTest InterestedClasses, KnownFPClass &Known,
                          unsigned Depth, const Query &Q,
@@ -4531,11 +4551,17 @@ void computeKnownFPClass(const Value *V, const APInt &DemandedElts,
     if (const IntrinsicInst *II = dyn_cast<IntrinsicInst>(Op)) {
       const Intrinsic::ID IID = II->getIntrinsicID();
       switch (IID) {
-      case Intrinsic::fabs:
-        computeKnownFPClass(II->getArgOperand(0), DemandedElts,
-                            InterestedClasses, Known, Depth + 1, Q, TLI);
+      case Intrinsic::fabs: {
+        if ((InterestedClasses & (fcNan | fcPositive)) != fcNone) {
+          // If we only care about the sign bit we don't need to inspect the
+          // operand.
+          computeKnownFPClass(II->getArgOperand(0), DemandedElts,
+                              InterestedClasses, Known, Depth + 1, Q, TLI);
+        }
+
         Known.fabs();
         break;
+      }
       case Intrinsic::copysign: {
         KnownFPClass KnownSign;
 
@@ -4544,6 +4570,27 @@ void computeKnownFPClass(const Value *V, const APInt &DemandedElts,
         computeKnownFPClass(II->getArgOperand(1), DemandedElts,
                             InterestedClasses, KnownSign, Depth + 1, Q, TLI);
         Known.copysign(KnownSign);
+        break;
+      }
+      case Intrinsic::fma:
+      case Intrinsic::fmuladd: {
+        if ((InterestedClasses & fcNegative) == fcNone)
+          break;
+
+        if (II->getArgOperand(0) != II->getArgOperand(1))
+          break;
+
+        // The multiply cannot be -0 and therefore the add can't be -0
+        Known.knownNot(fcNegZero);
+
+        // x * x + y is non-negative if y is non-negative.
+        KnownFPClass KnownAddend;
+        computeKnownFPClass(II->getArgOperand(2), DemandedElts,
+                            InterestedClasses, KnownAddend, Depth + 1, Q, TLI);
+
+        // TODO: Known sign bit with no nans
+        if (KnownAddend.cannotBeOrderedLessThanZero())
+          Known.knownNot(fcNegative);
         break;
       }
       case Intrinsic::sin:
@@ -4596,6 +4643,27 @@ void computeKnownFPClass(const Value *V, const APInt &DemandedElts,
           Known.knownNot(fcNan);
         break;
       }
+      case Intrinsic::exp:
+      case Intrinsic::exp2: {
+        Known.knownNot(fcNegative);
+        if ((InterestedClasses & fcNan) == fcNone)
+          break;
+
+        KnownFPClass KnownSrc;
+        computeKnownFPClass(II->getArgOperand(0), DemandedElts,
+                            InterestedClasses, KnownSrc, Depth + 1, Q, TLI);
+        if (KnownSrc.isKnownNeverNaN()) {
+          Known.knownNot(fcNan);
+          Known.SignBit = false;
+        }
+
+        break;
+      }
+      case Intrinsic::fptrunc_round: {
+        computeKnownFPClassForFPTrunc(Op, DemandedElts, InterestedClasses,
+                                      Known, Depth, Q, TLI);
+        break;
+      }
       case Intrinsic::arithmetic_fence: {
         computeKnownFPClass(II->getArgOperand(0), DemandedElts,
                             InterestedClasses, Known, Depth + 1, Q, TLI);
@@ -4644,6 +4712,13 @@ void computeKnownFPClass(const Value *V, const APInt &DemandedElts,
     break;
   }
   case Instruction::FMul: {
+    // X * X is always non-negative or a NaN.
+    if (Op->getOperand(0) == Op->getOperand(1))
+      Known.knownNot(fcNegative);
+
+    if ((InterestedClasses & fcNan) != fcNan)
+      break;
+
     KnownFPClass KnownLHS, KnownRHS;
     computeKnownFPClass(Op->getOperand(1), DemandedElts,
                         fcNan | fcInf | fcZero | fcSubnormal, KnownRHS,
@@ -4723,16 +4798,8 @@ void computeKnownFPClass(const Value *V, const APInt &DemandedElts,
     break;
   }
   case Instruction::FPTrunc: {
-    if ((InterestedClasses & fcNan) == fcNone)
-      break;
-
-    KnownFPClass KnownSrc;
-    computeKnownFPClass(Op->getOperand(0), DemandedElts,
-                        InterestedClasses, KnownSrc, Depth + 1, Q, TLI);
-    if (KnownSrc.isKnownNeverNaN())
-      Known.knownNot(fcNan);
-
-    // Infinity needs a range check.
+    computeKnownFPClassForFPTrunc(Op, DemandedElts, InterestedClasses, Known,
+                                  Depth, Q, TLI);
     break;
   }
   case Instruction::SIToFP:
