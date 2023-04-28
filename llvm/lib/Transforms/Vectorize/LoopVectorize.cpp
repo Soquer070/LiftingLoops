@@ -12222,6 +12222,11 @@ PreservedAnalyses LoopVectorizePass::run(Function &F,
     if (!EnableVPlanNativePath) {
       PA.preserve<LoopAnalysis>();
       PA.preserve<DominatorTreeAnalysis>();
+      PA.preserve<ScalarEvolutionAnalysis>();
+
+#ifdef EXPENSIVE_CHECKS
+      SE.verify();
+#endif
     }
 
     if (Result.MadeCFGChange) {
