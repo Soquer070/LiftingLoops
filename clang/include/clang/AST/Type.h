@@ -2049,6 +2049,16 @@ public:
   /// 'arm_sve_vector_bits' type attribute as VectorType.
   QualType getSveEltType(const ASTContext &Ctx) const;
 
+  /// Determines if this is a sizeless type supported by the
+  /// 'riscv_rvv_vector_bits' type attribute, which can be applied to a single
+  /// RVV vector or mask.
+  bool isRVVVLSBuiltinType() const;
+
+  /// Returns the representative type for the element of an RVV builtin type.
+  /// This is used to represent fixed-length RVV vectors created with the
+  /// 'riscv_rvv_vector_bits' type attribute as VectorType.
+  QualType getRVVEltType(const ASTContext &Ctx) const;
+
   /// Types are partitioned into 3 broad categories (C99 6.2.5p1):
   /// object types, function types, and incomplete types.
 
@@ -3403,6 +3413,9 @@ public:
 
     /// is AArch64 SVE fixed-length predicate vector
     SveFixedLengthPredicateVector,
+
+    /// is RISC-V RVV fixed-length data vector
+    RVVFixedLengthDataVector,
 
     /// is EPI unsized vector
     EPIVector

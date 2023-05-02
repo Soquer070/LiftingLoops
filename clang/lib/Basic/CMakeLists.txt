@@ -125,8 +125,6 @@ add_clang_library(clangBasic
 
   DEPENDS
   omp_gen
-  RISCVTargetParserTableGen
-
   builtins_epi
   )
 

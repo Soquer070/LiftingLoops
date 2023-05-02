@@ -680,6 +680,8 @@ RISCVTargetLowering::RISCVTargetLowering(const TargetMachine &TM,
 
       setOperationAction(ISD::VECTOR_REVERSE, VT, Custom);
 
+      setOperationAction({ISD::STRICT_FSETCC, ISD::STRICT_FSETCCS}, VT, Custom);
+
       setOperationPromotedToType(
           ISD::VECTOR_SPLICE, VT,
           MVT::getVectorVT(MVT::i8, VT.getVectorElementCount()));
@@ -952,8 +954,9 @@ RISCVTargetLowering::RISCVTargetLowering(const TargetMachine &TM,
 
         setOperationAction(ISD::SETCC, VT, Custom);
 
-        setOperationAction({ISD::STRICT_FSETCC, ISD::STRICT_FSETCCS}, VT,
-                           Legal);
+        if (VT.getVectorElementType() == MVT::i1)
+          setOperationAction({ISD::STRICT_FSETCC, ISD::STRICT_FSETCCS}, VT,
+                             Custom);
 
         setOperationAction(ISD::SELECT, VT, Custom);
 
@@ -1281,6 +1284,9 @@ RISCVTargetLowering::RISCVTargetLowering(const TargetMachine &TM,
 
   setLibcallName(RTLIB::FPEXT_F16_F32, "__extendhfsf2");
   setLibcallName(RTLIB::FPROUND_F32_F16, "__truncsfhf2");
+
+  // Disable strict node mutation.
+  IsStrictFPEnabled = true;
 }
 
 void RISCVTargetLowering::registerVecLibCalls() {
@@ -2659,26 +2665,29 @@ bool RISCVTargetLowering::mergeStoresAfterLegalization(EVT VT) const {
          (VT.isFixedLengthVector() && VT.getVectorElementType() == MVT::i1);
 }
 
-bool RISCVTargetLowering::isLegalElementTypeForRVV(Type *ScalarTy) const {
-  if (ScalarTy->isPointerTy())
+bool RISCVTargetLowering::isLegalElementTypeForRVV(EVT ScalarTy) const {
+  if (!ScalarTy.isSimple())
+    return false;
+  switch (ScalarTy.getSimpleVT().SimpleTy) {
+  case MVT::iPTR:
     return Subtarget.is64Bit() ? Subtarget.hasVInstructionsI64() : true;
-
-  if (ScalarTy->isIntegerTy(8) || ScalarTy->isIntegerTy(16) ||
-      ScalarTy->isIntegerTy(32))
+  case MVT::i8:
+  case MVT::i16:
+  case MVT::i32:
     return true;
-
-  if (ScalarTy->isIntegerTy(64))
+  case MVT::i64:
     return Subtarget.hasVInstructionsI64();
-
-  if (ScalarTy->isHalfTy())
+  case MVT::f16:
     return Subtarget.hasVInstructionsF16();
-  if (ScalarTy->isFloatTy())
+  case MVT::f32:
     return Subtarget.hasVInstructionsF32();
-  if (ScalarTy->isDoubleTy())
+  case MVT::f64:
     return Subtarget.hasVInstructionsF64();
-
-  return false;
+  default:
+    return false;
+  }
 }
+
 
 unsigned RISCVTargetLowering::combineRepeatedFPDivisors() const {
   return NumRepeatedDivisors;
@@ -3785,7 +3794,24 @@ static SDValue lowerBUILD_VECTOR(SDValue Op, SelectionDAG &DAG,
     return Vec;
   }
 
-  return SDValue();
+  // For constant vectors, use generic constant pool lowering.  Otherwise,
+  // we'd have to materialize constants in GPRs just to move them into the
+  // vector.
+  if (ISD::isBuildVectorOfConstantSDNodes(Op.getNode()))
+    return SDValue();
+
+  // We can use a series of vslide1down instructions to move values in GPRs
+  // into the appropriate place in the result vector.  We use slide1down
+  // to avoid the register group overlap constraint of vslide1up.
+  if (VT.isFloatingPoint())
+    // TODO: Use vfslide1down.
+    return SDValue();
+
+  SDValue Vec = DAG.getUNDEF(ContainerVT);
+  for (const SDValue &V : Op->ops())
+    Vec = DAG.getNode(RISCVISD::VSLIDE1DOWN_VL, DL, ContainerVT,
+                      DAG.getUNDEF(ContainerVT), Vec, V, Mask, VL);
+  return convertFromScalableVector(VT, Vec, DAG, Subtarget);
 }
 
 static SDValue splatPartsI64WithVL(const SDLoc &DL, MVT VT, SDValue Passthru,
@@ -9146,10 +9172,12 @@ SDValue RISCVTargetLowering::lowerVectorStrictFSetcc(SDValue Op,
                                  Op2, OLECCVal);
       SDValue Tmp2 = DAG.getNode(ISD::STRICT_FSETCCS, DL, VTList, Chain, Op2,
                                  Op1, OLECCVal);
-      SDValue And = DAG.getNode(ISD::AND, DL, VT, Tmp1, Tmp2);
-      SDValue OutChain =
-          DAG.getMergeValues({Tmp1.getValue(1), Tmp2.getValue(1)}, DL);
-      return DAG.getMergeValues({And, OutChain}, DL);
+      SDValue OutChain = DAG.getNode(ISD::TokenFactor, DL, MVT::Other,
+                                     Tmp1.getValue(1), Tmp2.getValue(1));
+      // Tmp1 and Tmp2 might be the same node.
+      if (Tmp1 != Tmp2)
+        Tmp1 = DAG.getNode(ISD::AND, DL, VT, Tmp1, Tmp2);
+      return DAG.getMergeValues({Tmp1, OutChain}, DL);
     }
 
     // Expand (strict_fsetccs x, y, une) to (not (strict_fsetccs x, y, oeq))
@@ -11500,8 +11528,31 @@ static SDValue transformAddImmMulImm(SDNode *N, SelectionDAG &DAG,
   return DAG.getNode(ISD::ADD, DL, VT, New1, DAG.getConstant(CB, DL, VT));
 }
 
+// Try to turn (add (xor (setcc X, Y), 1) -1) into (neg (setcc X, Y)).
+static SDValue combineAddOfBooleanXor(SDNode *N, SelectionDAG &DAG) {
+  SDValue N0 = N->getOperand(0);
+  SDValue N1 = N->getOperand(1);
+  EVT VT = N->getValueType(0);
+  SDLoc DL(N);
+
+  // RHS should be -1.
+  if (!isAllOnesConstant(N1))
+    return SDValue();
+
+  // Look for an (xor (setcc X, Y), 1).
+  if (N0.getOpcode() != ISD::XOR || !isOneConstant(N0.getOperand(1)) ||
+      N0.getOperand(0).getOpcode() != ISD::SETCC)
+    return SDValue();
+
+  // Emit a negate of the setcc.
+  return DAG.getNode(ISD::SUB, DL, VT, DAG.getConstant(0, DL, VT),
+                     N0.getOperand(0));
+}
+
 static SDValue performADDCombine(SDNode *N, SelectionDAG &DAG,
                                  const RISCVSubtarget &Subtarget) {
+  if (SDValue V = combineAddOfBooleanXor(N, DAG))
+    return V;
   if (SDValue V = transformAddImmMulImm(N, DAG, Subtarget))
     return V;
   if (SDValue V = transformAddShlImm(N, DAG, Subtarget))
@@ -11740,7 +11791,7 @@ public:
   // Returns differ operand.
   SDValue const &getDOp() const { return operator[](DifferPos); }
 
-  // Returns consition code of comparison operation.
+  // Returns condition code of comparison operation.
   ISD::CondCode getCondCode() const { return CCode; }
 };
 } // namespace
@@ -13413,8 +13464,7 @@ static SDValue performCONCAT_VECTORSCombine(SDNode *N, SelectionDAG &DAG,
     return SDValue();
 
   // Check that the operation is legal
-  Type *WideVecTy = EVT(WideVecVT).getTypeForEVT(*DAG.getContext());
-  if (!TLI.isLegalStridedLoadStore(DAG.getDataLayout(), WideVecTy, Align))
+  if (!TLI.isLegalStridedLoadStore(WideVecVT, Align))
     return SDValue();
 
   MVT ContainerVT = TLI.getContainerForFixedLengthVector(WideVecVT);
@@ -18162,12 +18212,14 @@ bool RISCVTargetLowering::isLegalInterleavedAccessType(
     FixedVectorType *VTy, unsigned Factor, const DataLayout &DL) const {
   if (!Subtarget.useRVVForFixedLengthVectors())
     return false;
-  if (!isLegalElementTypeForRVV(VTy->getElementType()))
-    return false;
   EVT VT = getValueType(DL, VTy);
   // Don't lower vlseg/vsseg for fixed length vector types that can't be split.
   if (!isTypeLegal(VT))
     return false;
+
+  if (!isLegalElementTypeForRVV(VT.getScalarType()))
+    return false;
+
   // Sometimes the interleaved access pass picks up splats as interleaves of one
   // element. Don't lower these.
   if (VTy->getNumElements() < 2)
@@ -18181,22 +18233,21 @@ bool RISCVTargetLowering::isLegalInterleavedAccessType(
   return Factor * LMUL <= 8;
 }
 
-bool RISCVTargetLowering::isLegalStridedLoadStore(const DataLayout &DL,
-                                                  Type *DataType,
+bool RISCVTargetLowering::isLegalStridedLoadStore(EVT DataType,
                                                   Align Alignment) const {
   if (!Subtarget.hasVInstructions())
     return false;
 
   // Only support fixed vectors if we know the minimum vector size.
-  if (isa<FixedVectorType>(DataType) && !Subtarget.useRVVForFixedLengthVectors())
+  if (DataType.isFixedLengthVector() && !Subtarget.useRVVForFixedLengthVectors())
     return false;
 
-  Type *ScalarType = DataType->getScalarType();
+  EVT ScalarType = DataType.getScalarType();
   if (!isLegalElementTypeForRVV(ScalarType))
     return false;
 
   if (!Subtarget.enableUnalignedVectorMem() &&
-      Alignment < DL.getTypeStoreSize(ScalarType).getFixedValue())
+      Alignment < ScalarType.getStoreSize())
     return false;
 
   return true;

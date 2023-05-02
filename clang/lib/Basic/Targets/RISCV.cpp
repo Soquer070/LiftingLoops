@@ -201,6 +201,11 @@ void RISCVTargetInfo::getTargetDefines(const LangOptions &Opts,
     Builder.defineMacro("__riscv_v_intrinsic", Twine(getVersionValue(0, 11)));
   }
 
+  auto VScale = getVScaleRange(Opts);
+  if (VScale && VScale->first && VScale->first == VScale->second)
+    Builder.defineMacro("__riscv_v_fixed_vlen",
+                        Twine(VScale->first * llvm::RISCV::RVVBitsPerBlock));
+
   if (Opts.EPI) {
     Builder.defineMacro("__epi");
     // EPI: specific, remove now that we have __riscv_vector
@@ -348,7 +353,7 @@ void RISCVTargetInfo::adjust(DiagnosticsEngine &Diags, LangOptions &Opts) {
 
 bool RISCVTargetInfo::isValidCPUName(StringRef Name) const {
   bool Is64Bit = getTriple().isArch64Bit();
-  return llvm::RISCV::checkCPUKind(llvm::RISCV::parseCPUKind(Name), Is64Bit);
+  return llvm::RISCV::parseCPU(Name, Is64Bit);
 }
 
 void RISCVTargetInfo::fillValidCPUList(
@@ -359,8 +364,7 @@ void RISCVTargetInfo::fillValidCPUList(
 
 bool RISCVTargetInfo::isValidTuneCPUName(StringRef Name) const {
   bool Is64Bit = getTriple().isArch64Bit();
-  return llvm::RISCV::checkTuneCPUKind(
-      llvm::RISCV::parseTuneCPUKind(Name, Is64Bit), Is64Bit);
+  return llvm::RISCV::parseTuneCPU(Name, Is64Bit);
 }
 
 void RISCVTargetInfo::fillValidTuneCPUList(

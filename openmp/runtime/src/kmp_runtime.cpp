@@ -554,6 +554,14 @@ static void __kmp_fini_allocator() { __kmp_fini_memkind(); }
 
 /* ------------------------------------------------------------------------ */
 
+#if ENABLE_LIBOMPTARGET
+static void __kmp_init_omptarget() {
+  __kmp_init_target_task();
+}
+#endif
+
+/* ------------------------------------------------------------------------ */
+
 #if KMP_DYNAMIC_LIB
 #if KMP_OS_WINDOWS
 
@@ -7636,6 +7644,11 @@ static void __kmp_do_serial_initialize(void) {
 #endif
 
   __kmp_validate_locks();
+
+#if ENABLE_LIBOMPTARGET
+  /* Initialize functions from libomptarget */
+  __kmp_init_omptarget();
+#endif
 
   /* Initialize internal memory allocator */
   __kmp_init_allocator();

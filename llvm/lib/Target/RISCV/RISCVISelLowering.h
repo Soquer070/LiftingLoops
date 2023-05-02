@@ -723,7 +723,7 @@ public:
 
   bool shouldRemoveExtendFromGSIndex(EVT IndexVT, EVT DataVT) const override;
 
-  bool isLegalElementTypeForRVV(Type *ScalarTy) const;
+  bool isLegalElementTypeForRVV(EVT ScalarTy) const;
 
   // FIXME: This is not ideal.
   SDValue lowerVECLIBCALL(SDValue Op, SelectionDAG &DAG,
@@ -768,7 +768,7 @@ public:
 
   /// Return true if a stride load store of the given result type and
   /// alignment is legal.
-  bool isLegalStridedLoadStore(const DataLayout &DL, Type *DataType, Align Alignment) const;
+  bool isLegalStridedLoadStore(EVT DataType, Align Alignment) const;
 
   unsigned getMaxSupportedInterleaveFactor() const override { return 8; }
 
