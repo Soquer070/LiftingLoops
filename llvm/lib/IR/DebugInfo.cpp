@@ -2126,7 +2126,10 @@ bool AssignmentTrackingPass::runOnFunction(Function &F) {
       if (AllocaInst *Alloca =
               dyn_cast<AllocaInst>(DDI->getAddress()->stripPointerCasts())) {
         // FIXME: Skip VLAs for now (let these variables use dbg.declares).
-        if (!Alloca->isStaticAlloca())
+        if (!Alloca->isStaticAlloca() ||
+            // Skip scalable vectors too because
+            // this pass is not able to handle them yet, apparently.
+            isa<ScalableVectorType>(Alloca->getAllocatedType()))
           continue;
         DbgDeclares[Alloca].insert(DDI);
         Vars[Alloca].insert(VarRecord(DDI));
