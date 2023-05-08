@@ -352,6 +352,7 @@ public:
     VPPredicatedWidenCallSC,
     VPWidenEVLMaskSC,
     VPWidenCanonicalIVSC,
+    VPWidenCastSC,
     VPWidenGEPSC,
     VPWidenMemoryInstructionSC,
     VPWidenSC,
@@ -453,6 +454,7 @@ class VPSlotTracker {
 
   void assignSlot(const VPValue *V);
   void assignSlots(const VPlan &Plan);
+  void assignSlots(const VPBasicBlock *VPBB);
 
 public:
   VPSlotTracker(const VPlan *Plan = nullptr) {

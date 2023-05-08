@@ -121,18 +121,18 @@ define dso_local void @foo(i32 signext %n, i32 signext %j, float %temp1.coerce0,
 ;
 ; STRIDED-LABEL: @foo(
 ; STRIDED-NEXT:  entry:
-; STRIDED-NEXT:    [[TMP0:%.*]] = zext i32 [[N:%.*]] to i64
 ; STRIDED-NEXT:    [[CMP_NOT_NOT40:%.*]] = icmp sgt i32 [[J:%.*]], 0
 ; STRIDED-NEXT:    br i1 [[CMP_NOT_NOT40]], label [[FOR_BODY_PREHEADER:%.*]], label [[FOR_COND_CLEANUP:%.*]]
 ; STRIDED:       for.body.preheader:
+; STRIDED-NEXT:    [[TMP0:%.*]] = zext i32 [[N:%.*]] to i64
 ; STRIDED-NEXT:    [[IDXPROM1:%.*]] = sext i32 [[J]] to i64
 ; STRIDED-NEXT:    [[WIDE_TRIP_COUNT:%.*]] = zext i32 [[J]] to i64
-; STRIDED-NEXT:    [[ARRAYIDX:%.*]] = getelementptr { float, float }, ptr [[A:%.*]], i64 [[IDXPROM1]]
-; STRIDED-NEXT:    [[UGLYGEP:%.*]] = getelementptr i8, ptr [[X:%.*]], i64 4
-; STRIDED-NEXT:    [[UGLYGEP1:%.*]] = getelementptr i8, ptr [[Y:%.*]], i64 4
+; STRIDED-NEXT:    [[ARRAYIDX:%.*]] = getelementptr inbounds { float, float }, ptr [[A:%.*]], i64 [[IDXPROM1]]
+; STRIDED-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr [[X:%.*]], i64 4
+; STRIDED-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr [[Y:%.*]], i64 4
 ; STRIDED-NEXT:    [[TMP1:%.*]] = shl nsw i64 [[IDXPROM1]], 3
 ; STRIDED-NEXT:    [[TMP2:%.*]] = or i64 [[TMP1]], 4
-; STRIDED-NEXT:    [[UGLYGEP2:%.*]] = getelementptr i8, ptr [[A]], i64 [[TMP2]]
+; STRIDED-NEXT:    [[SCEVGEP2:%.*]] = getelementptr i8, ptr [[A]], i64 [[TMP2]]
 ; STRIDED-NEXT:    [[TMP3:%.*]] = shl nuw nsw i64 [[TMP0]], 3
 ; STRIDED-NEXT:    [[BROADCAST_SPLATINSERT10:%.*]] = insertelement <vscale x 2 x float> poison, float [[TEMP2_COERCE1:%.*]], i64 0
 ; STRIDED-NEXT:    [[BROADCAST_SPLAT11:%.*]] = shufflevector <vscale x 2 x float> [[BROADCAST_SPLATINSERT10]], <vscale x 2 x float> poison, <vscale x 2 x i32> zeroinitializer
@@ -152,20 +152,20 @@ define dso_local void @foo(i32 signext %n, i32 signext %j, float %temp1.coerce0,
 ; STRIDED-NEXT:    [[TMP8:%.*]] = getelementptr i8, ptr [[X]], i64 [[TMP7]]
 ; STRIDED-NEXT:    [[VP_STRIDED_LOAD:%.*]] = call <vscale x 2 x float> @llvm.experimental.vp.strided.load.nxv2f32.p0.i64(ptr [[TMP8]], i64 8, <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]]), !llvm.access.group [[ACC_GRP4:![0-9]+]]
 ; STRIDED-NEXT:    [[TMP9:%.*]] = shl i64 [[INDEX]], 3
-; STRIDED-NEXT:    [[TMP10:%.*]] = getelementptr i8, ptr [[UGLYGEP]], i64 [[TMP9]]
+; STRIDED-NEXT:    [[TMP10:%.*]] = getelementptr i8, ptr [[SCEVGEP]], i64 [[TMP9]]
 ; STRIDED-NEXT:    [[VP_STRIDED_LOAD7:%.*]] = call <vscale x 2 x float> @llvm.experimental.vp.strided.load.nxv2f32.p0.i64(ptr [[TMP10]], i64 8, <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]]), !llvm.access.group [[ACC_GRP4]]
 ; STRIDED-NEXT:    [[TMP11:%.*]] = shl i64 [[INDEX]], 3
 ; STRIDED-NEXT:    [[TMP12:%.*]] = getelementptr i8, ptr [[Y]], i64 [[TMP11]]
 ; STRIDED-NEXT:    [[VP_STRIDED_LOAD8:%.*]] = call <vscale x 2 x float> @llvm.experimental.vp.strided.load.nxv2f32.p0.i64(ptr [[TMP12]], i64 8, <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]]), !llvm.access.group [[ACC_GRP4]]
 ; STRIDED-NEXT:    [[TMP13:%.*]] = shl i64 [[INDEX]], 3
-; STRIDED-NEXT:    [[TMP14:%.*]] = getelementptr i8, ptr [[UGLYGEP1]], i64 [[TMP13]]
+; STRIDED-NEXT:    [[TMP14:%.*]] = getelementptr i8, ptr [[SCEVGEP1]], i64 [[TMP13]]
 ; STRIDED-NEXT:    [[VP_STRIDED_LOAD9:%.*]] = call <vscale x 2 x float> @llvm.experimental.vp.strided.load.nxv2f32.p0.i64(ptr [[TMP14]], i64 8, <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]]), !llvm.access.group [[ACC_GRP4]]
 ; STRIDED-NEXT:    [[VP_OP12:%.*]] = call fast <vscale x 2 x float> @llvm.vp.fmul.nxv2f32(<vscale x 2 x float> [[VP_STRIDED_LOAD8]], <vscale x 2 x float> [[BROADCAST_SPLAT11]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]])
 ; STRIDED-NEXT:    [[VP_OP15:%.*]] = call fast <vscale x 2 x float> @llvm.vp.fmul.nxv2f32(<vscale x 2 x float> [[VP_STRIDED_LOAD9]], <vscale x 2 x float> [[BROADCAST_SPLAT14]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]])
 ; STRIDED-NEXT:    [[VP_OP16:%.*]] = call fast <vscale x 2 x float> @llvm.vp.fmul.nxv2f32(<vscale x 2 x float> [[VP_STRIDED_LOAD8]], <vscale x 2 x float> [[BROADCAST_SPLAT14]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]])
 ; STRIDED-NEXT:    [[VP_OP17:%.*]] = call fast <vscale x 2 x float> @llvm.vp.fmul.nxv2f32(<vscale x 2 x float> [[VP_STRIDED_LOAD9]], <vscale x 2 x float> [[BROADCAST_SPLAT11]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]])
 ; STRIDED-NEXT:    [[TMP15:%.*]] = mul i64 [[INDEX]], [[TMP3]]
-; STRIDED-NEXT:    [[TMP16:%.*]] = getelementptr i8, ptr [[UGLYGEP2]], i64 [[TMP15]]
+; STRIDED-NEXT:    [[TMP16:%.*]] = getelementptr i8, ptr [[SCEVGEP2]], i64 [[TMP15]]
 ; STRIDED-NEXT:    [[VP_STRIDED_LOAD18:%.*]] = call <vscale x 2 x float> @llvm.experimental.vp.strided.load.nxv2f32.p0.i64(ptr [[TMP16]], i64 [[TMP3]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]]), !llvm.access.group [[ACC_GRP4]]
 ; STRIDED-NEXT:    [[VP_OP21:%.*]] = call fast <vscale x 2 x float> @llvm.vp.fmul.nxv2f32(<vscale x 2 x float> [[VP_STRIDED_LOAD]], <vscale x 2 x float> [[BROADCAST_SPLAT20]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]])
 ; STRIDED-NEXT:    [[VP_OP24:%.*]] = call fast <vscale x 2 x float> @llvm.vp.fmul.nxv2f32(<vscale x 2 x float> [[VP_STRIDED_LOAD7]], <vscale x 2 x float> [[BROADCAST_SPLAT23]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]])
@@ -186,7 +186,7 @@ define dso_local void @foo(i32 signext %n, i32 signext %j, float %temp1.coerce0,
 ; STRIDED-NEXT:    [[TMP20:%.*]] = getelementptr i8, ptr [[ARRAYIDX]], i64 [[TMP19]]
 ; STRIDED-NEXT:    call void @llvm.experimental.vp.strided.store.nxv2f32.p0.i64(<vscale x 2 x float> [[VP_OP31]], ptr [[TMP20]], i64 [[TMP3]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]]), !llvm.access.group [[ACC_GRP4]]
 ; STRIDED-NEXT:    [[TMP21:%.*]] = mul i64 [[INDEX]], [[TMP3]]
-; STRIDED-NEXT:    [[TMP22:%.*]] = getelementptr i8, ptr [[UGLYGEP2]], i64 [[TMP21]]
+; STRIDED-NEXT:    [[TMP22:%.*]] = getelementptr i8, ptr [[SCEVGEP2]], i64 [[TMP21]]
 ; STRIDED-NEXT:    call void @llvm.experimental.vp.strided.store.nxv2f32.p0.i64(<vscale x 2 x float> [[VP_OP35]], ptr [[TMP22]], i64 [[TMP3]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP6]]), !llvm.access.group [[ACC_GRP4]]
 ; STRIDED-NEXT:    [[TMP23:%.*]] = and i64 [[TMP5]], 4294967295
 ; STRIDED-NEXT:    [[INDEX_NEXT]] = add i64 [[INDEX]], [[TMP23]]

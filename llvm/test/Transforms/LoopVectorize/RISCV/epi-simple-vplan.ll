@@ -17,8 +17,12 @@ target triple = "riscv64-unknown-linux-gnu"
 
 ; CHECK: VPlan 'Initial VPlan for VF={vscale x 1,vscale x 2,vscale x 4,vscale x 8,vscale x 16},UF>=1' {
 ; CHECK-NEXT: Live-in vp<%0> = vector-trip-count
-; CHECK-NEXT: Live-in vp<%2> = original trip-count
 ; CHECK-NEXT: Live-in vp<%1> = backedge-taken count
+; CHECK-NEXT: vp<%2> = original trip-count
+; CHECK-EMPTY:
+; CHECK-NEXT: ph:
+; CHECK-NEXT:   EMIT vp<%2> = EXPAND SCEV (zext i32 %N to i64)
+; CHECK-NEXT: No successors
 ; CHECK-EMPTY:
 ; CHECK-NEXT: vector.ph:
 ; CHECK-NEXT: Successor(s): vector loop
