@@ -15,6 +15,8 @@ target triple = "riscv64-unknown-linux-gnu"
 define dso_local void @foo(%struct.crypto_stream_chacha20_dolbeau_riscv_v_ECRYPT_ctx* nocapture %x_, i8* nocapture readonly %m, i8* nocapture %c_, i32 signext %bytes) local_unnamed_addr
 ; CHECK-LABEL: foo:
 ; CHECK:       # %bb.0: # %entry
+; CHECK-NEXT:    beqz a3, .LBB0_22
+; CHECK-NEXT:  # %bb.1: # %if.end
 ; CHECK-NEXT:    addi sp, sp, -272
 ; CHECK-NEXT:    .cfi_def_cfa_offset 272
 ; CHECK-NEXT:    sd ra, 264(sp) # 8-byte Folded Spill
@@ -48,8 +50,6 @@ define dso_local void @foo(%struct.crypto_stream_chacha20_dolbeau_riscv_v_ECRYPT
 ; CHECK-NEXT:    mul a4, a4, a5
 ; CHECK-NEXT:    sub sp, sp, a4
 ; CHECK-NEXT:    .cfi_escape 0x0f, 0x0e, 0x72, 0x00, 0x11, 0x90, 0x02, 0x22, 0x11, 0x0c, 0x92, 0xa2, 0x38, 0x00, 0x1e, 0x22 # sp + 272 + 12 * vlenb
-; CHECK-NEXT:    beqz a3, .LBB0_21
-; CHECK-NEXT:  # %bb.1: # %if.end
 ; CHECK-NEXT:    li a4, 256
 ; CHECK-NEXT:    bltu a3, a4, .LBB0_7
 ; CHECK-NEXT:  # %bb.2: # %if.then1
@@ -991,7 +991,7 @@ define dso_local void @foo(%struct.crypto_stream_chacha20_dolbeau_riscv_v_ECRYPT
 ; CHECK-NEXT:    addi a0, a0, 1
 ; CHECK-NEXT:    addi a1, a1, 1
 ; CHECK-NEXT:    bnez t1, .LBB0_20
-; CHECK-NEXT:  .LBB0_21: # %cleanup
+; CHECK-NEXT:  .LBB0_21:
 ; CHECK-NEXT:    csrr a0, vlenb
 ; CHECK-NEXT:    li a1, 12
 ; CHECK-NEXT:    mul a0, a0, a1
@@ -1010,6 +1010,7 @@ define dso_local void @foo(%struct.crypto_stream_chacha20_dolbeau_riscv_v_ECRYPT
 ; CHECK-NEXT:    ld s10, 176(sp) # 8-byte Folded Reload
 ; CHECK-NEXT:    ld s11, 168(sp) # 8-byte Folded Reload
 ; CHECK-NEXT:    addi sp, sp, 272
+; CHECK-NEXT:  .LBB0_22: # %cleanup
 ; CHECK-NEXT:    ret
 {
 entry:
