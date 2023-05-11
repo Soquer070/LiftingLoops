@@ -79,6 +79,9 @@ public:
     return StackId != TargetStackID::ScalableVector;
   }
 
+  void updateCalleeSavedStack(MachineFrameInfo &MFI, int FrameIdx,
+                              const TargetRegisterClass *RC) const override;
+
 protected:
   const RISCVSubtarget &STI;
 

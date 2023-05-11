@@ -353,6 +353,11 @@ public:
   virtual void determineCalleeSaves(MachineFunction &MF, BitVector &SavedRegs,
                                     RegScavenger *RS = nullptr) const;
 
+  // Give a chance to the target to adjust the StackID of a frame index
+  // corresponding to a callee saved.
+  virtual void updateCalleeSavedStack(MachineFrameInfo &MFI, int FrameIdx,
+                                      const TargetRegisterClass *RC) const {}
+
   /// processFunctionBeforeFrameFinalized - This method is called immediately
   /// before the specified function's frame layout (MF.getFrameInfo()) is
   /// finalized.  Once the frame is finalized, MO_FrameIndex operands are

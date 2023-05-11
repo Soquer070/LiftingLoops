@@ -612,6 +612,20 @@ void RISCVFrameLowering::emitPrologue(MachineFunction &MF,
       }
     }
   }
+
+  if (RVVStackSize) {
+    const TargetRegisterInfo *TRI = MF.getSubtarget().getRegisterInfo();
+    for (auto &CS : CSI) {
+      // Insert the callee saved to the stack frame.
+      int FI = CS.getFrameIdx();
+      if (!(FI >= 0 && MFI.getStackID(FI) == TargetStackID::ScalableVector))
+        continue;
+      Register Reg = CS.getReg();
+      const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
+      TII->storeRegToStackSlot(MBB, MBBI, Reg, !MBB.isLiveIn(Reg),
+                              CS.getFrameIdx(), RC, TRI, Register());
+    }
+  }
 }
 
 void RISCVFrameLowering::emitEpilogue(MachineFunction &MF,
@@ -658,6 +672,22 @@ void RISCVFrameLowering::emitEpilogue(MachineFunction &MF,
   uint64_t RealStackSize = StackSize + RVFI->getLibCallStackSize();
   uint64_t FPOffset = RealStackSize - RVFI->getVarArgsSaveSize();
   uint64_t RVVStackSize = RVFI->getRVVStackSize();
+
+  if (RVVStackSize) {
+    const RISCVInstrInfo *TII = STI.getInstrInfo();
+    const TargetRegisterInfo *TRI = MF.getSubtarget().getRegisterInfo();
+    const auto &AllCSI = MFI.getCalleeSavedInfo();
+    for (auto &CS : AllCSI) {
+      // Insert the callee saved to the stack frame.
+      int FI = CS.getFrameIdx();
+      if (!(FI >= 0 && MFI.getStackID(FI) == TargetStackID::ScalableVector))
+        continue;
+      Register Reg = CS.getReg();
+      const TargetRegisterClass *RC = TRI->getMinimalPhysRegClass(Reg);
+      TII->loadRegFromStackSlot(MBB, LastFrameDestroy, Reg, CS.getFrameIdx(),
+                                RC, TRI, Register());
+    }
+  }
 
   // Restore the stack pointer using the value of the frame pointer. Only
   // necessary if the stack pointer was modified, meaning the stack size is
@@ -1385,4 +1415,26 @@ bool RISCVFrameLowering::isSupportedStackID(TargetStackID::Value ID) const {
 
 TargetStackID::Value RISCVFrameLowering::getStackIDForScalableVectors() const {
   return TargetStackID::ScalableVector;
+}
+
+void RISCVFrameLowering::updateCalleeSavedStack(
+    MachineFrameInfo &MFI, int FrameIdx, const TargetRegisterClass *RC) const {
+  // FIXME: It should be possible to do this in a nicer way?
+  if (RISCV::VRRegClass.hasSubClassEq(RC) ||
+      RISCV::VRM2RegClass.hasSubClassEq(RC) ||
+      RISCV::VRM4RegClass.hasSubClassEq(RC) ||
+      RISCV::VRM8RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN2M1RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN2M2RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN2M4RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN3M1RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN3M2RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN4M1RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN4M2RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN5M1RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN6M1RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN7M1RegClass.hasSubClassEq(RC) ||
+      RISCV::VRN8M1RegClass.hasSubClassEq(RC)) {
+    MFI.setStackID(FrameIdx, TargetStackID::ScalableVector);
+  }
 }

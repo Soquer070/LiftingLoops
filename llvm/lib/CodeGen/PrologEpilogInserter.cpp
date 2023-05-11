@@ -483,6 +483,7 @@ static void assignCalleeSavedSpillSlots(MachineFunction &F,
       int FrameIdx;
       if (RegInfo->hasReservedSpillSlot(F, Reg, FrameIdx)) {
         CS.setFrameIdx(FrameIdx);
+        TFI->updateCalleeSavedStack(MFI, FrameIdx, RC);
         continue;
       }
 
@@ -510,6 +511,7 @@ static void assignCalleeSavedSpillSlots(MachineFunction &F,
       }
 
       CS.setFrameIdx(FrameIdx);
+      TFI->updateCalleeSavedStack(MFI, FrameIdx, RC);
     }
   }
 
