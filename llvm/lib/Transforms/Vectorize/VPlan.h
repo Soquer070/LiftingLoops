@@ -405,10 +405,6 @@ struct VPTransformState {
   /// Pointer to the VPlan code is generated for.
   VPlan *Plan;
 
-  /// Holds recipes that may generate a poison value that is used after
-  /// vectorization, even when their operands are not poison.
-  SmallPtrSet<VPRecipeBase *, 16> MayGeneratePoisonRecipes;
-
   /// The loop object for the current parent region, or nullptr.
   Loop *CurrentVectorLoop = nullptr;
 
@@ -421,6 +417,10 @@ struct VPTransformState {
 
   /// Only used when widening declare simd calls.
   DenseMap<InstructionVFPair, VFInfo> &DeclareSIMDFnVFInfo;
+
+  /// Map SCEVs to their expanded values. Populated when executing
+  /// VPExpandSCEVRecipes.
+  DenseMap<const SCEV *, Value *> ExpandedSCEVs;
 };
 
 /// VPBlockBase is the building block of the Hierarchical Control-Flow Graph.
@@ -1031,7 +1031,8 @@ public:
 
   static inline bool classof(const VPRecipeBase *R) {
     return R->getVPDefID() == VPRecipeBase::VPWidenSC ||
-           R->getVPDefID() == VPRecipeBase::VPWidenGEPSC;
+           R->getVPDefID() == VPRecipeBase::VPWidenGEPSC ||
+           R->getVPDefID() == VPRecipeBase::VPReplicateSC;
   }
 
   /// Drop all poison-generating flags.
@@ -2005,7 +2006,7 @@ public:
 /// copies of the original scalar type, one per lane, instead of producing a
 /// single copy of widened type for all lanes. If the instruction is known to be
 /// uniform only one copy, per lane zero, will be generated.
-class VPReplicateRecipe : public VPRecipeBase, public VPValue {
+class VPReplicateRecipe : public VPRecipeWithIRFlags, public VPValue {
   /// Indicator if only a single replica per lane is needed.
   bool IsUniform;
 
@@ -2016,8 +2017,8 @@ public:
   template <typename IterT>
   VPReplicateRecipe(Instruction *I, iterator_range<IterT> Operands,
                     bool IsUniform, VPValue *Mask = nullptr)
-      : VPRecipeBase(VPDef::VPReplicateSC, Operands), VPValue(this, I),
-        IsUniform(IsUniform), IsPredicated(Mask) {
+      : VPRecipeWithIRFlags(VPDef::VPReplicateSC, Operands, *I),
+        VPValue(this, I), IsUniform(IsUniform), IsPredicated(Mask) {
     if (Mask)
       addOperand(Mask);
   }
