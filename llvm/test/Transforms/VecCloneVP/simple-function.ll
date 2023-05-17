@@ -56,7 +56,7 @@ attributes #1 = { "_ZGVEMk1vv_simple_function_without_allocas" "_ZGVENk2vv_simpl
 ; CHECK-NEXT:    [[VEC_Y:%.*]] = alloca <vscale x 1 x i64>, align 8
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv1i64.p0(<vscale x 1 x i64> [[Y:%.*]], ptr [[VEC_Y]], <vscale x 1 x i1> [[MASK]], i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 1 x i64>, align 8
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]
@@ -93,7 +93,7 @@ attributes #1 = { "_ZGVEMk1vv_simple_function_without_allocas" "_ZGVENk2vv_simpl
 ; CHECK-NEXT:    [[VEC_Y:%.*]] = alloca <vscale x 2 x i64>, align 16
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv2i64.p0(<vscale x 2 x i64> [[Y:%.*]], ptr [[VEC_Y]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 2 x i64>, align 16
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]
@@ -127,7 +127,7 @@ attributes #1 = { "_ZGVEMk1vv_simple_function_without_allocas" "_ZGVENk2vv_simpl
 ; CHECK-NEXT:    [[VEC_Y:%.*]] = alloca <vscale x 1 x i64>, align 8
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv1i64.p0(<vscale x 1 x i64> [[Y:%.*]], ptr [[VEC_Y]], <vscale x 1 x i1> [[MASK]], i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 1 x i64>, align 8
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]
@@ -164,7 +164,7 @@ attributes #1 = { "_ZGVEMk1vv_simple_function_without_allocas" "_ZGVENk2vv_simpl
 ; CHECK-NEXT:    [[VEC_Y:%.*]] = alloca <vscale x 2 x i64>, align 16
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv2i64.p0(<vscale x 2 x i64> [[Y:%.*]], ptr [[VEC_Y]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 2 x i64>, align 16
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]

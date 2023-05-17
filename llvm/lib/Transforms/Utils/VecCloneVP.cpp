@@ -875,7 +875,7 @@ bool VecCloneVPPass::runImpl(
   Builder.SetInsertPoint(EntryBlock.getTerminator());
   Constant *Zero = ConstantInt::get(Type::getInt32Ty(Clone->getContext()), 0);
   Value *VLCheck = nullptr;
-  VLCheck = Builder.CreateICmpUGE(VL, Zero, "vl.check");
+  VLCheck = Builder.CreateICmpUGT(VL, Zero, "vl.check");
   Builder.CreateCondBr(VLCheck, LoopBlock, NewReturnBlock);
   EntryBlock.getTerminator()->eraseFromParent();
 

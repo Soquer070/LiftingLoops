@@ -164,7 +164,7 @@ attributes #1 = { "_ZGVEMk2vvv_simple_control_flow_with_allocas" "_ZGVENk2vvv_si
 ; CHECK-NEXT:    [[VEC_W:%.*]] = alloca <vscale x 2 x i32>, align 8
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv2i32.p0(<vscale x 2 x i32> [[W:%.*]], ptr [[VEC_W]], <vscale x 2 x i1> [[MASK]], i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 2 x i32>, align 8
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]
@@ -239,7 +239,7 @@ attributes #1 = { "_ZGVEMk2vvv_simple_control_flow_with_allocas" "_ZGVENk2vvv_si
 ; CHECK-NEXT:    [[VEC_W:%.*]] = alloca <vscale x 2 x i32>, align 8
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv2i32.p0(<vscale x 2 x i32> [[W:%.*]], ptr [[VEC_W]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 2 x i32>, align 8
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]
@@ -312,7 +312,7 @@ attributes #1 = { "_ZGVEMk2vvv_simple_control_flow_with_allocas" "_ZGVENk2vvv_si
 ; CHECK-NEXT:    [[VEC_W:%.*]] = alloca <vscale x 2 x i32>, align 8
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv2i32.p0(<vscale x 2 x i32> [[W:%.*]], ptr [[VEC_W]], <vscale x 2 x i1> [[MASK]], i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 2 x i32>, align 8
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]
@@ -390,7 +390,7 @@ attributes #1 = { "_ZGVEMk2vvv_simple_control_flow_with_allocas" "_ZGVENk2vvv_si
 ; CHECK-NEXT:    [[VEC_W:%.*]] = alloca <vscale x 2 x i32>, align 8
 ; CHECK-NEXT:    call void @llvm.vp.store.nxv2i32.p0(<vscale x 2 x i32> [[W:%.*]], ptr [[VEC_W]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[VL]])
 ; CHECK-NEXT:    [[VEC_RET:%.*]] = alloca <vscale x 2 x i32>, align 8
-; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp uge i32 [[VL]], 0
+; CHECK-NEXT:    [[VL_CHECK:%.*]] = icmp ugt i32 [[VL]], 0
 ; CHECK-NEXT:    br i1 [[VL_CHECK]], label [[SIMD_LOOP:%.*]], label [[RETURN:%.*]]
 ; CHECK:       simd.loop:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i32 [ 0, [[ENTRY:%.*]] ], [ [[INDVAR:%.*]], [[SIMD_LOOP_EXIT:%.*]] ]
@@ -404,15 +404,15 @@ attributes #1 = { "_ZGVEMk2vvv_simple_control_flow_with_allocas" "_ZGVENk2vvv_si
 ; CHECK-NEXT:    [[ADD:%.*]] = add nsw i32 [[TMP2]], 4
 ; CHECK-NEXT:    [[VEC_X_GEP3:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_X]], i32 0, i32 [[INDEX]]
 ; CHECK-NEXT:    store i32 [[ADD]], ptr [[VEC_X_GEP3]], align 4
-; CHECK-NEXT:    [[VEC_Y_GEP8:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_Y]], i32 0, i32 [[INDEX]]
-; CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[VEC_Y_GEP8]], align 4
+; CHECK-NEXT:    [[VEC_Y_GEP10:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_Y]], i32 0, i32 [[INDEX]]
+; CHECK-NEXT:    [[TMP3:%.*]] = load i32, ptr [[VEC_Y_GEP10]], align 4
 ; CHECK-NEXT:    [[ADD1:%.*]] = add nsw i32 [[TMP3]], 5
-; CHECK-NEXT:    [[VEC_Y_GEP7:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_Y]], i32 0, i32 [[INDEX]]
-; CHECK-NEXT:    store i32 [[ADD1]], ptr [[VEC_Y_GEP7]], align 4
+; CHECK-NEXT:    [[VEC_Y_GEP9:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_Y]], i32 0, i32 [[INDEX]]
+; CHECK-NEXT:    store i32 [[ADD1]], ptr [[VEC_Y_GEP9]], align 4
 ; CHECK-NEXT:    br label [[IF_END6:%.*]]
 ; CHECK:       if.else:
-; CHECK-NEXT:    [[VEC_Y_GEP6:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_Y]], i32 0, i32 [[INDEX]]
-; CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[VEC_Y_GEP6]], align 4
+; CHECK-NEXT:    [[VEC_Y_GEP8:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_Y]], i32 0, i32 [[INDEX]]
+; CHECK-NEXT:    [[TMP4:%.*]] = load i32, ptr [[VEC_Y_GEP8]], align 4
 ; CHECK-NEXT:    [[CMP2:%.*]] = icmp sgt i32 [[TMP4]], 7
 ; CHECK-NEXT:    br i1 [[CMP2]], label [[IF_THEN3:%.*]], label [[IF_END:%.*]]
 ; CHECK:       if.then3:
@@ -421,11 +421,11 @@ attributes #1 = { "_ZGVEMk2vvv_simple_control_flow_with_allocas" "_ZGVENk2vvv_si
 ; CHECK-NEXT:    [[ADD4:%.*]] = add nsw i32 [[TMP5]], 5
 ; CHECK-NEXT:    [[VEC_X_GEP1:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_X]], i32 0, i32 [[INDEX]]
 ; CHECK-NEXT:    store i32 [[ADD4]], ptr [[VEC_X_GEP1]], align 4
-; CHECK-NEXT:    [[VEC_W_GEP10:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_W]], i32 0, i32 [[INDEX]]
-; CHECK-NEXT:    [[TMP6:%.*]] = load i32, ptr [[VEC_W_GEP10]], align 4
+; CHECK-NEXT:    [[VEC_W_GEP7:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_W]], i32 0, i32 [[INDEX]]
+; CHECK-NEXT:    [[TMP6:%.*]] = load i32, ptr [[VEC_W_GEP7]], align 4
 ; CHECK-NEXT:    [[ADD5:%.*]] = add nsw i32 [[TMP6]], 5
-; CHECK-NEXT:    [[VEC_W_GEP9:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_W]], i32 0, i32 [[INDEX]]
-; CHECK-NEXT:    store i32 [[ADD5]], ptr [[VEC_W_GEP9]], align 4
+; CHECK-NEXT:    [[VEC_W_GEP6:%.*]] = getelementptr <vscale x 2 x i32>, ptr [[VEC_W]], i32 0, i32 [[INDEX]]
+; CHECK-NEXT:    store i32 [[ADD5]], ptr [[VEC_W_GEP6]], align 4
 ; CHECK-NEXT:    br label [[IF_END]]
 ; CHECK:       if.end:
 ; CHECK-NEXT:    br label [[IF_END6]]
