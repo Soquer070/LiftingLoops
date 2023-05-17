@@ -868,9 +868,8 @@ bool VecCloneVPPass::runImpl(
   for (ReturnInst *RetInst : OldReturns) {
     assert(RetInst == RetInst->getParent()->getTerminator());
     Builder.SetInsertPoint(RetInst);
-    Value *StoreVal = RetInst->getOperand(0);
-    Type *StoreValTy = StoreVal->getType();
-    if (!StoreValTy->isVoidTy()) {
+    if (auto *StoreVal = RetInst->getReturnValue()) {
+      Type *StoreValTy = StoreVal->getType();
       Value *MemPtr = VecRetAlloca;
       if (!VecRetAlloca->getType()->isOpaquePointerTy()) {
         // Cast it to a pointer to the type of the old return instruction.
