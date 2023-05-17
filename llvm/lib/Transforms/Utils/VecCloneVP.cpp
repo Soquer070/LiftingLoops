@@ -254,15 +254,14 @@ Function *VecCloneVPPass::cloneFunction(Module &M, Function &F,
       ParmTypes.push_back(ParamTy);
     ++VKIt;
   }
-
+  // Mask parameter.
   if (isMasked(V.Shape)) {
     Type *MaskVecTy =
         VectorType::get(Type::getInt1Ty(M.getContext()), V.Shape.VF);
     ParmTypes.push_back(MaskVecTy);
   }
-
-  if (hasVL(V.Shape))
-    ParmTypes.push_back(Type::getInt32Ty(M.getContext()));
+  // VL parameter.
+  ParmTypes.push_back(Type::getInt32Ty(M.getContext()));
 
   FunctionType *CloneFuncType = FunctionType::get(ReturnType, ParmTypes, false);
   Function *Clone = Function::Create(
@@ -275,17 +274,15 @@ Function *VecCloneVPPass::cloneFunction(Module &M, Function &F,
     Vmap[&Arg] = &*NewArgIt;
     ++NewArgIt;
   }
-
+  // Mask argument.
   if (isMasked(V.Shape)) {
     Argument &MaskArg = *NewArgIt;
     MaskArg.setName("mask");
     ++NewArgIt;
   }
-
-  if (hasVL(V.Shape)) {
-    Argument &VLArg = *NewArgIt;
-    VLArg.setName("vl");
-  }
+  // VL argument.
+  Argument &VLArg = *NewArgIt;
+  VLArg.setName("vl");
 
   SmallVector<ReturnInst *, 8> Returns;
   CloneFunctionInto(Clone, &F, Vmap, CloneFunctionChangeType::LocalChangesOnly,
@@ -307,8 +304,7 @@ Function *VecCloneVPPass::cloneFunction(Module &M, Function &F,
   Clone->removeRetAttrs(AM);
 
   // Add zeroext attribute to VL operand.
-  if (hasVL(V.Shape))
-    Clone->addParamAttr(Clone->arg_size() - 1, Attribute::ZExt);
+  Clone->addParamAttr(Clone->arg_size() - 1, Attribute::ZExt);
 
   LLVM_DEBUG(
       dbgs() << "[VecCloneVP] After Cloning and Function Signature widening\n");
@@ -490,21 +486,17 @@ void VecCloneVPPass::widenAllocaInstructions(
                   VecArgType, DL.getAllocaAddrSpace(), nullptr,
                   "vec." + ArgName);
 
-              if (VL) {
-                auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
-                if (Mask)
-                  VPBuilder.setMask(Mask);
-                else {
-                  auto *AllOnes = ConstantInt::getAllOnesValue(
-                      VectorType::get(Builder.getInt1Ty(), VecArgType));
-                  VPBuilder.setMask(AllOnes);
-                }
-                VPBuilder.setEVL(VL);
-                VPBuilder.createVectorInstruction(Instruction::Store, nullptr,
-                                                  {&Arg, VecAlloca});
-              } else
-                Builder.CreateAlignedStore(
-                    &Arg, VecAlloca, DL.getPrefTypeAlign(VecArgType), false);
+              auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
+              if (Mask)
+                VPBuilder.setMask(Mask);
+              else {
+                auto *AllOnes = ConstantInt::getAllOnesValue(
+                    VectorType::get(Builder.getInt1Ty(), VecArgType));
+                VPBuilder.setMask(AllOnes);
+              }
+              VPBuilder.setEVL(VL);
+              VPBuilder.createVectorInstruction(Instruction::Store, nullptr,
+                                                {&Arg, VecAlloca});
 
               AllocaMap[Alloca] = VecAlloca;
               StoresToRemove.push_back(StoreUser);
@@ -638,21 +630,17 @@ void VecCloneVPPass::updateParameterUsers(Function *Clone,
           AllocaInst *VecAlloca = Builder.CreateAlloca(
               VecArgType, DL.getAllocaAddrSpace(), nullptr, "vec." + ArgName);
 
-          if (VL) {
-            auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
-            if (Mask)
-              VPBuilder.setMask(Mask);
-            else {
-              auto *AllOnes = ConstantInt::getAllOnesValue(
-                  VectorType::get(Builder.getInt1Ty(), VecArgType));
-              VPBuilder.setMask(AllOnes);
-            }
-            VPBuilder.setEVL(VL);
-            VPBuilder.createVectorInstruction(Instruction::Store, nullptr,
-                                              {&Arg, VecAlloca});
-          } else
-            Builder.CreateAlignedStore(&Arg, VecAlloca,
-                                       DL.getPrefTypeAlign(VecArgType), false);
+          auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
+          if (Mask)
+            VPBuilder.setMask(Mask);
+          else {
+            auto *AllOnes = ConstantInt::getAllOnesValue(
+                VectorType::get(Builder.getInt1Ty(), VecArgType));
+            VPBuilder.setMask(AllOnes);
+          }
+          VPBuilder.setEVL(VL);
+          VPBuilder.createVectorInstruction(Instruction::Store, nullptr,
+                                            {&Arg, VecAlloca});
 
           VecParmCasts[&Arg] = VecAlloca;
           if (!VecAlloca->getType()->isOpaquePointerTy()) {
@@ -737,10 +725,9 @@ bool VecCloneVPPass::runImpl(
 
   // Retrieve Mask and VL values.
   size_t NumArgs = Clone->arg_size() - 1;
-  Value *VL = nullptr;
-  if (hasVL(Variant.Shape))
-    VL = Clone->getArg(NumArgs--);
-
+  assert(hasVL(Variant.Shape) && "VecCloneVP requires vector length");
+  Value *VL = Clone->getArg(NumArgs--);
+  assert(VL && "Vector length must be a valid value!");
   Value *Mask = nullptr;
   if (isMasked(Variant.Shape))
     Mask = Clone->getArg(NumArgs--);
@@ -784,26 +771,17 @@ bool VecCloneVPPass::runImpl(
       break;
     }
     Builder.SetInsertPoint(EntryBlock.getFirstNonPHI());
-    if (VL) {
-      auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
-      auto *AllOnes = ConstantInt::getAllOnesValue(
-          VectorType::get(Builder.getInt1Ty(), DestType));
-      VPBuilder.setMask(AllOnes);
-      VPBuilder.setEVL(VL);
-      Value *ZExt = VPBuilder.createVectorInstruction(
-          Instruction::ZExt, DestType, {Mask}, "vp.zext." + Mask->getName());
-      MaskAlloca = Builder.CreateAlloca(DestType, DL.getAllocaAddrSpace(),
-                                        nullptr, "vec." + Mask->getName());
-      VPBuilder.createVectorInstruction(Instruction::Store, nullptr,
-                                        {ZExt, MaskAlloca});
-    } else {
-      Value *ZExt =
-          Builder.CreateZExt(Mask, DestType, "zext." + Mask->getName());
-      MaskAlloca = Builder.CreateAlloca(DestType, DL.getAllocaAddrSpace(),
-                                        nullptr, "vec." + Mask->getName());
-      Builder.CreateAlignedStore(ZExt, MaskAlloca,
-                                 DL.getPrefTypeAlign(DestType), false);
-    }
+    auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
+    auto *AllOnes = ConstantInt::getAllOnesValue(
+        VectorType::get(Builder.getInt1Ty(), DestType));
+    VPBuilder.setMask(AllOnes);
+    VPBuilder.setEVL(VL);
+    Value *ZExt = VPBuilder.createVectorInstruction(
+        Instruction::ZExt, DestType, {Mask}, "vp.zext." + Mask->getName());
+    MaskAlloca = Builder.CreateAlloca(DestType, DL.getAllocaAddrSpace(),
+                                      nullptr, "vec." + Mask->getName());
+    VPBuilder.createVectorInstruction(Instruction::Store, nullptr,
+                                      {ZExt, MaskAlloca});
   }
 
   // On the split, the alloca instructions are moved into LoopBlock. Move
@@ -897,14 +875,7 @@ bool VecCloneVPPass::runImpl(
   Builder.SetInsertPoint(EntryBlock.getTerminator());
   Constant *Zero = ConstantInt::get(Type::getInt32Ty(Clone->getContext()), 0);
   Value *VLCheck = nullptr;
-  if (VL)
-    VLCheck = Builder.CreateICmpUGE(VL, Zero, "vl.check");
-  else {
-    auto *KMV = ConstantInt::get(Type::getInt32Ty(Clone->getContext()),
-                                 Variant.Shape.VF.getKnownMinValue());
-    VLCheck = Builder.CreateICmpUGE(Builder.CreateVScale(KMV, "vscale"), Zero,
-                                    "vl.check");
-  }
+  VLCheck = Builder.CreateICmpUGE(VL, Zero, "vl.check");
   Builder.CreateCondBr(VLCheck, LoopBlock, NewReturnBlock);
   EntryBlock.getTerminator()->eraseFromParent();
 
@@ -915,14 +886,7 @@ bool VecCloneVPPass::runImpl(
       ConstantInt::get(Type::getInt32Ty(Clone->getContext()), 1);
   auto *Induction = Builder.CreateNSWAdd(Phi, Increment, "indvar");
   Value *ExitCond = nullptr;
-  if (VL)
-    ExitCond = Builder.CreateICmpEQ(Induction, VL, "exit.cond");
-  else {
-    auto *KMV = ConstantInt::get(Type::getInt32Ty(Clone->getContext()),
-                                 Variant.Shape.VF.getKnownMinValue());
-    ExitCond = Builder.CreateICmpEQ(
-        Induction, Builder.CreateVScale(KMV, "vscale"), "exit.cond");
-  }
+  ExitCond = Builder.CreateICmpEQ(Induction, VL, "exit.cond");
   Builder.CreateCondBr(ExitCond, NewReturnBlock, LoopBlock);
   LoopExitBlock->getTerminator()->eraseFromParent();
 
@@ -936,22 +900,17 @@ bool VecCloneVPPass::runImpl(
   Instruction *RetInst = NewReturnBlock->getTerminator();
   Builder.SetInsertPoint(RetInst);
   if (!VecRetTy->isVoidTy()) {
-    if (VL) {
-      auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
-      if (Mask)
-        VPBuilder.setMask(Mask);
-      else {
-        auto *AllOnes = ConstantInt::getAllOnesValue(
-            VectorType::get(Builder.getInt1Ty(), cast<VectorType>(VecRetTy)));
-        VPBuilder.setMask(AllOnes);
-      }
-      VPBuilder.setEVL(VL);
-      VecReturn = VPBuilder.createVectorInstruction(Instruction::Load, VecRetTy,
-                                                    {VecRetAlloca}, "vec.ret");
-    } else
-      VecReturn = Builder.CreateAlignedLoad(VecRetTy, VecRetAlloca,
-                                            DL.getPrefTypeAlign(VecRetTy),
-                                            "vec.ret");
+    auto VPBuilder = VectorBuilder(cast<IRBuilderBase>(Builder));
+    if (Mask)
+      VPBuilder.setMask(Mask);
+    else {
+      auto *AllOnes = ConstantInt::getAllOnesValue(
+          VectorType::get(Builder.getInt1Ty(), cast<VectorType>(VecRetTy)));
+      VPBuilder.setMask(AllOnes);
+    }
+    VPBuilder.setEVL(VL);
+    VecReturn = VPBuilder.createVectorInstruction(Instruction::Load, VecRetTy,
+                                                  {VecRetAlloca}, "vec.ret");
   }
   Builder.CreateRet(VecReturn);
   RetInst->eraseFromParent();
@@ -968,20 +927,18 @@ bool VecCloneVPPass::runImpl(
   addLoopMetadata(LoopExitBlock, Variant.Shape.VF);
 
   // Add llvm.assume(vl <= vscale x k)
-  if (VL) {
-    Builder.SetInsertPoint(EntryBlock.getFirstNonPHI());
-    auto *KMV = ConstantInt::get(Type::getInt32Ty(Clone->getContext()),
-                                 Variant.Shape.VF.getKnownMinValue());
-    Value *VScale = Builder.CreateVScale(KMV, "vscale");
-    auto *AssumeCond = Builder.CreateICmpULE(VL, VScale, "assume.cond");
-    auto *Assume = Builder.CreateAssumption(AssumeCond);
-    assert(isa<AssumeInst>(Assume) &&
-           "Created a llvm.assume that is not an assume instruction?");
+  Builder.SetInsertPoint(EntryBlock.getFirstNonPHI());
+  auto *KMV = ConstantInt::get(Type::getInt32Ty(Clone->getContext()),
+                               Variant.Shape.VF.getKnownMinValue());
+  Value *VScale = Builder.CreateVScale(KMV, "vscale");
+  auto *AssumeCond = Builder.CreateICmpULE(VL, VScale, "assume.cond");
+  auto *Assume = Builder.CreateAssumption(AssumeCond);
+  assert(isa<AssumeInst>(Assume) &&
+         "Created a llvm.assume that is not an assume instruction?");
 
-    // Register new assumption
-    auto &AC = GetAC(*Clone);
-    AC.registerAssumption(cast<AssumeInst>(Assume));
-  }
+  // Register new assumption
+  auto &AC = GetAC(*Clone);
+  AC.registerAssumption(cast<AssumeInst>(Assume));
 
   LLVM_DEBUG(dbgs() << "[VecCloneVP] After SIMD Function Cloning\n");
   LLVM_DEBUG(Clone->dump());
