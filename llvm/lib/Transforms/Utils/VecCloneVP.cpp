@@ -344,6 +344,18 @@ void VecCloneVPPass::removeIncompatibleAttributes(Function *Clone) {
   }
 }
 
+void VecCloneVPPass::addAccessGroup(Function *Clone) {
+  LLVMContext &Context = Clone->getContext();
+  MDNode *NewAccessGroup = MDNode::getDistinct(Context, {});
+  for (auto &BB : *Clone) {
+    for (auto &I : BB) {
+      if (isa<LoadInst>(I) || isa<StoreInst>(I))
+        I.setMetadata("llvm.access.group", NewAccessGroup);
+    }
+  }
+  MemoryAccessGroup = NewAccessGroup;
+}
+
 void VecCloneVPPass::insertSplitForMaskedVariant(Function *Clone,
                                                  const DataLayout &DL,
                                                  BasicBlock *LoopBlock,
@@ -438,6 +450,10 @@ void VecCloneVPPass::addLoopMetadata(BasicBlock *Latch, ElementCount VF) {
   // Do not allow the scalar epilogue.
   MDs.push_back(MDNode::get(
       Context, MDString::get(Context, "llvm.loop.epilogue.forbid")));
+  // Avoid memchecks.
+  MDs.push_back(MDNode::get(
+      Context, {MDString::get(Context, "llvm.loop.parallel_accesses"),
+                MemoryAccessGroup}));
 
   MDNode *NewLoopID = MDNode::get(Context, MDs);
   // Set operand 0 to refer to the loop id itself.
@@ -658,10 +674,12 @@ void VecCloneVPPass::updateParameterUsers(Function *Clone,
             Builder.CreateGEP(VecArgType->getElementType(), VecParmCasts[&Arg],
                               Phi, VecParmCasts[&Arg]->getName() + ".gep");
 
-        Value *ArgElemLoad =
-            Builder.CreateAlignedLoad(VecArgType->getElementType(), VecAllocaCastGep,
-                                      DL.getPrefTypeAlign(VecArgType->getElementType()),
-                                      false, "vec." + ArgName + ".elem");
+        LoadInst *ArgElemLoad = Builder.CreateAlignedLoad(
+            VecArgType->getElementType(), VecAllocaCastGep,
+            DL.getPrefTypeAlign(VecArgType->getElementType()), false,
+            "vec." + ArgName + ".elem");
+        // Add load to the AccessGroup
+        ArgElemLoad->setMetadata("llvm.access.group", MemoryAccessGroup);
 
         User->setOperand(Use->getOperandNo(), ArgElemLoad);
       } else if (ParmKinds[ArgNo].ParamKind == VFParamKind::OMP_Linear) {
@@ -721,7 +739,11 @@ bool VecCloneVPPass::runImpl(
   if (F.isDeclaration())
     return true; // LLVM IR has been modified
 
-  IRBuilder<> Builder(Clone->getContext());
+  BasicBlock &EntryBlock = Clone->getEntryBlock();
+  if (isSimpleFunction(Clone, EntryBlock)) {
+    LLVM_DEBUG(dbgs() << "[VecCloneVP] Function is too simple\n");
+    return false;
+  }
 
   // Retrieve Mask and VL values.
   size_t NumArgs = Clone->arg_size() - 1;
@@ -732,14 +754,12 @@ bool VecCloneVPPass::runImpl(
   if (isMasked(Variant.Shape))
     Mask = Clone->getArg(NumArgs--);
 
+  // Link together all loads and stores by assigning them all to the same AG.
+  addAccessGroup(Clone);
+
+  IRBuilder<> Builder(Clone->getContext());
   const DataLayout &DL = Clone->getParent()->getDataLayout();
   DenseMap<AllocaInst *, Instruction *> AllocaMap;
-
-  BasicBlock &EntryBlock = Clone->getEntryBlock();
-  if (isSimpleFunction(Clone, EntryBlock)) {
-    LLVM_DEBUG(dbgs() << "[VecCloneVP] Function is too simple\n");
-    return false;
-  }
 
   // Split the entry block to create the one for the loop body.
   BasicBlock *LoopBlock =

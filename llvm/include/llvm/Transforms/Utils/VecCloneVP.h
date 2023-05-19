@@ -35,7 +35,7 @@ typedef std::vector<VFInfo> DeclaredVariants;
 typedef std::map<Function *, DeclaredVariants> FunctionVariants;
 
 struct VecCloneVPPass : public PassInfoMixin<VecCloneVPPass> {
-
+  MDNode* MemoryAccessGroup = nullptr;
 public:
   /// \brief Get all functions marked for vectorization in module and their
   /// list of variants.
@@ -78,6 +78,9 @@ private:
   /// \brief Remove any incompatible parameter attributes as a result of
   /// widening vector parameters.
   void removeIncompatibleAttributes(Function *Clone);
+
+  /// \brief Add access group metadata to memory accessing instructions.
+  void addAccessGroup(Function *Clone);
 
   /// \brief Check to see if the function is simple enough that a loop does
   /// not need to be inserted into the function.
