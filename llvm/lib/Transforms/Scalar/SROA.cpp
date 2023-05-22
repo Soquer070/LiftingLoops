@@ -4015,6 +4015,10 @@ static Type *getTypePartition(const DataLayout &DL, Type *Ty, uint64_t Offset,
     return nullptr;
 
   const StructLayout *SL = DL.getStructLayout(STy);
+
+  if (SL->getSizeInBits().isScalable())
+    return nullptr;
+
   if (Offset >= SL->getSizeInBytes())
     return nullptr;
   uint64_t EndOffset = Offset + Size;
@@ -4989,8 +4993,9 @@ SROAPass::runOnAlloca(AllocaInst &AI) {
   // Skip alloca forms that this analysis can't handle.
   auto *AT = AI.getAllocatedType();
   TypeSize Size = DL.getTypeAllocSize(AT);
-  if (AI.isArrayAllocation() || !AT->isSized() || Size.isScalable() ||
-      Size.getFixedValue() == 0)
+  // FIXME: EPI. Change clang's codegen to avoid this.
+  if (AI.isArrayAllocation() || !AT->isSized() || 
+      (!Size.isScalable() && Size.getFixedValue() == 0))
     return {Changed, CFGChanged};
 
   // First, split any FCA loads and stores touching this alloca to promote

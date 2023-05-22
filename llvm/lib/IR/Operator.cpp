@@ -152,7 +152,9 @@ bool GEPOperator::accumulateConstantOffset(
         const StructLayout *SL = DL.getStructLayout(STy);
         // Element offset is in bytes.
         if (!AccumulateOffset(
-                APInt(Offset.getBitWidth(), SL->getElementOffset(ElementIdx)),
+                APInt(Offset.getBitWidth(),
+                  // FIXME: EPI.
+                      SL->getElementOffset(ElementIdx).getKnownMinValue()),
                 1))
           return false;
         continue;

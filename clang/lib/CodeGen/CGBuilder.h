@@ -195,7 +195,9 @@ public:
     llvm::StructType *ElTy = cast<llvm::StructType>(Addr.getElementType());
     const llvm::DataLayout &DL = BB->getParent()->getParent()->getDataLayout();
     const llvm::StructLayout *Layout = DL.getStructLayout(ElTy);
-    auto Offset = CharUnits::fromQuantity(Layout->getElementOffset(Index));
+    // FIXME: EPI
+    auto Offset = CharUnits::fromQuantity(
+        Layout->getElementOffset(Index).getKnownMinValue());
 
     return Address(
         CreateStructGEP(Addr.getElementType(), Addr.getPointer(), Index, Name),

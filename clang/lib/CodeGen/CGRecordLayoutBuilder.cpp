@@ -948,7 +948,9 @@ CodeGenTypes::ComputeRecordLayout(const RecordDecl *D, llvm::StructType *Ty) {
   const ASTRecordLayout &Layout = getContext().getASTRecordLayout(D);
 
   uint64_t TypeSizeInBits = getContext().toBits(Layout.getSize());
-  assert(TypeSizeInBits == getDataLayout().getTypeAllocSizeInBits(Ty) &&
+  assert(TypeSizeInBits ==
+             // EPI: FIXME
+             getDataLayout().getTypeAllocSizeInBits(Ty).getKnownMinValue() &&
          "Type size mismatch!");
 
   if (BaseTy) {
@@ -979,7 +981,9 @@ CodeGenTypes::ComputeRecordLayout(const RecordDecl *D, llvm::StructType *Ty) {
     // AST offset.
     if (!FD->isBitField()) {
       unsigned FieldNo = RL->getLLVMFieldNo(FD);
-      assert(AST_RL.getFieldOffset(i) == SL->getElementOffsetInBits(FieldNo) &&
+      // EPI: FIXME
+      assert(AST_RL.getFieldOffset(i) ==
+                 SL->getElementOffsetInBits(FieldNo).getKnownMinValue() &&
              "Invalid field offset!");
       continue;
     }

@@ -1,4 +1,4 @@
-; XFAIL: *
+; XPASS: *
 ; RUN: not opt -S -passes=verify < %s 2>&1 | FileCheck %s
 
 define <vscale x 1 x i32> @load(ptr %x) {

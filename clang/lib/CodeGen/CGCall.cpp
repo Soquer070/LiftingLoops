@@ -3136,9 +3136,13 @@ void CodeGenFunction::EmitFunctionProlog(const CGFunctionInfo &FI,
       llvm::StructType *STy = dyn_cast<llvm::StructType>(ArgI.getCoerceToType());
       if (ArgI.isDirect() && ArgI.getCanBeFlattened() && STy &&
           STy->getNumElements() > 1) {
-        uint64_t SrcSize = CGM.getDataLayout().getTypeAllocSize(STy);
+        // EPI: FIXME
+        uint64_t SrcSize =
+            CGM.getDataLayout().getTypeAllocSize(STy).getKnownMinValue();
         llvm::Type *DstTy = Ptr.getElementType();
-        uint64_t DstSize = CGM.getDataLayout().getTypeAllocSize(DstTy);
+        // EPI: FIXME
+        uint64_t DstSize =
+            CGM.getDataLayout().getTypeAllocSize(DstTy).getKnownMinValue();
 
         Address AddrToStoreInto = Address::invalid();
         if (SrcSize <= DstSize) {
