@@ -266,7 +266,7 @@ def SparseTensorEncodingAttr : SparseTensor_Attr<"SparseTensorEncoding",
     ArrayRefParameter<
       "::mlir::sparse_tensor::DimLevelType",
       "level-types"
-      >: $dimLevelType,
+      >: $lvlTypes,
     // A permutation from (higher-ordering)-coordinates to level-coordinates.
     "AffineMap":$dimOrdering,
     // A mapping from dimension-coordinates to (higher-ordering)-coordinates.
@@ -283,12 +283,12 @@ def SparseTensorEncodingAttr : SparseTensor_Attr<"SparseTensorEncoding",
   );
 
   let builders = [
-    AttrBuilder<(ins "ArrayRef<::mlir::sparse_tensor::DimLevelType>":$dimLevelType,
+    AttrBuilder<(ins "ArrayRef<::mlir::sparse_tensor::DimLevelType>":$lvlTypes,
                      "AffineMap":$dimOrdering,
                      "AffineMap":$higherOrdering,
                      "unsigned":$posWidth,
                      "unsigned":$crdWidth), [{
-      return $_get($_ctxt, dimLevelType,
+      return $_get($_ctxt, lvlTypes,
                          dimOrdering,
                          higherOrdering,
                          posWidth,
@@ -342,9 +342,9 @@ def SparseTensorEncodingAttr : SparseTensor_Attr<"SparseTensorEncoding",
     bool isOrderedLvl(::mlir::sparse_tensor::Level l) const { return isOrderedDLT(getLvlType(l)); }
     bool isUniqueLvl(::mlir::sparse_tensor::Level l) const { return isUniqueDLT(getLvlType(l)); }
 
-    bool isSlice() const {
-      return !getDimSlices().empty();
-    }
+    bool isSlice() const;
+
+    ::mlir::sparse_tensor::SparseTensorDimSliceAttr getDimSlice(::mlir::sparse_tensor::Dimension dim) const;
 
     std::optional<uint64_t> getStaticDimSliceOffset(::mlir::sparse_tensor::Dimension dim) const;
     std::optional<uint64_t> getStaticDimSliceSize(::mlir::sparse_tensor::Dimension dim) const;

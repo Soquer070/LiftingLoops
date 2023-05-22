@@ -18,7 +18,7 @@ define <vscale x 1 x double> @test_vp_fma_nxv1f64(<vscale x 1 x double> %f0, <vs
 define <vscale x 1 x double> @test_vp_fma_nxv1f64_masked(<vscale x 1 x double> %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) nounwind {
 ; CHECK-LABEL: test_vp_fma_nxv1f64_masked:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfmadd.vv v9, v8, v10, v0.t
 ; CHECK-NEXT:    vmv.v.v v8, v9
 ; CHECK-NEXT:    ret
@@ -42,7 +42,7 @@ define <vscale x 2 x double> @test_vp_fma_nxv2f64(<vscale x 2 x double> %f0, <vs
 define <vscale x 2 x double> @test_vp_fma_nxv2f64_masked(<vscale x 2 x double> %f0, <vscale x 2 x double> %f1, <vscale x 2 x double> %f2, <vscale x 2 x i1> %m, i32 zeroext %n) nounwind {
 ; CHECK-LABEL: test_vp_fma_nxv2f64_masked:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m2, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m2, ta, ma
 ; CHECK-NEXT:    vfmadd.vv v10, v8, v12, v0.t
 ; CHECK-NEXT:    vmv.v.v v8, v10
 ; CHECK-NEXT:    ret
@@ -66,7 +66,7 @@ define <vscale x 2 x float> @test_vp_fma_nxv2f32(<vscale x 2 x float> %f0, <vsca
 define <vscale x 2 x float> @test_vp_fma_nxv2f32_masked(<vscale x 2 x float> %f0, <vscale x 2 x float> %f1, <vscale x 2 x float> %f2, <vscale x 2 x i1> %m, i32 zeroext %n) nounwind {
 ; CHECK-LABEL: test_vp_fma_nxv2f32_masked:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e32, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e32, m1, ta, ma
 ; CHECK-NEXT:    vfmadd.vv v9, v8, v10, v0.t
 ; CHECK-NEXT:    vmv.v.v v8, v9
 ; CHECK-NEXT:    ret
@@ -81,7 +81,7 @@ declare <vscale x 2 x float> @llvm.vp.fma.nxv2f32(<vscale x 2 x float>, <vscale 
 define <vscale x 1 x double> @test_vp_fma_neg_operand_3(<vscale x 1 x double> %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) {
 ; CHECK-LABEL: test_vp_fma_neg_operand_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v11, v10
 ; CHECK-NEXT:    vfmsub.vv v8, v9, v10
 ; CHECK-NEXT:    vfmadd.vv v9, v8, v11, v0.t
@@ -101,7 +101,7 @@ define <vscale x 1 x double> @test_vp_fma_neg_operand_3(<vscale x 1 x double> %f
 define <vscale x 1 x double> @test_vp_fma_neg_operand_1_3(<vscale x 1 x double> %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) {
 ; CHECK-LABEL: test_vp_fma_neg_operand_1_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v11, v8
 ; CHECK-NEXT:    vfneg.v v12, v10
 ; CHECK-NEXT:    vfnmadd.vv v8, v9, v10
@@ -122,7 +122,7 @@ define <vscale x 1 x double> @test_vp_fma_neg_operand_1_3(<vscale x 1 x double> 
 define <vscale x 1 x double> @test_vp_fma_neg_operand_1(<vscale x 1 x double> %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) {
 ; CHECK-LABEL: test_vp_fma_neg_operand_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v11, v8
 ; CHECK-NEXT:    vfnmsub.vv v8, v9, v10
 ; CHECK-NEXT:    vfmadd.vv v8, v11, v10, v0.t
@@ -141,7 +141,7 @@ define <vscale x 1 x double> @test_vp_fma_neg_operand_1(<vscale x 1 x double> %f
 define <vscale x 1 x double> @test_vp_fma_splat_op_1(double %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) {
 ; CHECK-LABEL: test_vp_fma_splat_op_1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfmadd.vf v8, fa0, v9
 ; CHECK-NEXT:    vfmadd.vf v8, fa0, v9, v0.t
 ; CHECK-NEXT:    ret
@@ -160,7 +160,7 @@ define <vscale x 1 x double> @test_vp_fma_splat_op_1(double %f0, <vscale x 1 x d
 define <vscale x 1 x double> @test_vp_fma_splat_op_1_neg_op_3(double %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) {
 ; CHECK-LABEL: test_vp_fma_splat_op_1_neg_op_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v10, v9
 ; CHECK-NEXT:    vfmsub.vf v8, fa0, v9
 ; CHECK-NEXT:    vfmadd.vf v8, fa0, v10, v0.t
@@ -182,7 +182,7 @@ define <vscale x 1 x double> @test_vp_fma_splat_op_1_neg_op_3(double %f0, <vscal
 define <vscale x 1 x double> @test_vp_fma_splat_op_1_neg_op_2_3(double %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) {
 ; CHECK-LABEL: test_vp_fma_splat_op_1_neg_op_2_3:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v10, v9
 ; CHECK-NEXT:    vfnmadd.vf v8, fa0, v9
 ; CHECK-NEXT:    vfneg.v v8, v8
@@ -209,7 +209,7 @@ define <vscale x 1 x double> @test_vp_fma_splat_op_1_neg_op_2_3(double %f0, <vsc
 define <vscale x 1 x double> @test_vp_fma_splat_op_1_neg_op_2(double %f0, <vscale x 1 x double> %f1, <vscale x 1 x double> %f2, <vscale x 1 x i1> %m, i32 zeroext %n) {
 ; CHECK-LABEL: test_vp_fma_splat_op_1_neg_op_2:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v10, v8
 ; CHECK-NEXT:    vfnmsac.vf v9, fa0, v8
 ; CHECK-NEXT:    vfmadd.vf v10, fa0, v9, v0.t
@@ -234,7 +234,7 @@ define <vscale x 1 x double> @test_vp_fma_neg_splat_op_1_neg_op_3(double %f0, <v
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    vsetvli a1, zero, e64, m1, ta, ma
 ; CHECK-NEXT:    vfmv.v.f v10, fa0
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v10, v10
 ; CHECK-NEXT:    vfneg.v v11, v9
 ; CHECK-NEXT:    vfnmadd.vf v8, fa0, v9
@@ -260,7 +260,7 @@ define <vscale x 1 x double> @test_vp_fma_neg_splat_op_1(double %f0, <vscale x 1
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    vsetvli a1, zero, e64, m1, ta, ma
 ; CHECK-NEXT:    vfmv.v.f v10, fa0
-; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vfneg.v v10, v10
 ; CHECK-NEXT:    vfnmsub.vf v8, fa0, v9
 ; CHECK-NEXT:    vfmadd.vv v8, v10, v9, v0.t

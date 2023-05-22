@@ -170,7 +170,7 @@ define void @test_vp_fp(<vscale x 1 x double>* %a0, <vscale x 1 x double>* %a1, 
 ; CHECK-O0-NEXT:    add a1, sp, a1
 ; CHECK-O0-NEXT:    addi a1, a1, 48
 ; CHECK-O0-NEXT:    vl1r.v v8, (a1) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vsetvli zero, a4, e64, m1, ta, mu
+; CHECK-O0-NEXT:    vsetvli zero, a4, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vfmadd.vv v10, v8, v9, v0.t
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    slli a2, a1, 3
@@ -179,7 +179,6 @@ define void @test_vp_fp(<vscale x 1 x double>* %a0, <vscale x 1 x double>* %a1, 
 ; CHECK-O0-NEXT:    addi a1, a1, 48
 ; CHECK-O0-NEXT:    vl1r.v v0, (a1) # Unknown-size Folded Reload
 ; CHECK-O0-NEXT:    # implicit-def: $v9
-; CHECK-O0-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vfneg.v v9, v8, v0.t
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    slli a2, a1, 3
@@ -275,10 +274,9 @@ define void @test_vp_fp(<vscale x 1 x double>* %a0, <vscale x 1 x double>* %a1, 
 ; CHECK-O2-NEXT:    vmv.v.v v9, v18
 ; CHECK-O2-NEXT:    mv a0, s0
 ; CHECK-O2-NEXT:    call __epi_fmod_nxv1f64_m@plt
-; CHECK-O2-NEXT:    vsetvli zero, s0, e64, m1, ta, mu
+; CHECK-O2-NEXT:    vsetvli zero, s0, e64, m1, ta, ma
 ; CHECK-O2-NEXT:    vmv1r.v v0, v16
 ; CHECK-O2-NEXT:    vfmadd.vv v18, v17, v19, v0.t
-; CHECK-O2-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
 ; CHECK-O2-NEXT:    vfneg.v v9, v17, v0.t
 ; CHECK-O2-NEXT:    vfcvt.f.x.v v10, v20, v0.t
 ; CHECK-O2-NEXT:    vse64.v v21, (s1), v0.t
@@ -627,7 +625,7 @@ define void @test_vp_fp_3(<vscale x 2 x double>* %a0, <vscale x 2 x double>* %a1
 ; CHECK-O0-NEXT:    add a1, sp, a1
 ; CHECK-O0-NEXT:    addi a1, a1, 48
 ; CHECK-O0-NEXT:    vl2r.v v8, (a1) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vsetvli zero, a4, e64, m2, ta, mu
+; CHECK-O0-NEXT:    vsetvli zero, a4, e64, m2, ta, ma
 ; CHECK-O0-NEXT:    vfmadd.vv v12, v8, v10, v0.t
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    li a2, 6
@@ -636,7 +634,6 @@ define void @test_vp_fp_3(<vscale x 2 x double>* %a0, <vscale x 2 x double>* %a1
 ; CHECK-O0-NEXT:    addi a1, a1, 48
 ; CHECK-O0-NEXT:    vl1r.v v0, (a1) # Unknown-size Folded Reload
 ; CHECK-O0-NEXT:    # implicit-def: $v10m2
-; CHECK-O0-NEXT:    vsetvli zero, zero, e64, m2, ta, ma
 ; CHECK-O0-NEXT:    vfneg.v v10, v8, v0.t
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    li a2, 6
@@ -732,10 +729,9 @@ define void @test_vp_fp_3(<vscale x 2 x double>* %a0, <vscale x 2 x double>* %a1
 ; CHECK-O2-NEXT:    vmv.v.v v10, v16
 ; CHECK-O2-NEXT:    mv a0, s0
 ; CHECK-O2-NEXT:    call __epi_fmod_nxv2f64_m@plt
-; CHECK-O2-NEXT:    vsetvli zero, s0, e64, m2, ta, mu
+; CHECK-O2-NEXT:    vsetvli zero, s0, e64, m2, ta, ma
 ; CHECK-O2-NEXT:    vmv1r.v v0, v18
 ; CHECK-O2-NEXT:    vfmadd.vv v16, v20, v22, v0.t
-; CHECK-O2-NEXT:    vsetvli zero, zero, e64, m2, ta, ma
 ; CHECK-O2-NEXT:    vfneg.v v10, v20, v0.t
 ; CHECK-O2-NEXT:    vfcvt.f.x.v v12, v24, v0.t
 ; CHECK-O2-NEXT:    vse64.v v26, (s1), v0.t

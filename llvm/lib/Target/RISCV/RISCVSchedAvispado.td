@@ -444,10 +444,10 @@ let Latency = 86, ResourceCycles = [86] in
 }
 
 // FIXME
-defm "" : LMULWriteRes<"WriteVIMovVX", []>;
-defm "" : LMULWriteRes<"WriteVIMovXV", []>;
-defm "" : LMULWriteRes<"WriteVFMovVF", []>;
-defm "" : LMULWriteRes<"WriteVFMovFV", []>;
+def : WriteRes<WriteVIMovVX, []>;
+def : WriteRes<WriteVIMovXV, []>;
+def : WriteRes<WriteVFMovVF, []>;
+def : WriteRes<WriteVFMovFV, []>;
 defm "" : LMULWriteRes<"WriteVISlideX", []>;
 defm "" : LMULWriteRes<"WriteVISlideI", []>;
 defm "" : LMULWriteRes<"WriteVISlide1X", []>;
@@ -609,12 +609,12 @@ defm "" : LMULReadAdvance<"ReadVMSFSV", 85>;
 defm "" : LMULReadAdvance<"ReadVMIotV", 85>;
 
 // 17. Vector Permutation Instructions
-defm "" : LMULReadAdvance<"ReadVIMovVX", 85>;
-defm "" : LMULReadAdvance<"ReadVIMovXV", 85>;
-defm "" : LMULReadAdvance<"ReadVIMovXX", 85>;
-defm "" : LMULReadAdvance<"ReadVFMovVF", 85>;
-defm "" : LMULReadAdvance<"ReadVFMovFV", 85>;
-defm "" : LMULReadAdvance<"ReadVFMovFX", 85>;
+def : ReadAdvance<ReadVIMovVX, 85>;
+def : ReadAdvance<ReadVIMovXV, 85>;
+def : ReadAdvance<ReadVIMovXX, 85>;
+def : ReadAdvance<ReadVFMovVF, 85>;
+def : ReadAdvance<ReadVFMovFV, 85>;
+def : ReadAdvance<ReadVFMovFX, 85>;
 defm "" : LMULReadAdvance<"ReadVISlideV", 85>;
 defm "" : LMULReadAdvance<"ReadVISlideX", 85>;
 defm "" : LMULReadAdvance<"ReadVFSlideV", 85>;
