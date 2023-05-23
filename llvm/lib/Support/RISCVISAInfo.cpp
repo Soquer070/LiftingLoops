@@ -926,6 +926,7 @@ static const char *ImpliedExtsZcmt[] = {"zca"};
 static const char *ImpliedExtsZdinx[] = {"zfinx"};
 static const char *ImpliedExtsZepi[] = {"zvl64b", "zve64d", "f", "d"};
 static const char *ImpliedExtsZfa[] = {"f"};
+static const char *ImpliedExtsZfbfmin[] = {"f"};
 static const char *ImpliedExtsZfh[] = {"f"};
 static const char *ImpliedExtsZfhmin[] = {"f"};
 static const char *ImpliedExtsZfinx[] = {"zicsr"};
@@ -988,6 +989,7 @@ static constexpr ImpliedExtsEntry ImpliedExts[] = {
     {{"zdinx"}, {ImpliedExtsZdinx}},
     {{"zepi"}, {ImpliedExtsZepi}},
     {{"zfa"}, {ImpliedExtsZfa}},
+    {{"zfbfmin"}, {ImpliedExtsZfbfmin}},
     {{"zfh"}, {ImpliedExtsZfh}},
     {{"zfhmin"}, {ImpliedExtsZfhmin}},
     {{"zfinx"}, {ImpliedExtsZfinx}},
