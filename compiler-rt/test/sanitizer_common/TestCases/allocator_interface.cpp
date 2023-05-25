@@ -4,9 +4,6 @@
 // No allocator.
 // UNSUPPORTED: ubsan
 
-// FIXME: implementation is incomplete.
-// XFAIL: msan, lsan, hwasan, tsan
-
 #include <assert.h>
 #include <sanitizer/allocator_interface.h>
 #include <stdio.h>

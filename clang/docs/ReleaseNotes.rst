@@ -60,6 +60,10 @@ C++ Specific Potentially Breaking Changes
 -----------------------------------------
 - Clang won't search for coroutine_traits in std::experimental namespace any more.
   Clang will only search for std::coroutine_traits for coroutines then.
+- Clang no longer allows dereferencing of a ``void *`` as an extension. Clang 16
+  converted this to a default-error as ``-Wvoid-ptr-dereference``, as well as a
+  SFINAE error. This flag is still valid however, as it disables the equivalent
+  warning in C.
 
 ABI Changes in This Version
 ---------------------------
@@ -301,6 +305,8 @@ Improvements to Clang's diagnostics
   (`#58601 <https://github.com/llvm/llvm-project/issues/58601>`_)
 - Clang's `-Wshadow` warning now warns about shadowings by static local variables
   (`#62850: <https://github.com/llvm/llvm-project/issues/62850>`_).
+- Clang now warns when any predefined macro is undefined or redefined, instead
+  of only some of them.
 
 Bug Fixes in This Version
 -------------------------
@@ -581,6 +587,7 @@ CUDA/HIP Language Changes
 
 CUDA Support
 ^^^^^^^^^^^^
+- Clang now supports CUDA SDK up to 12.1
 
 AIX Support
 ^^^^^^^^^^^
