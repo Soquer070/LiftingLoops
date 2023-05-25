@@ -34,12 +34,12 @@ target triple = "riscv64-unknown-linux-gnu"
 ; CHECK-NEXT:     vp<%5>    = SCALAR-STEPS vp<%3>, ir<1>
 ; CHECK-NEXT:     EMIT vp<%6> = WIDEN-CANONICAL-INDUCTION vp<%3>, vp<%4>
 ; CHECK-NEXT:     EMIT vp<%7> = vp icmp ule vp<%6> vp<%1> vp<%4>
-; CHECK-NEXT:     CLONE ir<%arrayidx> = getelementptr ir<%a>, vp<%5>
+; CHECK-NEXT:     CLONE ir<%arrayidx> = getelementptr inbounds ir<%a>, vp<%5>
 ; CHECK-NEXT:     PREDICATED-WIDEN ir<%0> = load ir<%arrayidx>, vp<%7>, vp<%4> (ALL-ONES-MASK)
-; CHECK-NEXT:     CLONE ir<%arrayidx2> = getelementptr ir<%b>, vp<%5>
+; CHECK-NEXT:     CLONE ir<%arrayidx2> = getelementptr inbounds ir<%b>, vp<%5>
 ; CHECK-NEXT:     PREDICATED-WIDEN ir<%1> = load ir<%arrayidx2>, vp<%7>, vp<%4> (ALL-ONES-MASK)
 ; CHECK-NEXT:     PREDICATED-WIDEN ir<%add> = add ir<%1>, ir<%0>, vp<%7>, vp<%4>
-; CHECK-NEXT:     CLONE ir<%arrayidx4> = getelementptr ir<%c>, vp<%5>
+; CHECK-NEXT:     CLONE ir<%arrayidx4> = getelementptr inbounds ir<%c>, vp<%5>
 ; CHECK-NEXT:     PREDICATED-WIDEN store ir<%arrayidx4>, ir<%add>, vp<%7>, vp<%4> (ALL-ONES-MASK)
 ; CHECK-NEXT:     EMIT vp<%14> = VF * UF +  vp<%3> vp<%4>
 ; CHECK-NEXT:     EMIT branch-on-count  vp<%14> vp<%0>
