@@ -8096,6 +8096,8 @@ InstructionCost BoUpSLP::getSpillCost() const {
   // are grouped together. Using dominance ensures a deterministic order.
   SmallVector<Instruction *, 16> OrderedScalars;
   for (const auto &TEPtr : VectorizableTree) {
+    if (TEPtr->State != TreeEntry::Vectorize)
+      continue;
     Instruction *Inst = dyn_cast<Instruction>(TEPtr->Scalars[0]);
     if (!Inst)
       continue;
@@ -8109,7 +8111,7 @@ InstructionCost BoUpSLP::getSpillCost() const {
     assert((NodeA == NodeB) == (NodeA->getDFSNumIn() == NodeB->getDFSNumIn()) &&
            "Different nodes should have different DFS numbers");
     if (NodeA != NodeB)
-      return NodeA->getDFSNumIn() < NodeB->getDFSNumIn();
+      return NodeA->getDFSNumIn() > NodeB->getDFSNumIn();
     return B->comesBefore(A);
   });
 
@@ -8168,7 +8170,7 @@ InstructionCost BoUpSLP::getSpillCost() const {
       };
 
       // Debug information does not impact spill cost.
-      if (isa<CallInst>(&*PrevInstIt) && !NoCallIntrinsic(&*PrevInstIt) &&
+      if (isa<CallBase>(&*PrevInstIt) && !NoCallIntrinsic(&*PrevInstIt) &&
           &*PrevInstIt != PrevInst)
         NumCalls++;
 
