@@ -387,9 +387,8 @@ let Latency = 86, ResourceCycles = [86] in
   defm "" : LMULWriteResW<"WriteVNClipX", [AvispadoVPUArithQueue]>;
   defm "" : LMULWriteResW<"WriteVNClipI", [AvispadoVPUArithQueue]>;
 
-  defm "" : LMULWriteRes<"WriteVIRedV_From", [AvispadoVPUArithQueue]>;
-  defm "" : LMULWriteRes<"WriteVIWRedV_From", [AvispadoVPUArithQueue]>;
-  // defm "" : LMULWriteResWRed<"WriteVIWRedV_From", [AvispadoVPUArithQueue]>;
+  defm "" : LMULSEWWriteRes<"WriteVIRedV_From", [AvispadoVPUArithQueue]>;
+  defm "" : LMULSEWWriteResWRed<"WriteVIWRedV_From", [AvispadoVPUArithQueue]>;
 
   defm "" : LMULWriteRes<"WriteVMALUV", [AvispadoVPUArithQueue]>;
   defm "" : LMULWriteRes<"WriteVMPopV", [AvispadoVPUArithQueue]>;
@@ -433,14 +432,10 @@ let Latency = 86, ResourceCycles = [86] in
   defm "" : LMULWriteResW<"WriteVFNCvtFToIV", [AvispadoVPUArithQueue]>;
   defm "" : LMULWriteResFW<"WriteVFNCvtFToFV", [AvispadoVPUArithQueue]>;
 
-  defm "" : LMULWriteRes<"WriteVFRedV_From", [AvispadoVPUArithQueue]>;
-  defm "" : LMULWriteRes<"WriteVFRedOV_From", [AvispadoVPUArithQueue]>;
-  defm "" : LMULWriteResFWRed<"WriteVFWRedV_From", [AvispadoVPUArithQueue]>;
-  defm "" : LMULWriteResFWRed<"WriteVFWRedOV_From", [AvispadoVPUArithQueue]>;
-  // def : WriteRes<WriteVFRedV, [AvispadoVPUArithQueue]>;
-  // def : WriteRes<WriteVFRedOV, [AvispadoVPUArithQueue]>;
-  // def : WriteRes<WriteVFWRedV, [AvispadoVPUArithQueue]>;
-  // def : WriteRes<WriteVFWRedOV, [AvispadoVPUArithQueue]>;
+  defm "" : LMULSEWWriteResF<"WriteVFRedV_From", [AvispadoVPUArithQueue]>;
+  defm "" : LMULSEWWriteResF<"WriteVFRedOV_From", [AvispadoVPUArithQueue]>;
+  defm "" : LMULSEWWriteResFWRed<"WriteVFWRedV_From", [AvispadoVPUArithQueue]>;
+  defm "" : LMULSEWWriteResFWRed<"WriteVFWRedOV_From", [AvispadoVPUArithQueue]>;
 }
 
 // FIXME
