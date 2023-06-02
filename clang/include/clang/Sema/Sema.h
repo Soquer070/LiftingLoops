@@ -11324,6 +11324,11 @@ public:
   void
   checkDeclIsAllowedInOpenMPTarget(Expr *E, Decl *D,
                                    SourceLocation IdLoc = SourceLocation());
+
+  /// Adds OMPDeclareTargetDeclAttr to referenced variables in declare target
+  /// directive.
+  void ActOnOpenMPDeclareTargetInitializer(Decl *D);
+
   /// Finishes analysis of the deferred functions calls that may be declared as
   /// host/nohost during device/host compilation.
   void finalizeOpenMPDelayedAnalysis(const FunctionDecl *Caller,
@@ -13771,7 +13776,6 @@ private:
   Scope *CurScope;
 
   mutable IdentifierInfo *Ident_super;
-  mutable IdentifierInfo *Ident___float128;
 
   /// Nullability type specifiers.
   IdentifierInfo *Ident__Nonnull = nullptr;
@@ -13820,7 +13824,6 @@ public:
   }
 
   IdentifierInfo *getSuperIdentifier() const;
-  IdentifierInfo *getFloat128Identifier() const;
 
   ObjCContainerDecl *getObjCDeclContext() const;
 

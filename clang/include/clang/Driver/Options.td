@@ -2566,6 +2566,10 @@ defm operator_names : BoolFOption<"operator-names",
 def fdiagnostics_absolute_paths : Flag<["-"], "fdiagnostics-absolute-paths">, Group<f_Group>,
   Flags<[CC1Option, CoreOption]>, HelpText<"Print absolute paths in diagnostics">,
   MarshallingInfoFlag<DiagnosticOpts<"AbsolutePath">>;
+defm diagnostics_show_line_numbers : BoolFOption<"diagnostics-show-line-numbers",
+  DiagnosticOpts<"ShowLineNumbers">, DefaultTrue,
+  NegFlag<SetFalse, [CC1Option], "Show line numbers in diagnostic code snippets">,
+  PosFlag<SetTrue>>;
 def fno_stack_protector : Flag<["-"], "fno-stack-protector">, Group<f_Group>,
   HelpText<"Disable the use of stack protectors">;
 def fno_strict_aliasing : Flag<["-"], "fno-strict-aliasing">, Group<f_Group>,
@@ -5271,9 +5275,12 @@ def fno_reformat : Flag<["-"], "fno-reformat">, Group<Preprocessor_Group>,
   HelpText<"Dump the cooked character stream in -E mode">;
 defm analyzed_objects_for_unparse : OptOutFC1FFlag<"analyzed-objects-for-unparse", "", "Do not use the analyzed objects when unparsing">;
 
-def emit_mlir : Flag<["-"], "emit-mlir">, Group<Action_Group>,
-  HelpText<"Build the parse tree, then lower it to MLIR">;
-def emit_fir : Flag<["-"], "emit-fir">, Alias<emit_mlir>;
+def emit_fir : Flag<["-"], "emit-fir">, Group<Action_Group>,
+  HelpText<"Build the parse tree, then lower it to FIR">;
+def emit_mlir : Flag<["-"], "emit-mlir">, Alias<emit_fir>;
+
+def emit_hlfir : Flag<["-"], "emit-hlfir">, Group<Action_Group>,
+  HelpText<"Build the parse tree, then lower it to HLFIR">;
 
 } // let Flags = [FC1Option, FlangOnlyOption]
 

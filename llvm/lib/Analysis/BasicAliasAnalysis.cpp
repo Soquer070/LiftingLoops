@@ -1867,10 +1867,3 @@ void BasicAAWrapperPass::getAnalysisUsage(AnalysisUsage &AU) const {
   AU.addRequiredTransitive<DominatorTreeWrapperPass>();
   AU.addRequiredTransitive<TargetLibraryInfoWrapperPass>();
 }
-
-BasicAAResult llvm::createLegacyPMBasicAAResult(Pass &P, Function &F) {
-  return BasicAAResult(
-      F.getParent()->getDataLayout(), F,
-      P.getAnalysis<TargetLibraryInfoWrapperPass>().getTLI(F),
-      P.getAnalysis<AssumptionCacheTracker>().getAssumptionCache(F));
-}

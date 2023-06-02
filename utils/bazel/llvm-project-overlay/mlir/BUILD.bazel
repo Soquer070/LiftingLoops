@@ -34,6 +34,7 @@ expand_template(
     out = "include/mlir/Config/mlir-config.h",
     substitutions = {
         "#cmakedefine01 MLIR_ENABLE_EXPENSIVE_PATTERN_API_CHECKS": "#define MLIR_ENABLE_EXPENSIVE_PATTERN_API_CHECKS 0",
+        "#cmakedefine MLIR_GREEDY_REWRITE_RANDOMIZER_SEED ${MLIR_GREEDY_REWRITE_RANDOMIZER_SEED}": "/* #undef MLIR_GREEDY_REWRITE_RANDOMIZER_SEED */",
     },
     template = "include/mlir/Config/mlir-config.h.cmake",
 )
@@ -5934,6 +5935,7 @@ cc_library(
         ":ArithUtils",
         ":DialectUtils",
         ":TensorDialect",
+        ":ValueBoundsOpInterface",
         "//llvm:Support",
     ],
 )
@@ -5987,6 +5989,7 @@ cc_library(
         ":SCFDialect",
         ":TensorDialect",
         ":TensorPassIncGen",
+        ":TensorUtils",
         ":TilingInterface",
         ":Transforms",
         ":ValueBoundsOpInterface",
@@ -6038,6 +6041,7 @@ cc_library(
         ":TensorDialect",
         ":TensorTransformOpsIncGen",
         ":TensorTransforms",
+        ":TensorUtils",
         ":TransformDialect",
         ":ValueBoundsOpInterface",
         "//llvm:Support",
