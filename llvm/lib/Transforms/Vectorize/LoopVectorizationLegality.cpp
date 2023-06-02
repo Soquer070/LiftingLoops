@@ -81,10 +81,6 @@ static cl::opt<LoopVectorizeHints::ScalableForceKind>
             clEnumValN(LoopVectorizeHints::SK_ScalableOnly, "only",
                        "Scalable vectorization is the only option available")));
 
-static cl::opt<bool> DisableVersioningForStride(
-    "disable-loop-versioning-for-stride", cl::init(false), cl::Hidden,
-    cl::desc("Disable loop versioning for stride != 1 for loop vectorization"));
-
 /// Maximum vectorization interleave count.
 static const unsigned MaxInterleaveFactor = 16;
 
@@ -471,7 +467,7 @@ int LoopVectorizationLegality::isConsecutivePtr(Type *AccessTy,
   bool OptForSize = F->hasOptSize() ||
                     llvm::shouldOptimizeForSize(TheLoop->getHeader(), PSI, BFI,
                                                 PGSOQueryType::IRPass);
-  bool CanAddPredicate = !DisableVersioningForStride && !OptForSize;
+  bool CanAddPredicate = !OptForSize;
   int Stride = getPtrStride(PSE, AccessTy, Ptr, TheLoop, Strides,
                             CanAddPredicate, false).value_or(0);
   if (Stride == 1 || Stride == -1)

@@ -706,15 +706,14 @@ private:
 /// \p PSE is true.
 ///
 /// If necessary this method will version the stride of the pointer according
-/// to \p PtrToStride and therefore add further predicates to \p PSE, unless
-/// \p AddPredicate is false.
+/// to \p PtrToStride and therefore add further predicates to \p PSE.
 ///
 /// \p PtrToStride provides the mapping between the pointer value and its
 /// stride as collected by LoopVectorizationLegality::collectStridedAccess.
 const SCEV *
 replaceSymbolicStrideSCEV(PredicatedScalarEvolution &PSE,
                           const DenseMap<Value *, const SCEV *> &PtrToStride,
-                          Value *Ptr, bool AddPredicate = true);
+                          Value *Ptr);
 
 /// If the pointer has a constant stride return it in units of the access type
 /// size.  Otherwise return std::nullopt.
@@ -724,7 +723,7 @@ replaceSymbolicStrideSCEV(PredicatedScalarEvolution &PSE,
 ///
 /// If necessary this method will version the stride of the pointer according
 /// to \p PtrToStride and therefore add further predicates to \p PSE.
-/// The \p AddPredicate parameter indicates if we are allowed to make additional
+/// The \p Assume parameter indicates if we are allowed to make additional
 /// run-time assumptions.
 ///
 /// Note that the analysis results are defined if-and-only-if the original
@@ -734,7 +733,7 @@ std::optional<int64_t>
 getPtrStride(PredicatedScalarEvolution &PSE, Type *AccessTy, Value *Ptr,
              const Loop *Lp,
              const DenseMap<Value *, const SCEV *> &StridesMap = DenseMap<Value *, const SCEV *>(),
-             bool AddPredicate = false, bool ShouldCheckWrap = true);
+             bool Assume = false, bool ShouldCheckWrap = true);
 
 /// Returns the distance between the pointers \p PtrA and \p PtrB iff they are
 /// compatible and it is possible to calculate the distance between them. This

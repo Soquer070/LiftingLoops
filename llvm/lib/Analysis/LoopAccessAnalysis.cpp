@@ -148,10 +148,8 @@ bool VectorizerParams::isInterleaveForced() {
 
 const SCEV *llvm::replaceSymbolicStrideSCEV(PredicatedScalarEvolution &PSE,
                                             const DenseMap<Value *, const SCEV *> &PtrToStride,
-                                            Value *Ptr, bool AddPredicate) {
+                                            Value *Ptr) {
   const SCEV *OrigSCEV = PSE.getSCEV(Ptr);
-  if (!AddPredicate)
-    return OrigSCEV;
 
   // If there is an entry in the map return the SCEV of the pointer with the
   // symbolic stride replaced by one.
@@ -1371,7 +1369,7 @@ std::optional<int64_t> llvm::getPtrStride(PredicatedScalarEvolution &PSE,
                                           Type *AccessTy, Value *Ptr,
                                           const Loop *Lp,
                                           const DenseMap<Value *, const SCEV *> &StridesMap,
-                                          bool AddPredicate, bool ShouldCheckWrap) {
+                                          bool Assume, bool ShouldCheckWrap) {
   Type *Ty = Ptr->getType();
   assert(Ty->isPointerTy() && "Unexpected non-ptr");
 
@@ -1381,11 +1379,10 @@ std::optional<int64_t> llvm::getPtrStride(PredicatedScalarEvolution &PSE,
     return std::nullopt;
   }
 
-  const SCEV *PtrScev =
-      replaceSymbolicStrideSCEV(PSE, StridesMap, Ptr, AddPredicate);
+  const SCEV *PtrScev = replaceSymbolicStrideSCEV(PSE, StridesMap, Ptr);
 
   const SCEVAddRecExpr *AR = dyn_cast<SCEVAddRecExpr>(PtrScev);
-  if (AddPredicate && !AR)
+  if (Assume && !AR)
     AR = PSE.getAsAddRec(Ptr);
 
   if (!AR) {
@@ -1453,7 +1450,7 @@ std::optional<int64_t> llvm::getPtrStride(PredicatedScalarEvolution &PSE,
       (Stride == 1 || Stride == -1))
     return Stride;
 
-  if (AddPredicate) {
+  if (Assume) {
     PSE.setNoOverflow(Ptr, SCEVWrapPredicate::IncrementNUSW);
     LLVM_DEBUG(dbgs() << "LAA: Pointer may wrap:\n"
                       << "LAA:   Pointer: " << *Ptr << "\n"
