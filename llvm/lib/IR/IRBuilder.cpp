@@ -661,8 +661,7 @@ CallInst *IRBuilderBase::CreateMaskedGather(Type *Ty, Value *Ptrs,
   assert(NumElts == PtrsTy->getElementCount() && "Element count mismatch");
 
   if (!Mask)
-    Mask = Constant::getAllOnesValue(
-        VectorType::get(Type::getInt1Ty(Context), NumElts));
+    Mask = getAllOnesMask(NumElts);
 
   if (isa<ScalableVectorType>(Ty))
     assert(isa<ScalableVectorType>(Mask->getType()) &&
@@ -701,8 +700,7 @@ CallInst *IRBuilderBase::CreateMaskedScatter(Value *Data, Value *Ptrs,
 #endif
 
   if (!Mask)
-    Mask = Constant::getAllOnesValue(
-        VectorType::get(Type::getInt1Ty(Context), NumElts));
+    Mask = getAllOnesMask(NumElts);
 
   if (isa<ScalableVectorType>(DataTy))
     assert(isa<ScalableVectorType>(Mask->getType()) &&
