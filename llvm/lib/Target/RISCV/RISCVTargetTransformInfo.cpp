@@ -43,6 +43,11 @@ static cl::opt<unsigned> SLPMaxVF(
         "SLP vectorizer.  Defaults to 1 which disables SLP."),
     cl::init(1), cl::Hidden);
 
+static cl::opt<bool> DisableStridedAccesses(
+    "riscv-disable-strided-accesses",
+    cl::desc("Make strided accesses not useable by the transformations"),
+    cl::init(false), cl::Hidden);
+
 InstructionCost RISCVTTIImpl::getLMULCost(MVT VT) {
   // TODO: Here assume reciprocal throughput is 1 for LMUL_1, it is
   // implementation-defined.
@@ -206,7 +211,7 @@ bool RISCVTTIImpl::preferPredicatedVectorOps() const {
 }
 
 bool RISCVTTIImpl::canUseStridedAccesses() const {
-  if (ST->hasEPI())
+  if (ST->hasEPI() && !DisableStridedAccesses)
     return true;
 
   return BaseT::canUseStridedAccesses();

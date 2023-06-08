@@ -33,6 +33,7 @@
 #include "llvm/Analysis/ScalarEvolution.h"
 #include "llvm/Analysis/ScalarEvolutionExpressions.h"
 #include "llvm/Analysis/TargetLibraryInfo.h"
+#include "llvm/Analysis/TargetTransformInfo.h"
 #include "llvm/Analysis/ValueTracking.h"
 #include "llvm/Analysis/VectorUtils.h"
 #include "llvm/IR/BasicBlock.h"
@@ -2146,6 +2147,7 @@ bool LoopAccessInfo::canAnalyzeLoop() {
 
 void LoopAccessInfo::analyzeLoop(AAResults *AA, LoopInfo *LI,
                                  const TargetLibraryInfo *TLI,
+                                 const TargetTransformInfo *TTI,
                                  DominatorTree *DT) {
   // Holds the Load and Store instructions.
   SmallVector<LoadInst *, 16> Loads;
@@ -2167,7 +2169,11 @@ void LoopAccessInfo::analyzeLoop(AAResults *AA, LoopInfo *LI,
 
   const bool EnableMemAccessVersioningOfLoop =
       EnableMemAccessVersioning &&
-      !TheLoop->getHeader()->getParent()->hasOptSize();
+      !TheLoop->getHeader()->getParent()->hasOptSize() &&
+      // If the target can use strided accesses, opportunistically using them
+      // should not be worse than a sequence of strided scalar loads with bad
+      // locality, so use them.
+      (!TTI || !TTI->canUseStridedAccesses());
 
   // Traverse blocks in fixed RPOT order, regardless of their storage in the
   // loop info, as it may be arbitrary.
@@ -2754,14 +2760,16 @@ void LoopAccessInfo::collectStridedAccess(Value *MemAccess) {
 }
 
 LoopAccessInfo::LoopAccessInfo(Loop *L, ScalarEvolution *SE,
-                               const TargetLibraryInfo *TLI, AAResults *AA,
+                               const TargetLibraryInfo *TLI,
+                               const TargetTransformInfo *TTI,
+                               AAResults *AA,
                                DominatorTree *DT, LoopInfo *LI)
     : PSE(std::make_unique<PredicatedScalarEvolution>(*SE, *L)),
       PtrRtChecking(nullptr),
       DepChecker(std::make_unique<MemoryDepChecker>(*PSE, L)), TheLoop(L) {
   PtrRtChecking = std::make_unique<RuntimePointerChecking>(*DepChecker, SE);
   if (canAnalyzeLoop()) {
-    analyzeLoop(AA, LI, TLI, DT);
+    analyzeLoop(AA, LI, TLI, TTI, DT);
   }
 }
 
@@ -2813,7 +2821,7 @@ const LoopAccessInfo &LoopAccessInfoManager::getInfo(Loop &L) {
 
   if (I.second)
     I.first->second =
-        std::make_unique<LoopAccessInfo>(&L, &SE, TLI, &AA, &DT, &LI);
+        std::make_unique<LoopAccessInfo>(&L, &SE, TLI, TTI, &AA, &DT, &LI);
 
   return *I.first->second;
 }
@@ -2826,10 +2834,12 @@ bool LoopAccessLegacyAnalysis::runOnFunction(Function &F) {
   auto &SE = getAnalysis<ScalarEvolutionWrapperPass>().getSE();
   auto *TLIP = getAnalysisIfAvailable<TargetLibraryInfoWrapperPass>();
   auto *TLI = TLIP ? &TLIP->getTLI(F) : nullptr;
+  auto *TTIP = getAnalysisIfAvailable<TargetTransformInfoWrapperPass>();
+  auto *TTI = TTIP ? &TTIP->getTTI(F) : nullptr;
   auto &AA = getAnalysis<AAResultsWrapperPass>().getAAResults();
   auto &DT = getAnalysis<DominatorTreeWrapperPass>().getDomTree();
   auto &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
-  LAIs = std::make_unique<LoopAccessInfoManager>(SE, AA, DT, LI, TLI);
+  LAIs = std::make_unique<LoopAccessInfoManager>(SE, AA, DT, LI, TLI, TTI);
   return false;
 }
 
@@ -2867,7 +2877,8 @@ LoopAccessInfoManager LoopAccessAnalysis::run(Function &F,
   auto &DT = FAM.getResult<DominatorTreeAnalysis>(F);
   auto &LI = FAM.getResult<LoopAnalysis>(F);
   auto &TLI = FAM.getResult<TargetLibraryAnalysis>(F);
-  return LoopAccessInfoManager(SE, AA, DT, LI, &TLI);
+  auto &TTI = FAM.getResult<TargetIRAnalysis>(F);
+  return LoopAccessInfoManager(SE, AA, DT, LI, &TLI, &TTI);
 }
 
 char LoopAccessLegacyAnalysis::ID = 0;

@@ -562,7 +562,8 @@ private:
 class LoopAccessInfo {
 public:
   LoopAccessInfo(Loop *L, ScalarEvolution *SE, const TargetLibraryInfo *TLI,
-                 AAResults *AA, DominatorTree *DT, LoopInfo *LI);
+                 const TargetTransformInfo *TTI, AAResults *AA,
+                 DominatorTree *DT, LoopInfo *LI);
 
   /// Return true we can analyze the memory accesses in the loop and there are
   /// no memory dependence cycles.
@@ -639,8 +640,8 @@ public:
 
 private:
   /// Analyze the loop.
-  void analyzeLoop(AAResults *AA, LoopInfo *LI,
-                   const TargetLibraryInfo *TLI, DominatorTree *DT);
+  void analyzeLoop(AAResults *AA, LoopInfo *LI, const TargetLibraryInfo *TLI,
+                   const TargetTransformInfo *TTI, DominatorTree *DT);
 
   /// Check if the structure of the loop allows it to be analyzed by this
   /// pass.
@@ -775,11 +776,13 @@ class LoopAccessInfoManager {
   DominatorTree &DT;
   LoopInfo &LI;
   const TargetLibraryInfo *TLI = nullptr;
+  const TargetTransformInfo *TTI = nullptr;
 
 public:
   LoopAccessInfoManager(ScalarEvolution &SE, AAResults &AA, DominatorTree &DT,
-                        LoopInfo &LI, const TargetLibraryInfo *TLI)
-      : SE(SE), AA(AA), DT(DT), LI(LI), TLI(TLI) {}
+                        LoopInfo &LI, const TargetLibraryInfo *TLI,
+                        const TargetTransformInfo *TTI)
+      : SE(SE), AA(AA), DT(DT), LI(LI), TLI(TLI), TTI(TTI) {}
 
   const LoopAccessInfo &getInfo(Loop &L);
 
