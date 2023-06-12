@@ -350,6 +350,8 @@ let Latency = 86, ResourceCycles = [86] in
   defm "" : LMULWriteRes<"WriteVICmpV", [AvispadoVPUArithQueue]>;
   defm "" : LMULWriteRes<"WriteVICmpX", [AvispadoVPUArithQueue]>;
   defm "" : LMULWriteRes<"WriteVICmpI", [AvispadoVPUArithQueue]>;
+  defm "" : LMULWriteRes<"WriteVIMinMaxV", [AvispadoVPUArithQueue]>;
+  defm "" : LMULWriteRes<"WriteVIMinMaxX", [AvispadoVPUArithQueue]>;
   defm "" : LMULWriteRes<"WriteVIMulV", [AvispadoVPUArithQueue]>;
   defm "" : LMULWriteRes<"WriteVIMulX", [AvispadoVPUArithQueue]>;
   defm "" : LMULSEWWriteRes<"WriteVIDivV", [AvispadoVPUArithQueue]>;
@@ -436,6 +438,9 @@ let Latency = 86, ResourceCycles = [86] in
   defm "" : LMULSEWWriteResF<"WriteVFRedOV_From", [AvispadoVPUArithQueue]>;
   defm "" : LMULSEWWriteResFWRed<"WriteVFWRedV_From", [AvispadoVPUArithQueue]>;
   defm "" : LMULSEWWriteResFWRed<"WriteVFWRedOV_From", [AvispadoVPUArithQueue]>;
+
+  defm "" : LMULWriteRes<"WriteVFMinMaxV", [AvispadoVPUArithQueue]>;
+  defm "" : LMULWriteRes<"WriteVFMinMaxF", [AvispadoVPUArithQueue]>;
 }
 
 // FIXME
@@ -516,6 +521,8 @@ defm "" : LMULReadAdvance<"ReadVShiftV", 85>;
 defm "" : LMULReadAdvance<"ReadVShiftX", 85>;
 defm "" : LMULReadAdvance<"ReadVICmpV", 85>;
 defm "" : LMULReadAdvance<"ReadVICmpX", 85>;
+defm "" : LMULReadAdvance<"ReadVIMinMaxV", 85>;
+defm "" : LMULReadAdvance<"ReadVIMinMaxX", 85>;
 defm "" : LMULReadAdvance<"ReadVIMulV", 85>;
 defm "" : LMULReadAdvance<"ReadVIMulX", 85>;
 defm "" : LMULSEWReadAdvance<"ReadVIDivV", 85>;
@@ -564,6 +571,8 @@ defm "" : LMULReadAdvance<"ReadVFMulAddF", 85>;
 defm "" : LMULReadAdvanceFW<"ReadVFWMulAddV", 85>;
 defm "" : LMULReadAdvanceFW<"ReadVFWMulAddF", 85>;
 defm "" : LMULSEWReadAdvanceF<"ReadVFSqrtV", 85>;
+defm "" : LMULReadAdvance<"ReadVFMinMaxV", 85>;
+defm "" : LMULReadAdvance<"ReadVFMinMaxF", 85>;
 defm "" : LMULReadAdvance<"ReadVFRecpV", 85>;
 defm "" : LMULReadAdvance<"ReadVFCmpV", 85>;
 defm "" : LMULReadAdvance<"ReadVFCmpF", 85>;

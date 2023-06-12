@@ -82,9 +82,6 @@ def vecreduce_xor : SDNode<"ISD::VECREDUCE_XOR", SDTVecReduce>;
 def SDTVecReduceFP : SDTypeProfile<1, 1, [SDTCisFP<0>, SDTCisVec<1>,
                                           SDTCisFP<1>]>;
 
-def vecreduce_fmax : SDNode<"ISD::VECREDUCE_FMAX", SDTVecReduceFP>;
-def vecreduce_fmin : SDNode<"ISD::VECREDUCE_FMIN", SDTVecReduceFP>;
-
 //===----------------------------------------------------------------------===//
 // Additional definitions complementing those of RISCVInstrInfoVPseudos.td
 //===----------------------------------------------------------------------===//
