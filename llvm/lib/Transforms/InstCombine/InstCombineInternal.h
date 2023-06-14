@@ -396,6 +396,7 @@ private:
   Instruction *visitVPMul(VPIntrinsic *VPMul);
   Instruction *visitVPSelect(VPIntrinsic *VPSelect);
 
+  Value *tryToOptimizeGEP(GetElementPtrInst &GEP);
   Value *emitGEPOffsetVP(GetElementPtrInst &GEP, VectorBuilder &VB);
 
 public:

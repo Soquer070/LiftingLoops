@@ -19,6 +19,14 @@
 using namespace llvm;
 using namespace llvm::PatternMatch;
 
+static cl::opt<bool> OptimizeVectorGEP("optimize-vector-gep",
+                                       cl::desc("Optimize vector GEP"),
+                                       cl::init(true));
+
+static cl::opt<bool> ExpandVectorGEPToVP("expand-vector-gep-to-vp",
+                                         cl::desc("Expand vector GEP to VP"),
+                                         cl::init(true));
+
 Value *createIntExtOrTruncVP(VectorBuilder &VB, Value *From, Type *ToTy,
                              bool IsSigned) {
   Type *FromTy = From->getType();
@@ -35,6 +43,72 @@ Value *createIntExtOrTruncVP(VectorBuilder &VB, Value *From, Type *ToTy,
                         : (IsSigned ? Instruction::SExt : Instruction::ZExt);
 
   return VB.createVectorInstruction(Opcode, ToTy, {From});
+}
+
+Value *InstCombinerImpl::tryToOptimizeGEP(GetElementPtrInst &GEP) {
+  if (!OptimizeVectorGEP)
+    return nullptr;
+
+  // Pointer operand must be a scalar.
+  Value *PtrOp = GEP.getPointerOperand();
+  Type *PtrOpTy = GEP.getPointerOperandType();
+  if (PtrOpTy->isVectorTy()) {
+    if (!isSplatValue(PtrOp))
+      return nullptr;
+
+    PtrOp = getSplatValue(PtrOp);
+  }
+  assert(PtrOp && !PtrOpTy->isVectorTy() &&
+         "Invalid ptr operand for getelementptr instruction");
+
+  // We only try to optimize GEPs with just one index vector operand.
+  if (GEP.getNumIndices() > 1)
+    return nullptr;
+  Value *Idx = GEP.getOperand(GEP.getPointerOperandIndex() + 1);
+  Type *IdxTy = Idx->getType();
+  if (!IdxTy->isVectorTy())
+    return nullptr;
+
+  auto IndexIsA = [] (Value *V, unsigned int Opcode) -> bool {
+    auto *I = dyn_cast<Instruction>(V);
+    if (!I)
+      return false;
+    auto *CI = dyn_cast<CallInst>(I);
+    if (I->getOpcode() == Opcode ||
+        (CI && CI->getCalledFunction()->getIntrinsicID() ==
+                   VPIntrinsic::getForOpcode(Opcode))) {
+      return true;
+    }
+    return false;
+  };
+
+  if (IndexIsA(Idx, Instruction::SExt))
+    Idx = cast<Instruction>(Idx)->getOperand(0);
+  Value *NewBasePtr = nullptr;
+  Value *NewIdx = nullptr;
+  if (IndexIsA(Idx, Instruction::Add) ||
+             IndexIsA(Idx, Instruction::Sub)) {
+    auto *I = cast<Instruction>(Idx);
+    Value *LHS = I->getOperand(0);
+    Value *RHS = I->getOperand(1);
+
+    Value *Offset = getSplatValue(LHS);
+    NewIdx = RHS;
+    if (!Offset) {
+      Offset = getSplatValue(RHS);
+      NewIdx = LHS;
+    }
+    if (!Offset)
+      return nullptr;
+
+    NewBasePtr = Builder.CreateGEP(GEP.getSourceElementType(), PtrOp, Offset,
+                                   "base.ptr", GEP.isInBounds());
+  } else {
+    return nullptr;
+  }
+
+  return Builder.CreateGEP(GEP.getSourceElementType(), NewBasePtr, NewIdx,
+                           "gep.opt", GEP.isInBounds());
 }
 
 Value *InstCombinerImpl::emitGEPOffsetVP(GetElementPtrInst &GEP,
@@ -110,6 +184,8 @@ Instruction *InstCombinerImpl::visitVPInst(VPIntrinsic *VPI) {
 
 Instruction *
 InstCombinerImpl::visitVPGatherScatterOnlyGEP(GetElementPtrInst &GEP) {
+  if (!OptimizeVectorGEP && !ExpandVectorGEPToVP)
+    return nullptr;
   if (!GEP.getType()->isVectorTy())
     return nullptr;
 
@@ -144,6 +220,12 @@ InstCombinerImpl::visitVPGatherScatterOnlyGEP(GetElementPtrInst &GEP) {
         return nullptr;
     }
   }
+
+  if (Value *OptGEP = tryToOptimizeGEP(GEP))
+    return replaceInstUsesWith(GEP, OptGEP);
+
+  if (!ExpandVectorGEPToVP)
+    return nullptr;
 
   // Replace the GEP with VP instrinsics:
   // - vp.ptrtoint
