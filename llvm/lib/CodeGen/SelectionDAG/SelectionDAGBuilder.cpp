@@ -4533,34 +4533,88 @@ static bool getUniformBase(const Value *Ptr, SDValue &Base, SDValue &Index,
     return true;
   }
 
-  const GetElementPtrInst *GEP = dyn_cast<GetElementPtrInst>(Ptr);
-  if (!GEP || GEP->getParent() != CurBB)
+  if (const GetElementPtrInst *GEP = dyn_cast<GetElementPtrInst>(Ptr)) {
+    if (GEP->getParent() != CurBB)
+      return false;
+    if (GEP->getNumOperands() != 2)
+      return false;
+
+    const Value *BasePtr = GEP->getPointerOperand();
+    const Value *IndexVal = GEP->getOperand(GEP->getNumOperands() - 1);
+
+    // Make sure the base is scalar and the index is a vector.
+    if (BasePtr->getType()->isVectorTy() || !IndexVal->getType()->isVectorTy())
+      return false;
+
+    uint64_t ScaleVal = DL.getTypeAllocSize(GEP->getResultElementType());
+
+    // Target may not support the required addressing mode.
+    if (ScaleVal != 1 && !TLI.isLegalScaleForGatherScatter(ScaleVal, ElemSize))
+      return false;
+
+    Base = SDB->getValue(BasePtr);
+    Index = SDB->getValue(IndexVal);
+    IndexType = ISD::SIGNED_SCALED;
+
+    Scale = DAG.getTargetConstant(ScaleVal, SDB->getCurSDLoc(),
+                                  TLI.getPointerTy(DL));
+
+    return true;
+  }
+
+  auto ValueIsA = [](const Value *V, Intrinsic::ID VPID) -> bool {
+    if (auto *CI = dyn_cast<CallInst>(V);
+        CI && CI->getCalledFunction()->getIntrinsicID() == VPID) {
+      return true;
+    }
     return false;
+  };
+  // If Ptr is a vp.inttoptr, then it may be the result of the GEP->VP ops
+  // transformation. Try to recover both base and index.
+  if (ValueIsA(Ptr, Intrinsic::vp_inttoptr)) {
+    auto *VPIntToPtr = cast<VPIntrinsic>(Ptr);
+    if (VPIntToPtr->getParent() != CurBB)
+      return false;
 
-  if (GEP->getNumOperands() != 2)
-    return false;
+    Value *Mask = VPIntToPtr->getMaskParam();
+    Value *VL = VPIntToPtr->getVectorLengthParam();
+    Value *Op0 = VPIntToPtr->getOperand(0);
+    if (!ValueIsA(Op0, Intrinsic::vp_add))
+      return false;
+    auto *VPAdd = cast<VPIntrinsic>(Op0);
+    if (VPAdd->getMaskParam() != Mask || VPAdd->getVectorLengthParam() != VL)
+      return false;
+    // This add instruction sums the base pointer to the scaled index; that
+    // means one of the two operands must be a PtrToInt (i.e. the base pointer),
+    // consequently the other will be the index.
+    Value *BasePtr = nullptr, *IndexVal = nullptr;
+    Value *LHS = VPAdd->getOperand(0);
+    Value *RHS = VPAdd->getOperand(1);
+    if (ValueIsA(LHS, Intrinsic::vp_ptrtoint)) {
+      BasePtr = getSplatValue(cast<Instruction>(LHS)->getOperand(0));
+      IndexVal = RHS;
+    } else if (ValueIsA(RHS, Intrinsic::vp_ptrtoint)) {
+      BasePtr = getSplatValue(cast<Instruction>(RHS)->getOperand(0));
+      IndexVal = LHS;
+    } else {
+      return false;
+    }
 
-  const Value *BasePtr = GEP->getPointerOperand();
-  const Value *IndexVal = GEP->getOperand(GEP->getNumOperands() - 1);
+    if (!BasePtr)
+      return false;
+    if (auto *I = dyn_cast<Instruction>(BasePtr);
+        I && I->getParent() != CurBB && !I->isUsedInBasicBlock(CurBB))
+      return false;
 
-  // Make sure the base is scalar and the index is a vector.
-  if (BasePtr->getType()->isVectorTy() || !IndexVal->getType()->isVectorTy())
-    return false;
+    Base = SDB->getValue(BasePtr);
+    Index = SDB->getValue(IndexVal);
+    IndexType = ISD::SIGNED_SCALED;
+    Scale = DAG.getTargetConstant(1, SDB->getCurSDLoc(), TLI.getPointerTy(DL));
 
-  uint64_t ScaleVal = DL.getTypeAllocSize(GEP->getResultElementType());
+    return true;
+  }
 
-  // Target may not support the required addressing mode.
-  if (ScaleVal != 1 &&
-      !TLI.isLegalScaleForGatherScatter(ScaleVal, ElemSize))
-    return false;
-
-  Base = SDB->getValue(BasePtr);
-  Index = SDB->getValue(IndexVal);
-  IndexType = ISD::SIGNED_SCALED;
-
-  Scale =
-      DAG.getTargetConstant(ScaleVal, SDB->getCurSDLoc(), TLI.getPointerTy(DL));
-  return true;
+  return false;
 }
 
 void SelectionDAGBuilder::visitMaskedScatter(const CallInst &I) {

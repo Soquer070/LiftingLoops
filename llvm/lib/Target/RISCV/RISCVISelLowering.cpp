@@ -2185,6 +2185,9 @@ bool RISCVTargetLowering::canSplatOperand(Instruction *I, int Operand) const {
     return Operand == 0 || Operand == 1;
   case Intrinsic::vp_gather:
       return Operand == 0;
+  // We use this to optimize VP gathers/scatters.
+  case Intrinsic::vp_ptrtoint:
+    return Operand == 0;
   default:
     return false;
   }
