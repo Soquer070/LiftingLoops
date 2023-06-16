@@ -10,11 +10,13 @@ define void @test_vp_select_int(<vscale x 1 x i64> %a, <vscale x 1 x i64> %b, <v
 ; CHECK-O0-LABEL: test_vp_select_int:
 ; CHECK-O0:       # %bb.0:
 ; CHECK-O0-NEXT:    mv a1, a0
+; CHECK-O0-NEXT:    vmv1r.v v10, v8
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v8, v0
+; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v10, v0
 ; CHECK-O0-NEXT:    vs1r.v v8, (a0)
 ; CHECK-O0-NEXT:    ret
 ;
@@ -38,11 +40,13 @@ define void @test_vp_select_int_2(<vscale x 2 x i32> %a, <vscale x 2 x i32> %b, 
 ; CHECK-O0-LABEL: test_vp_select_int_2:
 ; CHECK-O0:       # %bb.0:
 ; CHECK-O0-NEXT:    mv a1, a0
+; CHECK-O0-NEXT:    vmv1r.v v10, v8
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v8, v0
+; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v10, v0
 ; CHECK-O0-NEXT:    vs1r.v v8, (a0)
 ; CHECK-O0-NEXT:    ret
 ;
@@ -66,11 +70,13 @@ define void @test_vp_select_int_3(<vscale x 2 x i64> %a, <vscale x 2 x i64> %b, 
 ; CHECK-O0-LABEL: test_vp_select_int_3:
 ; CHECK-O0:       # %bb.0:
 ; CHECK-O0-NEXT:    mv a1, a0
+; CHECK-O0-NEXT:    vmv2r.v v12, v8
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8m2
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m2, ta, ma
-; CHECK-O0-NEXT:    vmerge.vvm v8, v10, v8, v0
+; CHECK-O0-NEXT:    vmerge.vvm v8, v10, v12, v0
 ; CHECK-O0-NEXT:    vs2r.v v8, (a0)
 ; CHECK-O0-NEXT:    ret
 ;
@@ -94,11 +100,13 @@ define void @test_vp_select_fp(<vscale x 1 x double> %a, <vscale x 1 x double> %
 ; CHECK-O0-LABEL: test_vp_select_fp:
 ; CHECK-O0:       # %bb.0:
 ; CHECK-O0-NEXT:    mv a1, a0
+; CHECK-O0-NEXT:    vmv1r.v v10, v8
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v8, v0
+; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v10, v0
 ; CHECK-O0-NEXT:    vs1r.v v8, (a0)
 ; CHECK-O0-NEXT:    ret
 ;
@@ -122,11 +130,13 @@ define void @test_vp_select_fp_2(<vscale x 2 x float> %a, <vscale x 2 x float> %
 ; CHECK-O0-LABEL: test_vp_select_fp_2:
 ; CHECK-O0:       # %bb.0:
 ; CHECK-O0-NEXT:    mv a1, a0
+; CHECK-O0-NEXT:    vmv1r.v v10, v8
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v8, v0
+; CHECK-O0-NEXT:    vmerge.vvm v8, v9, v10, v0
 ; CHECK-O0-NEXT:    vs1r.v v8, (a0)
 ; CHECK-O0-NEXT:    ret
 ;
@@ -150,11 +160,13 @@ define void @test_vp_select_fp_3(<vscale x 2 x double> %a, <vscale x 2 x double>
 ; CHECK-O0-LABEL: test_vp_select_fp_3:
 ; CHECK-O0:       # %bb.0:
 ; CHECK-O0-NEXT:    mv a1, a0
+; CHECK-O0-NEXT:    vmv2r.v v12, v8
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8m2
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m2, ta, ma
-; CHECK-O0-NEXT:    vmerge.vvm v8, v10, v8, v0
+; CHECK-O0-NEXT:    vmerge.vvm v8, v10, v12, v0
 ; CHECK-O0-NEXT:    vs2r.v v8, (a0)
 ; CHECK-O0-NEXT:    ret
 ;

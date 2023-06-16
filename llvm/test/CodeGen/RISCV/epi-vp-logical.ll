@@ -24,33 +24,36 @@ define void @test_vp_logical(<vscale x 1 x i64>* %a0, <vscale x 1 x i64>* %a1, i
 ; CHECK-O0-NEXT:    srli a1, a1, 32
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vle64.v v8, (a3)
-; CHECK-O0-NEXT:    vle64.v v10, (a2)
+; CHECK-O0-NEXT:    vle64.v v9, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v9, v8, 0
-; CHECK-O0-NEXT:    vmv.v.i v8, 0
-; CHECK-O0-NEXT:    vand.vi v10, v10, 1
-; CHECK-O0-NEXT:    vmsne.vi v10, v10, 0
+; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    vmv.v.i v11, 0
+; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, mf8, ta, ma
-; CHECK-O0-NEXT:    vmand.mm v0, v9, v10
-; CHECK-O0-NEXT:    vmor.mm v11, v9, v10
+; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
+; CHECK-O0-NEXT:    vmor.mm v10, v8, v9
 ; CHECK-O0-NEXT:    addi a2, sp, 32
-; CHECK-O0-NEXT:    vs1r.v v11, (a2) # Unknown-size Folded Spill
-; CHECK-O0-NEXT:    vmxor.mm v9, v9, v10
+; CHECK-O0-NEXT:    vs1r.v v10, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vmxor.mm v8, v8, v9
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
-; CHECK-O0-NEXT:    vs1r.v v9, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vs1r.v v8, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e64, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vim v10, v8, 1, v0
+; CHECK-O0-NEXT:    vmerge.vim v10, v11, 1, v0
 ; CHECK-O0-NEXT:    addi a2, sp, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v9, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vmerge.vim v9, v11, 1, v0
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v8, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v8
+; CHECK-O0-NEXT:    vmerge.vim v8, v11, 1, v0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vse64.v v10, (a0)
 ; CHECK-O0-NEXT:    vse64.v v9, (a0)
@@ -135,33 +138,36 @@ define void @test_vp_logical_2(<vscale x 2 x i32>* %a0, <vscale x 2 x i32>* %a1,
 ; CHECK-O0-NEXT:    srli a1, a1, 32
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
 ; CHECK-O0-NEXT:    vle32.v v8, (a3)
-; CHECK-O0-NEXT:    vle32.v v10, (a2)
+; CHECK-O0-NEXT:    vle32.v v9, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e32, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v9, v8, 0
-; CHECK-O0-NEXT:    vmv.v.i v8, 0
-; CHECK-O0-NEXT:    vand.vi v10, v10, 1
-; CHECK-O0-NEXT:    vmsne.vi v10, v10, 0
+; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    vmv.v.i v11, 0
+; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, mf4, ta, ma
-; CHECK-O0-NEXT:    vmand.mm v0, v9, v10
-; CHECK-O0-NEXT:    vmor.mm v11, v9, v10
+; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
+; CHECK-O0-NEXT:    vmor.mm v10, v8, v9
 ; CHECK-O0-NEXT:    addi a2, sp, 32
-; CHECK-O0-NEXT:    vs1r.v v11, (a2) # Unknown-size Folded Spill
-; CHECK-O0-NEXT:    vmxor.mm v9, v9, v10
+; CHECK-O0-NEXT:    vs1r.v v10, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vmxor.mm v8, v8, v9
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
-; CHECK-O0-NEXT:    vs1r.v v9, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vs1r.v v8, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e32, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vim v10, v8, 1, v0
+; CHECK-O0-NEXT:    vmerge.vim v10, v11, 1, v0
 ; CHECK-O0-NEXT:    addi a2, sp, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v9, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vmerge.vim v9, v11, 1, v0
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v8, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v8
+; CHECK-O0-NEXT:    vmerge.vim v8, v11, 1, v0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
 ; CHECK-O0-NEXT:    vse32.v v10, (a0)
 ; CHECK-O0-NEXT:    vse32.v v9, (a0)
@@ -246,33 +252,36 @@ define void @test_vp_logical_3(<vscale x 4 x i16>* %a0, <vscale x 4 x i16>* %a1,
 ; CHECK-O0-NEXT:    srli a1, a1, 32
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
 ; CHECK-O0-NEXT:    vle16.v v8, (a3)
-; CHECK-O0-NEXT:    vle16.v v10, (a2)
+; CHECK-O0-NEXT:    vle16.v v9, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e16, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v9, v8, 0
-; CHECK-O0-NEXT:    vmv.v.i v8, 0
-; CHECK-O0-NEXT:    vand.vi v10, v10, 1
-; CHECK-O0-NEXT:    vmsne.vi v10, v10, 0
+; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    vmv.v.i v11, 0
+; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, mf2, ta, ma
-; CHECK-O0-NEXT:    vmand.mm v0, v9, v10
-; CHECK-O0-NEXT:    vmor.mm v11, v9, v10
+; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
+; CHECK-O0-NEXT:    vmor.mm v10, v8, v9
 ; CHECK-O0-NEXT:    addi a2, sp, 32
-; CHECK-O0-NEXT:    vs1r.v v11, (a2) # Unknown-size Folded Spill
-; CHECK-O0-NEXT:    vmxor.mm v9, v9, v10
+; CHECK-O0-NEXT:    vs1r.v v10, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vmxor.mm v8, v8, v9
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
-; CHECK-O0-NEXT:    vs1r.v v9, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vs1r.v v8, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e16, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vim v10, v8, 1, v0
+; CHECK-O0-NEXT:    vmerge.vim v10, v11, 1, v0
 ; CHECK-O0-NEXT:    addi a2, sp, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v9, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vmerge.vim v9, v11, 1, v0
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v8, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v8
+; CHECK-O0-NEXT:    vmerge.vim v8, v11, 1, v0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
 ; CHECK-O0-NEXT:    vse16.v v10, (a0)
 ; CHECK-O0-NEXT:    vse16.v v9, (a0)
@@ -357,33 +366,36 @@ define void @test_vp_logical_4(<vscale x 8 x i8>* %a0, <vscale x 8 x i8>* %a1, i
 ; CHECK-O0-NEXT:    srli a1, a1, 32
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
 ; CHECK-O0-NEXT:    vle8.v v8, (a3)
-; CHECK-O0-NEXT:    vle8.v v10, (a2)
+; CHECK-O0-NEXT:    vle8.v v9, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v9, v8, 0
-; CHECK-O0-NEXT:    vmv.v.i v8, 0
-; CHECK-O0-NEXT:    vand.vi v10, v10, 1
-; CHECK-O0-NEXT:    vmsne.vi v10, v10, 0
+; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    vmv.v.i v11, 0
+; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
-; CHECK-O0-NEXT:    vmand.mm v0, v9, v10
-; CHECK-O0-NEXT:    vmor.mm v11, v9, v10
+; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
+; CHECK-O0-NEXT:    vmor.mm v10, v8, v9
 ; CHECK-O0-NEXT:    addi a2, sp, 32
-; CHECK-O0-NEXT:    vs1r.v v11, (a2) # Unknown-size Folded Spill
-; CHECK-O0-NEXT:    vmxor.mm v9, v9, v10
+; CHECK-O0-NEXT:    vs1r.v v10, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vmxor.mm v8, v8, v9
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
-; CHECK-O0-NEXT:    vs1r.v v9, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vs1r.v v8, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m1, ta, ma
-; CHECK-O0-NEXT:    vmerge.vim v10, v8, 1, v0
+; CHECK-O0-NEXT:    vmerge.vim v10, v11, 1, v0
 ; CHECK-O0-NEXT:    addi a2, sp, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v9, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vmerge.vim v9, v11, 1, v0
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v8, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v8
+; CHECK-O0-NEXT:    vmerge.vim v8, v11, 1, v0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
 ; CHECK-O0-NEXT:    vse8.v v10, (a0)
 ; CHECK-O0-NEXT:    vse8.v v9, (a0)
@@ -468,33 +480,36 @@ define void @test_vp_logical_5(<vscale x 16 x i8>* %a0, <vscale x 16 x i8>* %a1,
 ; CHECK-O0-NEXT:    srli a1, a1, 32
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m2, ta, ma
 ; CHECK-O0-NEXT:    vle8.v v8, (a3)
-; CHECK-O0-NEXT:    vle8.v v12, (a2)
+; CHECK-O0-NEXT:    vle8.v v10, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m2, ta, ma
-; CHECK-O0-NEXT:    vand.vi v8, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v10, v8, 0
-; CHECK-O0-NEXT:    vmv.v.i v8, 0
-; CHECK-O0-NEXT:    vand.vi v12, v12, 1
-; CHECK-O0-NEXT:    vmsne.vi v11, v12, 0
+; CHECK-O0-NEXT:    vand.vi v12, v8, 1
+; CHECK-O0-NEXT:    vmsne.vi v8, v12, 0
+; CHECK-O0-NEXT:    vmv.v.i v14, 0
+; CHECK-O0-NEXT:    vand.vi v10, v10, 1
+; CHECK-O0-NEXT:    vmsne.vi v9, v10, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m2, ta, ma
-; CHECK-O0-NEXT:    vmand.mm v0, v10, v11
-; CHECK-O0-NEXT:    vmor.mm v12, v10, v11
+; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
+; CHECK-O0-NEXT:    vmor.mm v10, v8, v9
 ; CHECK-O0-NEXT:    addi a2, sp, 32
-; CHECK-O0-NEXT:    vs1r.v v12, (a2) # Unknown-size Folded Spill
-; CHECK-O0-NEXT:    vmxor.mm v10, v10, v11
-; CHECK-O0-NEXT:    csrr a2, vlenb
-; CHECK-O0-NEXT:    add a2, sp, a2
-; CHECK-O0-NEXT:    addi a2, a2, 32
 ; CHECK-O0-NEXT:    vs1r.v v10, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vmxor.mm v8, v8, v9
+; CHECK-O0-NEXT:    csrr a2, vlenb
+; CHECK-O0-NEXT:    add a2, sp, a2
+; CHECK-O0-NEXT:    addi a2, a2, 32
+; CHECK-O0-NEXT:    vs1r.v v8, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v12m2
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m2, ta, ma
-; CHECK-O0-NEXT:    vmerge.vim v12, v8, 1, v0
+; CHECK-O0-NEXT:    vmerge.vim v12, v14, 1, v0
 ; CHECK-O0-NEXT:    addi a2, sp, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v10, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v10m2
+; CHECK-O0-NEXT:    vmerge.vim v10, v14, 1, v0
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v8, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v8m2
+; CHECK-O0-NEXT:    vmerge.vim v8, v14, 1, v0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m2, ta, ma
 ; CHECK-O0-NEXT:    vse8.v v12, (a0)
 ; CHECK-O0-NEXT:    vse8.v v10, (a0)
@@ -579,33 +594,36 @@ define void @test_vp_logical_6(<vscale x 32 x i8>* %a0, <vscale x 32 x i8>* %a1,
 ; CHECK-O0-NEXT:    srli a1, a1, 32
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m4, ta, ma
 ; CHECK-O0-NEXT:    vle8.v v8, (a3)
-; CHECK-O0-NEXT:    vle8.v v16, (a2)
+; CHECK-O0-NEXT:    vle8.v v12, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m4, ta, ma
-; CHECK-O0-NEXT:    vand.vi v8, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v12, v8, 0
-; CHECK-O0-NEXT:    vmv.v.i v8, 0
-; CHECK-O0-NEXT:    vand.vi v16, v16, 1
-; CHECK-O0-NEXT:    vmsne.vi v13, v16, 0
+; CHECK-O0-NEXT:    vand.vi v16, v8, 1
+; CHECK-O0-NEXT:    vmsne.vi v8, v16, 0
+; CHECK-O0-NEXT:    vmv.v.i v20, 0
+; CHECK-O0-NEXT:    vand.vi v12, v12, 1
+; CHECK-O0-NEXT:    vmsne.vi v9, v12, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m4, ta, ma
-; CHECK-O0-NEXT:    vmand.mm v0, v12, v13
-; CHECK-O0-NEXT:    vmor.mm v14, v12, v13
+; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
+; CHECK-O0-NEXT:    vmor.mm v10, v8, v9
 ; CHECK-O0-NEXT:    addi a2, sp, 32
-; CHECK-O0-NEXT:    vs1r.v v14, (a2) # Unknown-size Folded Spill
-; CHECK-O0-NEXT:    vmxor.mm v12, v12, v13
+; CHECK-O0-NEXT:    vs1r.v v10, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vmxor.mm v8, v8, v9
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
-; CHECK-O0-NEXT:    vs1r.v v12, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    vs1r.v v8, (a2) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v16m4
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m4, ta, ma
-; CHECK-O0-NEXT:    vmerge.vim v16, v8, 1, v0
+; CHECK-O0-NEXT:    vmerge.vim v16, v20, 1, v0
 ; CHECK-O0-NEXT:    addi a2, sp, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v12, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v12m4
+; CHECK-O0-NEXT:    vmerge.vim v12, v20, 1, v0
 ; CHECK-O0-NEXT:    csrr a2, vlenb
 ; CHECK-O0-NEXT:    add a2, sp, a2
 ; CHECK-O0-NEXT:    addi a2, a2, 32
 ; CHECK-O0-NEXT:    vl1r.v v0, (a2) # Unknown-size Folded Reload
-; CHECK-O0-NEXT:    vmerge.vim v8, v8, 1, v0
+; CHECK-O0-NEXT:    # implicit-def: $v8m4
+; CHECK-O0-NEXT:    vmerge.vim v8, v20, 1, v0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m4, ta, ma
 ; CHECK-O0-NEXT:    vse8.v v16, (a0)
 ; CHECK-O0-NEXT:    vse8.v v12, (a0)

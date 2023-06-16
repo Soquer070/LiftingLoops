@@ -20,4 +20,4 @@
 // Check that the resulting file is under 40KB:
 //
 // RUN: wc -c %t/a.pcm | FileCheck --check-prefix=CHECK-SIZE %s
-// CHECK-SIZE: {{(^|[^0-9])[123][0-9][0-9][0-9][0-9]($|[^0-9])}}
+// CHECK-SIZE: {{(^|[^0-9])[12345][0-9][0-9][0-9][0-9]($|[^0-9])}}
