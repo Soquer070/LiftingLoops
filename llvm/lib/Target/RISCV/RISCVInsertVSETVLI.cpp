@@ -42,6 +42,10 @@ static cl::opt<bool> UseStrictAsserts(
     "riscv-insert-vsetvl-strict-asserts", cl::init(true), cl::Hidden,
     cl::desc("Enable strict assertion checking for the dataflow algorithm"));
 
+static cl::opt<bool> ForwardPropagateAVL(
+    "riscv-forward-propagate-avl", cl::init(true), cl::Hidden,
+    cl::desc("Propagate AVL before insertion of vsetvl"));
+
 namespace {
 
 static unsigned getVLOpNum(const MachineInstr &MI) {
@@ -1187,8 +1191,11 @@ void RISCVInsertVSETVLI::forwardPropagateAVL(MachineBasicBlock &MBB) {
       if (Propagate) {
         if (MI.getOpcode() == RISCV::PseudoVSETIVLI && Use.isImm())
           Use.setImm(VI.getAVLImm());
-        else if (Use.isReg() && VI.hasAVLReg())
-          Use.setReg(VI.getAVLReg());
+        else if (Use.isReg() && VI.hasAVLReg()) {
+          Register AVLReg = VI.getAVLReg();
+          Use.setReg(AVLReg);
+          MRI->clearKillFlags(AVLReg);
+        }
       }
     }
 
@@ -1842,8 +1849,9 @@ bool RISCVInsertVSETVLI::runOnMachineFunction(MachineFunction &MF) {
   BlockInfo.resize(MF.getNumBlockIDs());
 
   // Phase 0 - propagate AVL when VLMAX is the same
-  for (MachineBasicBlock &MBB : MF)
-    forwardPropagateAVL(MBB);
+  if (ForwardPropagateAVL)
+    for (MachineBasicBlock &MBB : MF)
+      forwardPropagateAVL(MBB);
 
   bool HaveVectorOp = false;
 
