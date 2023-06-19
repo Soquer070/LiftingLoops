@@ -4666,6 +4666,7 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
     State.setDebugLocFromInst(CI);
 
     assert(isa<IntegerType>(CI->getType()) && "Invalid destination Int type.");
+#ifndef NDEBUG
     IntegerType *DestElemTy = cast<IntegerType>(CI->getType());
     IntegerType *SrcElemTy = cast<IntegerType>(CI->getOperand(0)->getType());
     if (Opcode == Instruction::Trunc)
@@ -4674,6 +4675,7 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
     else
       assert(DestElemTy->getBitWidth() > SrcElemTy->getBitWidth() &&
              "Cannot extend to a smaller size.");
+#endif
     return CreateCast(CI);
   }
 
@@ -4681,6 +4683,7 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
   if (Opcode == Instruction::FPExt || Opcode == Instruction::FPTrunc) {
     auto *CI = cast<CastInst>(&I);
     State.setDebugLocFromInst(CI);
+#ifndef NDEBUG
     Type *DestElemTy = CI->getType();
     Type *SrcElemTy = CI->getOperand(0)->getType();
     assert(DestElemTy->isFloatingPointTy() && SrcElemTy->isFloatingPointTy() &&
@@ -4691,6 +4694,7 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
     else
       assert(DestElemTy->getTypeID() > SrcElemTy->getTypeID() &&
              "Cannot extend to a smaller size.");
+#endif
     return CreateCast(CI);
   }
 
@@ -4698,10 +4702,12 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
   if (Opcode == Instruction::FPToUI || Opcode == Instruction::FPToSI) {
     auto *CI = cast<CastInst>(&I);
     State.setDebugLocFromInst(CI);
+#ifndef NDEBUG
     Type *DestElemTy = CI->getType();
     Type *SrcElemTy = CI->getOperand(0)->getType();
     assert(DestElemTy->isIntegerTy() && SrcElemTy->isFloatingPointTy() &&
            "Invalid destination/source type for float to int cast.");
+#endif
     return CreateCast(CI);
   }
 
@@ -4709,10 +4715,12 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
   if (Opcode == Instruction::UIToFP || Opcode == Instruction::SIToFP) {
     auto *CI = cast<CastInst>(&I);
     State.setDebugLocFromInst(CI);
+#ifndef NDEBUG
     Type *DestElemTy = CI->getType();
     Type *SrcElemTy = CI->getOperand(0)->getType();
     assert(SrcElemTy->isIntegerTy() && DestElemTy->isFloatingPointTy() &&
            "Invalid destination/source type for float to int cast.");
+#endif
     return CreateCast(CI);
   }
 
@@ -4720,6 +4728,7 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
   if (Opcode == Instruction::IntToPtr || Opcode == Instruction::PtrToInt) {
     auto *CI = cast<CastInst>(&I);
     State.setDebugLocFromInst(CI);
+#ifndef NDEBUG
     Type *DestElemTy = CI->getType();
     Type *SrcElemTy = CI->getOperand(0)->getType();
     if (Opcode == Instruction::IntToPtr)
@@ -4728,6 +4737,7 @@ void InnerLoopVectorizer::widenPredicatedInstruction(Instruction &I,
     else
       assert(DestElemTy->isIntegerTy() && SrcElemTy->isPointerTy() &&
              "Invalid destination/source type for ptr to int cast.");
+#endif
     return CreateCast(CI);
   }
 
@@ -10375,9 +10385,11 @@ std::optional<VPlanPtr> LoopVectorizationPlanner::tryToBuildVPlanWithVPRecipes(
   VPlanTransforms::removeRedundantExpandSCEVRecipes(*Plan);
   VPlanTransforms::mergeBlocksIntoPredecessors(*Plan);
 
+#ifndef NDEBUG
   bool ValidVPlan = VPlanVerifier::verifyPlanIsValid(*Plan);
   LLVM_DEBUG(if (!ValidVPlan) { Plan->dump(); });
   assert(ValidVPlan && "VPlan is invalid");
+#endif
   return std::make_optional(std::move(Plan));
 }
 

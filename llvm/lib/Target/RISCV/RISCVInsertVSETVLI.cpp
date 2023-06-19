@@ -1220,6 +1220,7 @@ static bool isLMUL1OrSmaller(RISCVII::VLMUL LMUL) {
 bool RISCVInsertVSETVLI::needVSETVLI(const MachineInstr &MI,
                                      const VSETVLIInfo &Require,
                                      const VSETVLIInfo &CurInfo) const {
+#ifndef NDEBUG
   const RISCVEPIPseudosTable::EPIPseudoInfo *EPI =
       RISCVEPIPseudosTable::getEPIPseudoInfo(MI.getOpcode());
   assert(Require == (EPI ? computeInfoForEPIInstr(
@@ -1227,6 +1228,7 @@ bool RISCVInsertVSETVLI::needVSETVLI(const MachineInstr &MI,
                                EPI->VLMul, EPI->getMaskOpIndex(),
                                EPI->BaseInstr, EPI->getDynamicFlagsIndex(), MRI)
                          : computeInfoForInstr(MI, MI.getDesc().TSFlags, MRI)));
+#endif
 
   if (!CurInfo.isValid() || CurInfo.isUnknown() || CurInfo.hasSEWLMULRatioOnly())
     return true;

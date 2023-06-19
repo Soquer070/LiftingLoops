@@ -11443,8 +11443,10 @@ void RISCVTargetLowering::ReplaceNodeResults(SDNode *N,
     break;
   }
   case ISD::EXTRACT_SUBVECTOR: {
+#ifndef NDEBUG
     unsigned Idx = cast<ConstantSDNode>(N->getOperand(1))->getZExtValue();
     assert(Idx == 0 && "We can only extract the lowest vector");
+#endif
     Results.push_back(N->getOperand(0));
     // Results.push_back(DAG.getNode(RISCVISD::LOWER_PART, DL,
     //                               N->getOperand(0)->getValueType(0),
@@ -11610,9 +11612,11 @@ void RISCVTargetLowering::ReplaceNodeResults(SDNode *N,
     }
     case Intrinsic::epi_vmv_x_s: {
       EVT Ty = N->getValueType(0);
+#ifndef NDEBUG
       MVT::SimpleValueType SimpleVT = Ty.getSimpleVT().SimpleTy;
       assert(SimpleVT == MVT::i8 || SimpleVT == MVT::i16 ||
              SimpleVT == MVT::i32);
+#endif
 
       SDValue Extract64 =
           DAG.getNode(RISCVISD::VMV_X_S, DL, MVT::i64, N->getOperand(1));
