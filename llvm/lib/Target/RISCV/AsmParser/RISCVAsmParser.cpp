@@ -2178,10 +2178,7 @@ OperandMatchResultTy RISCVAsmParser::parseVTypeI(OperandVector &Operands) {
 
   getLexer().Lex();
 
-  while (getLexer().is(AsmToken::Comma)) {
-    // Consume comma.
-    getLexer().Lex();
-
+  while (parseOptionalToken(AsmToken::Comma)) {
     if (getLexer().isNot(AsmToken::Identifier))
       break;
 
@@ -2439,8 +2436,7 @@ OperandMatchResultTy RISCVAsmParser::parseReglist(OperandVector &Operands) {
   getLexer().Lex();
 
   // parse case like ,s0
-  if (getLexer().is(AsmToken::Comma)) {
-    getLexer().Lex();
+  if (parseOptionalToken(AsmToken::Comma)) {
     if (getLexer().isNot(AsmToken::Identifier)) {
       Error(getLoc(), "invalid register");
       return MatchOperand_ParseFail;
@@ -2459,8 +2455,7 @@ OperandMatchResultTy RISCVAsmParser::parseReglist(OperandVector &Operands) {
   }
 
   // parse case like -s1
-  if (getLexer().is(AsmToken::Minus)) {
-    getLexer().Lex();
+  if (parseOptionalToken(AsmToken::Minus)) {
     StringRef EndName = getLexer().getTok().getIdentifier();
     // FIXME: the register mapping and checks of EABI is wrong
     RegEnd = matchRegisterNameHelper(IsEABI, EndName);
@@ -2478,7 +2473,7 @@ OperandMatchResultTy RISCVAsmParser::parseReglist(OperandVector &Operands) {
 
   if (!IsEABI) {
     // parse extra part like ', x18[-x20]' for XRegList
-    if (getLexer().is(AsmToken::Comma)) {
+    if (parseOptionalToken(AsmToken::Comma)) {
       if (RegEnd != RISCV::X9) {
         Error(
             getLoc(),
@@ -2487,7 +2482,6 @@ OperandMatchResultTy RISCVAsmParser::parseReglist(OperandVector &Operands) {
       }
 
       // parse ', x18' for extra part
-      getLexer().Lex();
       if (getLexer().isNot(AsmToken::Identifier)) {
         Error(getLoc(), "invalid register");
         return MatchOperand_ParseFail;
@@ -2501,8 +2495,7 @@ OperandMatchResultTy RISCVAsmParser::parseReglist(OperandVector &Operands) {
       getLexer().Lex();
 
       // parse '-x20' for extra part
-      if (getLexer().is(AsmToken::Minus)) {
-        getLexer().Lex();
+      if (parseOptionalToken(AsmToken::Minus)) {
         if (getLexer().isNot(AsmToken::Identifier)) {
           Error(getLoc(), "invalid register");
           return MatchOperand_ParseFail;
@@ -2541,8 +2534,7 @@ OperandMatchResultTy RISCVAsmParser::parseReglist(OperandVector &Operands) {
 }
 
 OperandMatchResultTy RISCVAsmParser::parseZcmpSpimm(OperandVector &Operands) {
-  if (getLexer().is(AsmToken::Minus))
-    getLexer().Lex();
+  (void)parseOptionalToken(AsmToken::Minus);
 
   SMLoc S = getLoc();
   int64_t StackAdjustment = getLexer().getTok().getIntVal();
@@ -2619,10 +2611,7 @@ bool RISCVAsmParser::ParseInstruction(ParseInstructionInfo &Info,
     return true;
 
   // Parse until end of statement, consuming commas between operands
-  while (getLexer().is(AsmToken::Comma)) {
-    // Consume comma token
-    getLexer().Lex();
-
+  while (parseOptionalToken(AsmToken::Comma)) {
     // Parse next operand
     if (parseOperand(Operands, Name))
       return true;
