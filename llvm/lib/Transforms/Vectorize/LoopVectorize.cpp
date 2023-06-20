@@ -279,8 +279,7 @@ static cl::opt<bool> EnableInterleavedMemAccesses(
 /// predication, or in order to mask away gaps.
 static cl::opt<bool> EnableMaskedInterleavedMemAccesses(
     "enable-masked-interleaved-mem-accesses", cl::init(false), cl::Hidden,
-    cl::desc("Enable vectorization on masked interleaved memory accesses in a "
-             "loop"));
+    cl::desc("Enable vectorization on masked interleaved memory accesses in a loop"));
 
 static cl::opt<unsigned> TinyTripCountInterleaveThreshold(
     "tiny-trip-count-interleave-threshold", cl::init(128), cl::Hidden,
@@ -1037,9 +1036,7 @@ static void debugVectorizationMessage(const StringRef Prefix,
 /// the location of the remark.  \return the remark object that can be
 /// streamed to.
 static OptimizationRemarkAnalysis createLVAnalysis(const char *PassName,
-                                                   StringRef RemarkName,
-                                                   Loop *TheLoop,
-                                                   Instruction *I) {
+    StringRef RemarkName, Loop *TheLoop, Instruction *I) {
   Value *CodeRegion = TheLoop->getHeader();
   DebugLoc DL = TheLoop->getStartLoc();
 
@@ -3099,13 +3096,13 @@ Value *InnerLoopVectorizer::createBitOrPointerCast(Value *V, VectorType *DstVTy,
   auto *SrcVecTy = cast<VectorType>(V->getType());
   assert(VF == SrcVecTy->getElementCount() && "Vector dimensions do not match");
   Type *SrcElemTy = SrcVecTy->getElementType();
-  Type *DstElemTy = DstVTy->getElementType();
+  Type *DstElemTy = DstFVTy->getElementType();
   assert((DL.getTypeSizeInBits(SrcElemTy) == DL.getTypeSizeInBits(DstElemTy)) &&
          "Vector elements must have same size");
 
   // Do a direct cast if element types are castable.
   if (CastInst::isBitOrNoopPointerCastable(SrcElemTy, DstElemTy, DL)) {
-    return Builder.CreateBitOrPointerCast(V, DstVTy);
+    return Builder.CreateBitOrPointerCast(V, DstFVTy);
   }
   // V cannot be directly casted to desired vector type.
   // May happen when V is a floating point vector but DstVTy is a vector of
@@ -3119,7 +3116,7 @@ Value *InnerLoopVectorizer::createBitOrPointerCast(Value *V, VectorType *DstVTy,
       IntegerType::getIntNTy(V->getContext(), DL.getTypeSizeInBits(SrcElemTy));
   auto *VecIntTy = VectorType::get(IntTy, VF);
   Value *CastVal = Builder.CreateBitOrPointerCast(V, VecIntTy);
-  return Builder.CreateBitOrPointerCast(CastVal, DstVTy);
+  return Builder.CreateBitOrPointerCast(CastVal, DstFVTy);
 }
 
 void InnerLoopVectorizer::emitIterationCountCheck(BasicBlock *Bypass,
@@ -3599,7 +3596,7 @@ struct CSEDenseMapInfo {
 
 } // end anonymous namespace
 
-/// Perform cse of induction variable instructions.
+///Perform cse of induction variable instructions.
 static void cse(BasicBlock *BB) {
   // Perform simple cse.
   SmallDenseMap<Instruction *, Instruction *, 4, CSEDenseMapInfo> CSEMap;
@@ -4202,9 +4199,8 @@ void InnerLoopVectorizer::fixReduction(VPReductionPHIRecipe *PhiR,
         if (isa<SelectInst>(U)) {
           assert(!Sel && "Reduction exit feeding two selects");
           Sel = cast<SelectInst>(U);
-        } else {
-          // assert(isa<PHINode>(U) && "Reduction exit must feed Phi's or select");
-        }
+        } else
+          assert(isa<PHINode>(U) && "Reduction exit must feed Phi's or select");
       }
       assert(Sel && "Reduction exit feeds no select");
       State.reset(LoopExitInstDef, Sel, Part);
@@ -5223,13 +5219,13 @@ void LoopVectorizationCostModel::collectLoopUniforms(ElementCount VF) {
 
   // Add uniform instructions demanding lane 0 to the worklist. Instructions
   // that are scalar with predication must not be considered uniform after
-  // vectorizetion, because that would create an erroneous replicating region
+  // vectorization, because that would create an erroneous replicating region
   // where only a single instance out of VF should be formed.
   // TODO: optimize such seldom cases if found important, see PR40816.
   auto addToWorklistIfAllowed = [&](Instruction *I) -> void {
     if (isOutOfScope(I)) {
-      LLVM_DEBUG(dbgs() << "LV: Found not uniform due to scope: " << *I
-                        << "\n");
+      LLVM_DEBUG(dbgs() << "LV: Found not uniform due to scope: "
+                        << *I << "\n");
       return;
     }
     if (isScalarWithPredication(I, VF)) {
@@ -5346,9 +5342,10 @@ void LoopVectorizationCostModel::collectLoopUniforms(ElementCount VF) {
     if (isOutOfScope(V))
       continue;
     auto *I = cast<Instruction>(V);
-    auto UsersAreMemAccesses = llvm::all_of(I->users(), [&](User *U) -> bool {
-      return isVectorizedMemAccessUse(cast<Instruction>(U), V);
-    });
+    auto UsersAreMemAccesses =
+      llvm::all_of(I->users(), [&](User *U) -> bool {
+        return isVectorizedMemAccessUse(cast<Instruction>(U), V);
+      });
     if (UsersAreMemAccesses)
       addToWorklistIfAllowed(I);
   }
@@ -5423,8 +5420,7 @@ bool LoopVectorizationCostModel::runtimeChecksRequired() {
   LLVM_DEBUG(dbgs() << "LV: Performing code size checks.\n");
 
   if (Legal->getRuntimePointerChecking()->Need) {
-    reportVectorizationFailure(
-        "Runtime ptr check is required with -Os/-Oz",
+    reportVectorizationFailure("Runtime ptr check is required with -Os/-Oz",
         "runtime pointer checks needed. Enable vectorization of this "
         "loop with '#pragma clang loop vectorize(enable)' when "
         "compiling with -Os/-Oz",
@@ -5870,8 +5866,7 @@ LoopVectorizationCostModel::computeMaxVF(ElementCount UserVF, unsigned UserIC) {
   unsigned TC = PSE.getSE()->getSmallConstantTripCount(TheLoop);
   LLVM_DEBUG(dbgs() << "LV: Found trip count: " << TC << '\n');
   if (TC == 1) {
-    reportVectorizationFailure(
-        "Single iteration (non) loop",
+    reportVectorizationFailure("Single iteration (non) loop",
         "loop trip count is one, irrelevant for vectorization",
         "SingleIterationLoop", ORE, TheLoop);
     return FixedScalableVFPair::getNone();
@@ -7310,10 +7305,11 @@ LoopVectorizationCostModel::expectedCost(
 ///
 /// This SCEV can be sent to the Target in order to estimate the address
 /// calculation cost.
-static const SCEV *getAddressAccessSCEV(Value *Ptr,
-                                        LoopVectorizationLegality *Legal,
-                                        PredicatedScalarEvolution &PSE,
-                                        const Loop *TheLoop) {
+static const SCEV *getAddressAccessSCEV(
+              Value *Ptr,
+              LoopVectorizationLegality *Legal,
+              PredicatedScalarEvolution &PSE,
+              const Loop *TheLoop) {
 
   auto *Gep = dyn_cast<GetElementPtrInst>(Ptr);
   if (!Gep)
@@ -7834,7 +7830,7 @@ void LoopVectorizationCostModel::setCostBasedWideningDecision(ElementCount VF) {
   for (BasicBlock *BB : TheLoop->blocks()) {
     // For each instruction in the old loop.
     for (Instruction &I : *BB) {
-      Value *Ptr = getLoadStorePointerOperand(&I);
+      Value *Ptr =  getLoadStorePointerOperand(&I);
       if (!Ptr)
         continue;
 
@@ -7871,8 +7867,8 @@ void LoopVectorizationCostModel::setCostBasedWideningDecision(ElementCount VF) {
         };
 
         const InstructionCost GatherScatterCost =
-            isLegalGatherOrScatter(&I, VF) ? getGatherScatterCost(&I, VF)
-                                           : InstructionCost::getInvalid();
+          isLegalGatherOrScatter(&I, VF) ?
+          getGatherScatterCost(&I, VF) : InstructionCost::getInvalid();
 
         // Load: Scalar load + broadcast
         // Store: Scalar store + isLoopInvariantStoreValue ? 0 : extract
@@ -7994,7 +7990,7 @@ void LoopVectorizationCostModel::setCostBasedWideningDecision(ElementCount VF) {
   for (BasicBlock *BB : TheLoop->blocks())
     for (Instruction &I : *BB) {
       Instruction *PtrDef =
-          dyn_cast_or_null<Instruction>(getLoadStorePointerOperand(&I));
+        dyn_cast_or_null<Instruction>(getLoadStorePointerOperand(&I));
       if (PtrDef && TheLoop->contains(PtrDef) &&
           (getWideningDecision(&I, VF) != CM_GatherScatter
           && getWideningDecision(&I, VF) != CM_Strided))
@@ -8146,8 +8142,7 @@ LoopVectorizationCostModel::getInstructionCost(Instruction *I, ElementCount VF,
     if (VF.isVector() && Phi->getParent() != TheLoop->getHeader())
       return (Phi->getNumIncomingValues() - 1) *
              TTI.getCmpSelInstrCost(
-                 Instruction::Select,
-                 ToVectorTy(Phi->getType(), VF),
+                 Instruction::Select, ToVectorTy(Phi->getType(), VF),
                  ToVectorTy(Type::getInt1Ty(Phi->getContext()), VF),
                  CmpInst::BAD_ICMP_PREDICATE, CostKind);
 
@@ -8341,9 +8336,8 @@ LoopVectorizationCostModel::getInstructionCost(Instruction *I, ElementCount VF,
       return *RedCost;
 
     Type *SrcScalarTy = I->getOperand(0)->getType();
-    Type *SrcVecTy = VectorTy->isVectorTy()
-                         ? ToVectorTy(SrcScalarTy, VF)
-                         : SrcScalarTy;
+    Type *SrcVecTy =
+        VectorTy->isVectorTy() ? ToVectorTy(SrcScalarTy, VF) : SrcScalarTy;
     if (canTruncateToMinimalBitwidth(I, VF)) {
       // This cast is going to be shrunk. This may remove the cast or it might
       // turn it into slightly different cast. For example, if MinBW == 16,
@@ -8353,8 +8347,8 @@ LoopVectorizationCostModel::getInstructionCost(Instruction *I, ElementCount VF,
       Type *MinVecTy = VectorTy;
       if (Opcode == Instruction::Trunc) {
         SrcVecTy = smallestIntegerVectorType(SrcVecTy, MinVecTy);
-        VectorTy = largestIntegerVectorType(
-            ToVectorTy(I->getType(), VF), MinVecTy);
+        VectorTy =
+            largestIntegerVectorType(ToVectorTy(I->getType(), VF), MinVecTy);
       } else if (Opcode == Instruction::ZExt || Opcode == Instruction::SExt) {
         // Leave SrcVecTy unchanged - we only shrink the destination element
         // type.
@@ -9428,8 +9422,7 @@ VPRecipeBuilder::tryToOptimizeInductionPHI(PHINode *Phi,
 }
 
 VPWidenIntOrFpInductionRecipe *VPRecipeBuilder::tryToOptimizeInductionTruncate(
-    TruncInst *I, ArrayRef<VPValue *> Operands, VFRange &Range,
-    VPlan &Plan) {
+    TruncInst *I, ArrayRef<VPValue *> Operands, VFRange &Range, VPlan &Plan) {
   // Optimize the special case where the source is a constant integer
   // induction variable. Notice that we can only optimize the 'trunc' case
   // because (a) FP conversions lose precision, (b) sext/zext may wrap, and
@@ -11907,7 +11900,8 @@ bool LoopVectorizePass::processLoop(Loop *L) {
       TTI->isFPVectorizationPotentiallyUnsafe()) {
     reportVectorizationFailure(
         "Potentially unsafe FP op prevents vectorization",
-        "loop not vectorized due to unsafe FP support.", "UnsafeFP", ORE, L);
+        "loop not vectorized due to unsafe FP support.",
+        "UnsafeFP", ORE, L);
     Hints.emitRemarkWithHints();
     return false;
   }
