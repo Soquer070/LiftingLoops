@@ -436,6 +436,7 @@ let Latency = 86, ResourceCycles = [86] in
 
   defm "" : LMULSEWWriteResF<"WriteVFRedV_From", [AvispadoVPUArithQueue]>;
   defm "" : LMULSEWWriteResF<"WriteVFRedOV_From", [AvispadoVPUArithQueue]>;
+  defm "" : LMULSEWWriteResF<"WriteVFRedMinMaxV_From", [AvispadoVPUArithQueue]>;
   defm "" : LMULSEWWriteResFWRed<"WriteVFWRedV_From", [AvispadoVPUArithQueue]>;
   defm "" : LMULSEWWriteResFWRed<"WriteVFWRedOV_From", [AvispadoVPUArithQueue]>;
 

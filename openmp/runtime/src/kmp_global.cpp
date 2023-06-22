@@ -572,6 +572,7 @@ int __kmp_free_agent_allowed_teams_length = 0;
 
 #if OMPX_TASKGRAPH
 // TDG record & replay
+int __kmp_tdg_dot = 0;
 kmp_int32 __kmp_max_tdgs = 100;
 kmp_tdg_info_t **__kmp_global_tdgs = NULL;
 kmp_int32 __kmp_curr_tdg_idx =

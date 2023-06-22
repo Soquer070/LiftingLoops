@@ -2266,10 +2266,8 @@ defm xray_function_index : BoolFOption<"xray-function-index",
           " expense of single-function patching performance">>;
 
 def fxray_link_deps : Flag<["-"], "fxray-link-deps">, Group<f_Group>,
-  Flags<[CC1Option]>,
-  HelpText<"Tells clang to add the link dependencies for XRay.">;
-def fnoxray_link_deps : Flag<["-"], "fnoxray-link-deps">, Group<f_Group>,
-  Flags<[CC1Option]>;
+  HelpText<"Link XRay runtime library when -fxray-instrument is specified (default)">;
+def fno_xray_link_deps : Flag<["-"], "fno-xray-link-deps">, Group<f_Group>;
 
 def fxray_instrumentation_bundle :
   Joined<["-"], "fxray-instrumentation-bundle=">,
@@ -5287,10 +5285,6 @@ def fno_sycl : Flag<["-"], "fno-sycl">, Flags<[NoXarchOption, CoreOption]>,
 //===----------------------------------------------------------------------===//
 // FLangOption + NoXarchOption
 //===----------------------------------------------------------------------===//
-
-def flang_experimental_exec : Flag<["-"], "flang-experimental-exec">,
-  Flags<[FlangOption, FlangOnlyOption, NoXarchOption, HelpHidden]>,
-  HelpText<"Enable support for generating executables (experimental)">;
 
 def flang_experimental_hlfir : Flag<["-"], "flang-experimental-hlfir">,
   Flags<[FlangOption, FC1Option, FlangOnlyOption, NoXarchOption, HelpHidden]>,
