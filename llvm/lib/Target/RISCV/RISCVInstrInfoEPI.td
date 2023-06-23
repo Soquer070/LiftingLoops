@@ -1712,7 +1712,7 @@ class FromFPR64<DAGOperand operand, dag input_dag> {
 class FPZero<DAGOperand operand> {
   dag ret = !if(!eq(!cast<string>(operand),
                     !cast<string>(FPR64)),
-                (FMV_D_X X0), (FMV_W_X X0));
+                (FMV_D_X (XLenVT X0)), (FMV_W_X (XLenVT X0)));
 }
 
 multiclass epi_pat_load_store<ValueType type,
@@ -1806,11 +1806,11 @@ let Predicates = [HasVInstructions] in {
 def : Pat<(int_vscale), (PseudoEPIVSCALE)>;
 
 // FIXME: These patterns can be improved.
-def : Pat<(vscale 1), (PseudoEPIVSCALE)>;
-def : Pat<(vscale -1), (SUB X0, (PseudoEPIVSCALE))>;
+def : Pat<(XLenVT (vscale (XLenVT 1))), (PseudoEPIVSCALE)>;
+def : Pat<(XLenVT (vscale (XLenVT -1))), (XLenVT (SUB (XLenVT X0), (XLenVT (PseudoEPIVSCALE))))>;
 def : Pat<(vscale pow2uimm5:$mul),
           (SLLI (PseudoEPIVSCALE), (Log2 imm:$mul))>;
-def : Pat<(vscale (i64 GPR:$imm)),
+def : Pat<(vscale (XLenVT GPR:$imm)),
           (MUL (PseudoEPIVSCALE), $imm)>;
 
 }
@@ -3259,7 +3259,7 @@ multiclass pat_intrinsic_binary_int_w_vX0<string intrinsic_name,
               (!cast<Instruction>(instruction_name # "_" # MInfo.MX)
                (wti.Vector (IMPLICIT_DEF)),
                vti.MInfo.vrclass:$rs1,
-               /* rs2 */ X0,
+               (XLenVT /* rs2 */ X0),
                (wti.Mask zero_reg),
                AVL:$vl, vti.SEW)>;
 
@@ -3271,7 +3271,7 @@ multiclass pat_intrinsic_binary_int_w_vX0<string intrinsic_name,
               (!cast<Instruction>(instruction_name # "_" # MInfo.MX)
                wti.MInfo.vrclass:$merge,
                vti.MInfo.vrclass:$rs1,
-               /* rs2 */ X0,
+               (XLenVT /* rs2 */ X0),
                (wti.Mask V0),
                AVL:$vl, vti.SEW)>;
   }
@@ -3292,7 +3292,7 @@ multiclass pat_intrinsic_binary_int_v_wX0<string intrinsic_name,
               (!cast<Instruction>(instruction_name # "_" # MInfo.MX)
                (vti.Vector (IMPLICIT_DEF)),
                wti.MInfo.vrclass:$rs1,
-               /* rs2 */ X0,
+               (XLenVT /* rs2 */ X0),
                (vti.Mask zero_reg),
                AVL:$vl, vti.SEW)>;
 
@@ -3304,7 +3304,7 @@ multiclass pat_intrinsic_binary_int_v_wX0<string intrinsic_name,
               (!cast<Instruction>(instruction_name # "_" # MInfo.MX)
                vti.MInfo.vrclass:$merge,
                wti.MInfo.vrclass:$rs1,
-               /* rs2 */ X0,
+               (XLenVT /* rs2 */ X0),
                (vti.Mask V0),
                AVL:$vl, vti.SEW)>;
   }
@@ -3330,9 +3330,9 @@ foreach vti = EPIAllIntegerVectors in {
 }
 
 foreach vti = EPIAllIntegerVectors in {
-  def : Pat<(vti.Vector (int_epi_vmv_v_x GPR:$rs2, AVL:$vl)),
+  def : Pat<(vti.Vector (int_epi_vmv_v_x (XLenVT GPR:$rs2), AVL:$vl)),
             (!cast<Instruction>("PseudoEPIVMV_V_X_" # vti.MInfo.MX)
-             $rs2,
+             (XLenVT $rs2),
              AVL:$vl, vti.SEW)>;
   def : Pat<(vti.Vector (int_epi_vmv_v_x simm5:$imm5, AVL:$vl)),
             (!cast<Instruction>("PseudoEPIVMV_V_I_" # vti.MInfo.MX)
@@ -3418,7 +3418,7 @@ multiclass pat_vop_binary_xif<SDPatternOperator vop,
   defvar instruction = !cast<Instruction>(instruction_name # "_" # kind #"_" # MInfo.MX);
   def : Pat<(result_type (vop
                           (op1_type op_reg_class:$rs1),
-                          (op1_type (splat_vector op2_kind:$rs2)))),
+                          (op1_type (splat_vector (op2_type op2_kind:$rs2))))),
             swap_helper<
               (instruction (result_type (IMPLICIT_DEF))),
               (instruction op_reg_class:$rs1),
@@ -3496,7 +3496,7 @@ multiclass pat_vop_binary_reduction_int<SDPatternOperator vop,
                 (vti.Vector vti.MInfo.vrclass:$rs2),
                 (!cast<Instruction>("PseudoEPIVMV_S_X_" # vti.MInfo.MX)
                  (vti.Vector (IMPLICIT_DEF)),
-                 X0,
+                 (XLenVT X0),
                  VLMax, vti.SEW),
                 (vti.Mask zero_reg),
                 VLMax, vti.SEW)),
@@ -3695,9 +3695,9 @@ foreach fvti = EPIAllFloatVectors in
 
 foreach vti = EPIAllIntegerVectors in
 {
-  def : Pat<(vti.Vector (splat_vector GPR:$value)),
+  def : Pat<(vti.Vector (splat_vector (XLenVT GPR:$value))),
             (!cast<Instruction>("PseudoEPIVMV_V_X_" # vti.MInfo.MX)
-             GPR:$value,
+             (XLenVT GPR:$value),
              VLMax, vti.SEW)>;
   def : Pat<(vti.Vector (splat_vector simm5:$value)),
             (!cast<Instruction>("PseudoEPIVMV_V_I_" # vti.MInfo.MX)
@@ -4230,16 +4230,16 @@ def : Pat<(nxv1f64 (masked_ld GPR:$addr, undef, (nxv1i1 V0), (nxv1f64 VR:$merge)
              (nxv1f64 VR:$merge),
              GPR:$addr,
              (nxv1i1 V0),
-             /* vl */ X0,
+             (XLenVT /* vl */ X0),
              64)>;
 
 def : Pat<(masked_st (nxv1f64 VR:$value), GPR:$addr, undef, (nxv1i1 V0)),
           (PseudoEPIVSE64_V_M1
-              VR:$value, GPR:$addr, (nxv1i1 V0), /* vl */ X0, 64)>;
+              VR:$value, GPR:$addr, (nxv1i1 V0), (XLenVT /* vl */ X0), 64)>;
 
 def : Pat<(nxv1i1 (setule (nxv1i64 VR:$rs1), (nxv1i64 VR:$rs2))),
           (PseudoEPIVMSLEU_VV_M1 (nxv1i64 (IMPLICIT_DEF)), VR:$rs1, VR:$rs2,
-           (nxv1i1 zero_reg), /* vl */ X0, 64)>;
+           (nxv1i1 zero_reg), (XLenVT /* vl */ X0), 64)>;
 
 defm "" : pat_load;
 defm "" : pat_store;
