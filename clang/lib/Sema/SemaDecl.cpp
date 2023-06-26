@@ -8796,6 +8796,9 @@ void Sema::CheckVariableDeclarationType(VarDecl *NewVD) {
       return;
     }
   }
+
+  if (T->isRVVType())
+    checkRVVTypeSupport(T, NewVD->getLocation(), cast<ValueDecl>(CurContext));
 }
 
 /// Perform semantic checking on a newly-created variable

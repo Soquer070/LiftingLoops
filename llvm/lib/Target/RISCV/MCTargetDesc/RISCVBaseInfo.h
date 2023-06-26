@@ -20,8 +20,8 @@
 #include "llvm/ADT/StringSwitch.h"
 #include "llvm/CodeGen/Register.h"
 #include "llvm/MC/MCInstrDesc.h"
-#include "llvm/MC/SubtargetFeature.h"
 #include "llvm/Support/RISCVISAInfo.h"
+#include "llvm/TargetParser/SubtargetFeature.h"
 
 namespace llvm {
 
