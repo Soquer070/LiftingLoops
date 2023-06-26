@@ -59,8 +59,7 @@ let SchedModel = AvispadoModel in {
   def : WriteRes<WriteJmp, [AvispadoUnitB]>;
   def : WriteRes<WriteJal, [AvispadoUnitB]>;
   def : WriteRes<WriteJalr, [AvispadoUnitB]>;
-  def : WriteRes<WriteJmpReg, [AvispadoUnitB]>;
-  
+
   // Integer arithmetic and logic
   def : WriteRes<WriteIALU32, [AvispadoUnitALU]>;
   def : WriteRes<WriteIALU, [AvispadoUnitALU]>;
