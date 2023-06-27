@@ -482,12 +482,11 @@ define <vscale x 64 x i8> @test_vp_reverse_nxv64i8_masked(<vscale x 64 x i8> %sr
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB30_2:
 ; CHECK-NEXT:    sub a2, a1, a0
-; CHECK-NEXT:    vsetvli zero, a1, e8, m8, ta, ma
+; CHECK-NEXT:    vsetvli zero, a1, e8, m8, ta, mu
+; CHECK-NEXT:    vid.v v16
+; CHECK-NEXT:    vmsltu.vx v0, v16, a2
 ; CHECK-NEXT:    vslideup.vx v16, v8, a2
-; CHECK-NEXT:    vid.v v8
-; CHECK-NEXT:    vmsltu.vx v0, v8, a2
-; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    vmerge.vvm v16, v16, v8, v0
+; CHECK-NEXT:    vslidedown.vx v16, v8, a0, v0.t
 ; CHECK-NEXT:    addi a0, a1, -1
 ; CHECK-NEXT:    vsetvli zero, a1, e16, m8, ta, ma
 ; CHECK-NEXT:    vid.v v8
@@ -510,12 +509,11 @@ define <vscale x 64 x i8> @test_vp_reverse_nxv64i8(<vscale x 64 x i8> %src, i32 
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB31_2:
 ; CHECK-NEXT:    sub a2, a1, a0
-; CHECK-NEXT:    vsetvli zero, a1, e8, m8, ta, ma
+; CHECK-NEXT:    vsetvli zero, a1, e8, m8, ta, mu
+; CHECK-NEXT:    vid.v v16
+; CHECK-NEXT:    vmsltu.vx v0, v16, a2
 ; CHECK-NEXT:    vslideup.vx v16, v8, a2
-; CHECK-NEXT:    vid.v v8
-; CHECK-NEXT:    vmsltu.vx v0, v8, a2
-; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    vmerge.vvm v16, v16, v8, v0
+; CHECK-NEXT:    vslidedown.vx v16, v8, a0, v0.t
 ; CHECK-NEXT:    addi a0, a1, -1
 ; CHECK-NEXT:    vsetvli zero, a1, e16, m8, ta, ma
 ; CHECK-NEXT:    vid.v v8

@@ -1803,7 +1803,7 @@ def Log2 : SDNodeXForm<imm,
 
 let Predicates = [HasVInstructions] in {
 
-def : Pat<(int_vscale), (PseudoEPIVSCALE)>;
+def : Pat<(XLenVT (int_vscale)), (XLenVT (PseudoEPIVSCALE))>;
 
 // FIXME: These patterns can be improved.
 def : Pat<(XLenVT (vscale (XLenVT 1))), (PseudoEPIVSCALE)>;
@@ -2954,18 +2954,18 @@ defm "" : pat_intrinsic_binary_int_v_vs<"int_epi_vredmax", "PseudoEPIVREDMAX">;
 // the intrinsic is legalized programatically using the RISCVISD::VMV_X_S custom
 // node, which is then selected using a pattern as usual.
 foreach vti = [Vtype1xi64, Vtype2xi64, Vtype4xi64, Vtype8xi64] in
-  def : Pat<(int_epi_vmv_x_s (vti.Vector vti.MInfo.vrclass:$rs2)),
-            (!cast<Instruction>("PseudoEPIVMV_X_S_" # vti.MInfo.MX) $rs2, vti.SEW)>;
+  def : Pat<(XLenVT (int_epi_vmv_x_s (vti.Vector vti.MInfo.vrclass:$rs2))),
+            (XLenVT (!cast<Instruction>("PseudoEPIVMV_X_S_" # vti.MInfo.MX) $rs2, vti.SEW))>;
 foreach vti = [Vtype2xi32, Vtype4xi16, Vtype8xi8,
                Vtype4xi32,  Vtype8xi16,  Vtype16xi8,
                Vtype8xi32,  Vtype16xi16, Vtype32xi8,
                Vtype16xi32, Vtype32xi16, Vtype64xi8] in
-  def : Pat<(riscv_vmv_x_s (vti.Vector vti.MInfo.vrclass:$rs2)),
-            (!cast<Instruction>("PseudoEPIVMV_X_S_" # vti.MInfo.MX) $rs2, vti.SEW)>;
+  def : Pat<(XLenVT (riscv_vmv_x_s (vti.Vector vti.MInfo.vrclass:$rs2))),
+            (XLenVT (!cast<Instruction>("PseudoEPIVMV_X_S_" # vti.MInfo.MX) $rs2, vti.SEW))>;
 
 foreach vti = EPIAllIntegerVectors in {
-  def : Pat<(vti.Vector (int_epi_vmv_s_x (vti.Vector vti.MInfo.vrclass:$merge), GPR:$rs1, AVL:$vl)),
-            (!cast<Instruction>("PseudoEPIVMV_S_X_" # vti.MInfo.MX) $merge, $rs1, AVL:$vl, vti.SEW)>;
+  def : Pat<(vti.Vector (int_epi_vmv_s_x (vti.Vector vti.MInfo.vrclass:$merge), (XLenVT GPR:$rs1), AVL:$vl)),
+            (!cast<Instruction>("PseudoEPIVMV_S_X_" # vti.MInfo.MX) $merge, (XLenVT $rs1), AVL:$vl, vti.SEW)>;
 }
 
 defm "" : pat_intrinsic_binary_any_and_int_v_vx<"int_epi_vslide1up", "PseudoEPIVSLIDE1UP">;
@@ -4258,51 +4258,51 @@ def PseudoEPIImplicitVRN#tsize#M1 : Pseudo<(outs TupleRegClass:$rd), (ins), []>;
 foreach vti = NoGroupVectors in {
   defvar ivti = GetIntVectorTypeInfo<vti, vti.SEW>.Vti;
 
-  def : Pat<(!cast<SDNode>("riscv_vlseg"#tsize) GPR:$rs1, AVL:$vl, (XLenVT vti.SEW)),
+  def : Pat<(!cast<SDNode>("riscv_vlseg"#tsize) GPR:$rs1, (XLenVT AVL:$vl), (XLenVT vti.SEW)),
             (!cast<Instruction>("PseudoEPIVLSEG"#tsize#"E"#vti.SEW#"_V_M1")
              (!cast<Instruction>("PseudoEPIImplicitVRN"#tsize#"M1")),
              $rs1,
              (nxv1i1 zero_reg),
-             AVL:$vl,
+             (XLenVT AVL:$vl),
              vti.SEW)>;
 
-  def : Pat<(!cast<SDNode>("riscv_vsseg"#tsize) TupleRegClass:$rs3, GPR:$rs1, AVL:$vl, (XLenVT vti.SEW)),
+  def : Pat<(!cast<SDNode>("riscv_vsseg"#tsize) TupleRegClass:$rs3, GPR:$rs1, (XLenVT  AVL:$vl), (XLenVT vti.SEW)),
             (!cast<Instruction>("PseudoEPIVSSEG"#tsize#"E"#vti.SEW#"_V_M1")
              $rs3, $rs1,
              (nxv1i1 zero_reg),
-             AVL:$vl,
+             (XLenVT AVL:$vl),
              vti.SEW)>;
 
-  def : Pat<(!cast<SDNode>("riscv_vlsseg"#tsize) GPR:$rs1, GPR:$rs2, AVL:$vl, (XLenVT vti.SEW)),
+  def : Pat<(!cast<SDNode>("riscv_vlsseg"#tsize) GPR:$rs1, (XLenVT GPR:$rs2), (XLenVT AVL:$vl), (XLenVT vti.SEW)),
             (!cast<Instruction>("PseudoEPIVLSSEG"#tsize#"E"#vti.SEW#"_V_M1")
              (!cast<Instruction>("PseudoEPIImplicitVRN"#tsize#"M1")),
              $rs1, $rs2,
              (nxv1i1 zero_reg),
-             AVL:$vl,
+             (XLenVT AVL:$vl),
              vti.SEW)>;
 
-  def : Pat<(!cast<SDNode>("riscv_vssseg"#tsize) TupleRegClass:$rs3, GPR:$rs1, GPR:$rs2, AVL:$vl, (XLenVT vti.SEW)),
+  def : Pat<(!cast<SDNode>("riscv_vssseg"#tsize) TupleRegClass:$rs3, GPR:$rs1, (XLenVT GPR:$rs2), (XLenVT AVL:$vl), (XLenVT vti.SEW)),
             (!cast<Instruction>("PseudoEPIVSSSEG"#tsize#"E"#vti.SEW#"_V_M1")
              $rs3, $rs1, $rs2,
              (nxv1i1 zero_reg),
-             AVL:$vl,
+             (XLenVT AVL:$vl),
              vti.SEW)>;
 
   def : Pat<(!cast<SDNode>("riscv_vlxseg"#tsize) GPR:$rs1,
-               (ivti.Vector vti.MInfo.vrclass:$rs2), AVL:$vl, (XLenVT vti.SEW)),
+               (ivti.Vector vti.MInfo.vrclass:$rs2), (XLenVT AVL:$vl), (XLenVT vti.SEW)),
             (!cast<Instruction>("PseudoEPIVLXSEG"#tsize#"EI"#vti.SEW#"_V_M1")
              (!cast<Instruction>("PseudoEPIImplicitVRN"#tsize#"M1")),
              $rs1, $rs2,
              (nxv1i1 zero_reg),
-             AVL:$vl,
+             (XLenVT AVL:$vl),
              vti.SEW)>;
 
   def : Pat<(!cast<SDNode>("riscv_vsxseg"#tsize) TupleRegClass:$rs3, GPR:$rs1,
-               (ivti.Vector vti.MInfo.vrclass:$rs2), AVL:$vl, (XLenVT vti.SEW)),
+               (ivti.Vector vti.MInfo.vrclass:$rs2), (XLenVT AVL:$vl), (XLenVT vti.SEW)),
             (!cast<Instruction>("PseudoEPIVSXSEG"#tsize#"EI"#vti.SEW#"_V_M1")
              $rs3, $rs1, $rs2,
              (nxv1i1 zero_reg),
-             AVL:$vl,
+             (XLenVT AVL:$vl),
              vti.SEW)>;
 }
 

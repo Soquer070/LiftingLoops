@@ -2496,7 +2496,7 @@ RValue CodeGenFunction::EmitBuiltinExpr(const GlobalDecl GD, unsigned BuiltinID,
       return RValue::get(emitUnaryMaybeConstrainedFPBuiltin(*this, E,
                                    Intrinsic::roundeven,
                                    Intrinsic::experimental_constrained_roundeven));
-                                   
+
     case Builtin::BIsin:
     case Builtin::BIsinf:
     case Builtin::BIsinl:
