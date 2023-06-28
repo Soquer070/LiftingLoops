@@ -15,9 +15,12 @@ add_fp_unittest(
   SRCS
     sqrtf_test.cpp
   DEPENDS
+    .exhaustive_test
     libc.include.math
     libc.src.math.sqrtf
     libc.src.__support.FPUtil.fp_bits
+  LINK_LIBRARIES
+    -lpthread
 )
 
 add_fp_unittest(
@@ -83,6 +86,23 @@ add_fp_unittest(
     .exhaustive_test
     libc.include.math
     libc.src.math.tanf
+    libc.src.__support.FPUtil.fp_bits
+  LINK_LIBRARIES
+    -lpthread
+)
+
+add_fp_unittest(
+  erff_test
+  NO_RUN_POSTBUILD
+  NEED_MPFR
+  SUITE
+    libc_math_exhaustive_tests
+  SRCS
+    erff_test.cpp
+  DEPENDS
+    .exhaustive_test
+    libc.include.math
+    libc.src.math.erff
     libc.src.__support.FPUtil.fp_bits
   LINK_LIBRARIES
     -lpthread
