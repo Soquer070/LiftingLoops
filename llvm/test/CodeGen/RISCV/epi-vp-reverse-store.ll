@@ -22,10 +22,10 @@ define void @test_store_vp_reverse_nxv1f64(<vscale x 1 x double> %src, <vscale x
 define void @test_store_vp_reverse_different_evl_nxv1f64(<vscale x 1 x double> %src, <vscale x 1 x double> *%ptr, i32 zeroext %evl1, i32 zeroext %evl2) {
 ; CHECK-LABEL: test_store_vp_reverse_different_evl_nxv1f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi a3, a1, -1
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vid.v v9
-; CHECK-NEXT:    vrsub.vx v9, v9, a3
+; CHECK-NEXT:    addi a1, a1, -1
+; CHECK-NEXT:    vrsub.vx v9, v9, a1
 ; CHECK-NEXT:    vrgather.vv v10, v8, v9
 ; CHECK-NEXT:    vsetvli zero, a2, e64, m1, ta, ma
 ; CHECK-NEXT:    vse64.v v10, (a0)
@@ -41,10 +41,10 @@ define void @test_store_vp_reverse_different_evl_nxv1f64(<vscale x 1 x double> %
 define <vscale x 1 x double> @test_store_vp_reverse_many_uses_nxv1f64(<vscale x 1 x double> %src, <vscale x 1 x double> *%ptr, i32 zeroext %evl) {
 ; CHECK-LABEL: test_store_vp_reverse_many_uses_nxv1f64:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    addi a2, a1, -1
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vid.v v9
-; CHECK-NEXT:    vrsub.vx v10, v9, a2
+; CHECK-NEXT:    addi a1, a1, -1
+; CHECK-NEXT:    vrsub.vx v10, v9, a1
 ; CHECK-NEXT:    vrgather.vv v9, v8, v10
 ; CHECK-NEXT:    vse64.v v9, (a0)
 ; CHECK-NEXT:    vmv.v.v v8, v9

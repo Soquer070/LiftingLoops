@@ -2406,9 +2406,6 @@ def riscv_fslide1down_vl  : SDNode<"RISCVISD::VFSLIDE1DOWN_VL", SDTRVVFSlide1, [
 
 foreach vti = AllIntegerVectors in {
   let Predicates = GetVTypePredicates<vti>.Predicates in {
-		def : Pat<(vti.Vector (riscv_vid_vl (vti.Mask true_mask),
-																				VLOpFrag)),
-							(!cast<Instruction>("PseudoVID_V_"#vti.LMul.MX) GPR:$vl, vti.Log2SEW)>;
     def : Pat<(vti.Vector (riscv_vid_vl (vti.Mask V0),
                                         VLOpFrag)),
               (!cast<Instruction>("PseudoVID_V_"#vti.LMul.MX#"_MASK")

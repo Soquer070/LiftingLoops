@@ -24,10 +24,10 @@ define <vscale x 1 x double> @test_load_vp_reverse_different_evl_nxv1f64(<vscale
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vle64.v v9, (a0)
-; CHECK-NEXT:    addi a0, a2, -1
 ; CHECK-NEXT:    vsetvli zero, a2, e64, m1, ta, ma
 ; CHECK-NEXT:    vid.v v8
-; CHECK-NEXT:    vrsub.vx v10, v8, a0
+; CHECK-NEXT:    addi a2, a2, -1
+; CHECK-NEXT:    vrsub.vx v10, v8, a2
 ; CHECK-NEXT:    vrgather.vv v8, v9, v10
 ; CHECK-NEXT:    ret
   %head = insertelement <vscale x 1 x i1> undef, i1 1, i32 0
@@ -43,8 +43,8 @@ define <vscale x 1 x double> @test_load_vp_reverse_many_uses_nxv1f64(<vscale x 1
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vle64.v v8, (a0)
-; CHECK-NEXT:    addi a1, a1, -1
 ; CHECK-NEXT:    vid.v v9
+; CHECK-NEXT:    addi a1, a1, -1
 ; CHECK-NEXT:    vrsub.vx v9, v9, a1
 ; CHECK-NEXT:    vrgather.vv v10, v8, v9
 ; CHECK-NEXT:    vfadd.vv v8, v8, v10
@@ -63,8 +63,8 @@ define <vscale x 1 x double> @test_load_vp_reverse_general_mask_nxv1f64(<vscale 
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vle64.v v9, (a0), v0.t
-; CHECK-NEXT:    addi a1, a1, -1
 ; CHECK-NEXT:    vid.v v8
+; CHECK-NEXT:    addi a1, a1, -1
 ; CHECK-NEXT:    vrsub.vx v10, v8, a1
 ; CHECK-NEXT:    vrgather.vv v8, v9, v10
 ; CHECK-NEXT:    ret

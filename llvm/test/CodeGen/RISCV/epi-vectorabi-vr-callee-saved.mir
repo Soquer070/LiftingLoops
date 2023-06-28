@@ -2,10 +2,10 @@
 # RUN: llc -o - -mtriple riscv64 -mattr=+m,+a,+f,+d,+zepi \
 # RUN:     -start-after=virtregrewriter -verify-machineinstrs %s | FileCheck %s
 --- |
-  ; ModuleID = 't.ll'
+  ; ModuleID = 'epi-vectorabi-vr-callee-saved.ll'
   source_filename = "/home/rferrer/PROVECTOR/provector-src/src/vecclonevp/musl_exp.c"
   target datalayout = "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128"
-  target triple = "riscv64-unknown-linux-gnu"
+  target triple = "riscv64"
 
   %struct.exp_data = type { double, double, double, double, [4 x double], double, [5 x double], [256 x i64] }
 
@@ -39,24 +39,24 @@
   ; CHECK-NEXT:    vadd.vx v9, v19, a2
   ; CHECK-NEXT:    li a2, 63
   ; CHECK-NEXT:    vmsltu.vx v20, v9, a2
-  ; CHECK-NEXT:    vmandn.mm v11, v14, v20
+  ; CHECK-NEXT:    vmandn.mm v12, v14, v20
   ; CHECK-NEXT:    li a2, 969
-  ; CHECK-NEXT:    vmv1r.v v0, v11
+  ; CHECK-NEXT:    vmv1r.v v0, v12
   ; CHECK-NEXT:    vmsltu.vx v9, v19, a2, v0.t
-  ; CHECK-NEXT:    vmand.mm v17, v11, v9
-  ; CHECK-NEXT:    vmandn.mm v13, v11, v17
+  ; CHECK-NEXT:    vmand.mm v17, v12, v9
+  ; CHECK-NEXT:    vmandn.mm v13, v12, v17
   ; CHECK-NEXT:    li a2, 1033
   ; CHECK-NEXT:    vmv1r.v v0, v13
   ; CHECK-NEXT:    vmsltu.vx v9, v19, a2, v0.t
   ; CHECK-NEXT:    vmand.mm v21, v13, v9
-  ; CHECK-NEXT:    vmandn.mm v12, v13, v21
+  ; CHECK-NEXT:    vmandn.mm v11, v13, v21
   ; CHECK-NEXT:    li a2, -1
   ; CHECK-NEXT:    slli a2, a2, 52
   ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
-  ; CHECK-NEXT:    vmv1r.v v0, v12
+  ; CHECK-NEXT:    vmv1r.v v0, v11
   ; CHECK-NEXT:    vmseq.vx v9, v8, a2, v0.t
-  ; CHECK-NEXT:    vmand.mm v15, v12, v9
-  ; CHECK-NEXT:    vmandn.mm v10, v12, v15
+  ; CHECK-NEXT:    vmand.mm v15, v11, v9
+  ; CHECK-NEXT:    vmandn.mm v10, v11, v15
   ; CHECK-NEXT:    vsetvli zero, zero, e32, mf2, ta, ma
   ; CHECK-NEXT:    vmv1r.v v0, v10
   ; CHECK-NEXT:    vmseq.vx v9, v19, a1, v0.t
@@ -77,12 +77,12 @@
   ; CHECK-NEXT:    fld fa5, %pcrel_lo(.Lpcrel_hi1)(a1)
   ; CHECK-NEXT:    vfmerge.vfm v16, v16, fa4, v0
   ; CHECK-NEXT:    vmand.mm v10, v10, v18
-  ; CHECK-NEXT:    vmand.mm v11, v11, v17
+  ; CHECK-NEXT:    vmand.mm v12, v12, v17
   ; CHECK-NEXT:    vmv.v.v v0, v10
   ; CHECK-NEXT:    vfadd.vf v17, v8, fa5, v0.t
-  ; CHECK-NEXT:    vmv.v.v v0, v11
+  ; CHECK-NEXT:    vmv.v.v v0, v12
   ; CHECK-NEXT:    vfadd.vf v18, v8, fa5, v0.t
-  ; CHECK-NEXT:    vmand.mm v11, v14, v20
+  ; CHECK-NEXT:    vmand.mm v12, v14, v20
   ; CHECK-NEXT:    vmand.mm v0, v13, v21
   ; CHECK-NEXT:    vsetvli zero, zero, e32, mf2, ta, ma
   ; CHECK-NEXT:    vmerge.vim v14, v19, 0, v0
@@ -92,11 +92,11 @@
   ; CHECK-NEXT:  .Lpcrel_hi3:
   ; CHECK-NEXT:    auipc a1, %pcrel_hi(.LCPI0_3)
   ; CHECK-NEXT:    fld fa3, %pcrel_lo(.Lpcrel_hi3)(a1)
-  ; CHECK-NEXT:    vmor.mm v11, v0, v11
+  ; CHECK-NEXT:    vmor.mm v12, v0, v12
   ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
-  ; CHECK-NEXT:    vmv1r.v v0, v11
+  ; CHECK-NEXT:    vmv1r.v v0, v12
   ; CHECK-NEXT:    vfmul.vf v13, v8, fa4, v0.t
-  ; CHECK-NEXT:    vmv1r.v v0, v11
+  ; CHECK-NEXT:    vmv1r.v v0, v12
   ; CHECK-NEXT:    vfadd.vf v13, v13, fa3, v0.t
   ; CHECK-NEXT:  .Lpcrel_hi4:
   ; CHECK-NEXT:    auipc a1, %pcrel_hi(.LCPI0_4)
@@ -108,11 +108,9 @@
   ; CHECK-NEXT:    auipc a1, %pcrel_hi(.LCPI0_6)
   ; CHECK-NEXT:    fld fa2, %pcrel_lo(.Lpcrel_hi6)(a1)
   ; CHECK-NEXT:    vfadd.vf v19, v13, fa4, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, mu
   ; CHECK-NEXT:    vmv.v.v v20, v19
   ; CHECK-NEXT:    vfmadd.vf v20, fa3, v8, v0.t
   ; CHECK-NEXT:    vfmadd.vf v19, fa2, v20, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
   ; CHECK-NEXT:    vsll.vi v8, v13, 1, v0.t
   ; CHECK-NEXT:    li a1, 254
   ; CHECK-NEXT:    vand.vx v8, v8, a1, v0.t
@@ -120,18 +118,16 @@
   ; CHECK-NEXT:    vsll.vx v20, v13, a1, v0.t
   ; CHECK-NEXT:    vsll.vi v0, v8, 3
   ; CHECK-NEXT:    li a1, 112
-  ; CHECK-NEXT:    vadd.vx v0, v0, a1
+  ; CHECK-NEXT:    vadd.vx v21, v0, a1
   ; CHECK-NEXT:  .Lpcrel_hi7:
   ; CHECK-NEXT:    auipc a2, %pcrel_hi(__exp_data)
   ; CHECK-NEXT:    addi a2, a2, %pcrel_lo(.Lpcrel_hi7)
-  ; CHECK-NEXT:    vadd.vx v21, v0, a2
-  ; CHECK-NEXT:    vmv1r.v v0, v11
-  ; CHECK-NEXT:    vluxei64.v v21, (zero), v21, v0.t
+  ; CHECK-NEXT:    vmv1r.v v0, v12
+  ; CHECK-NEXT:    vluxei64.v v21, (a2), v21, v0.t
   ; CHECK-NEXT:    vor.vi v8, v8, 1, v0.t
   ; CHECK-NEXT:    vsll.vi v8, v8, 3
   ; CHECK-NEXT:    vadd.vx v8, v8, a1
-  ; CHECK-NEXT:    vadd.vx v8, v8, a2
-  ; CHECK-NEXT:    vluxei64.v v8, (zero), v8, v0.t
+  ; CHECK-NEXT:    vluxei64.v v8, (a2), v8, v0.t
   ; CHECK-NEXT:    vadd.vv v20, v8, v20, v0.t
   ; CHECK-NEXT:    vfmul.vv v8, v19, v19, v0.t
   ; CHECK-NEXT:    vfadd.vv v21, v19, v21, v0.t
@@ -143,11 +139,10 @@
   ; CHECK-NEXT:  .Lpcrel_hi9:
   ; CHECK-NEXT:    auipc a1, %pcrel_hi(.LCPI0_8)
   ; CHECK-NEXT:    fld fa4, %pcrel_lo(.Lpcrel_hi9)(a1)
-  ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+  ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
   ; CHECK-NEXT:    vmv1r.v v23, v19
   ; CHECK-NEXT:    vfmadd.vf v23, fa4, v22, v0.t
   ; CHECK-NEXT:    vfmadd.vv v23, v8, v21, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
   ; CHECK-NEXT:    vfmul.vv v8, v8, v8, v0.t
   ; CHECK-NEXT:  .Lpcrel_hi10:
   ; CHECK-NEXT:    auipc a1, %pcrel_hi(.LCPI0_9)
@@ -157,43 +152,38 @@
   ; CHECK-NEXT:  .Lpcrel_hi11:
   ; CHECK-NEXT:    auipc a1, %pcrel_hi(.LCPI0_10)
   ; CHECK-NEXT:    fld fa4, %pcrel_lo(.Lpcrel_hi11)(a1)
-  ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, mu
+  ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
   ; CHECK-NEXT:    vfmadd.vf v19, fa4, v21, v0.t
   ; CHECK-NEXT:    vfmadd.vv v19, v8, v23, v0.t
   ; CHECK-NEXT:    vsetvli zero, zero, e32, mf2, ta, ma
   ; CHECK-NEXT:    vmseq.vi v8, v14, 0, v0.t
-  ; CHECK-NEXT:    vmand.mm v14, v11, v8
-  ; CHECK-NEXT:    vmandn.mm v8, v11, v14
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, mu
+  ; CHECK-NEXT:    vmand.mm v14, v12, v8
+  ; CHECK-NEXT:    vmandn.mm v8, v12, v14
+  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
   ; CHECK-NEXT:    vmv.v.v v21, v19
   ; CHECK-NEXT:    vmv1r.v v0, v8
   ; CHECK-NEXT:    vfmadd.vv v21, v20, v20, v0.t
-  ; CHECK-NEXT:    vmand.mm v11, v11, v14
+  ; CHECK-NEXT:    vmand.mm v12, v12, v14
   ; CHECK-NEXT:    li a0, 1
   ; CHECK-NEXT:    slli a0, a0, 31
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
-  ; CHECK-NEXT:    vmv.v.v v0, v11
+  ; CHECK-NEXT:    vmv.v.v v0, v12
   ; CHECK-NEXT:    vand.vx v13, v13, a0, v0.t
   ; CHECK-NEXT:    vmseq.vi v13, v13, 0, v0.t
-  ; CHECK-NEXT:    vmand.mm v22, v11, v13
-  ; CHECK-NEXT:    vmandn.mm v13, v11, v22
+  ; CHECK-NEXT:    vmand.mm v22, v12, v13
+  ; CHECK-NEXT:    vmandn.mm v13, v12, v22
   ; CHECK-NEXT:    li a0, 511
   ; CHECK-NEXT:    slli a0, a0, 53
   ; CHECK-NEXT:    vmv.v.v v0, v13
   ; CHECK-NEXT:    vadd.vx v23, v20, a0, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, mu
   ; CHECK-NEXT:    vmv.v.v v24, v19
   ; CHECK-NEXT:    vfmadd.vv v24, v23, v23, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
   ; CHECK-NEXT:    vmflt.vf v14, v24, fa5, v0.t
   ; CHECK-NEXT:    vmand.mm v25, v13, v14
   ; CHECK-NEXT:    vmand.mm v14, v13, v25
   ; CHECK-NEXT:    vmv.v.v v0, v14
   ; CHECK-NEXT:    vfsub.vv v26, v23, v24, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, mu
   ; CHECK-NEXT:    vmv.v.v v27, v19
   ; CHECK-NEXT:    vfmadd.vv v27, v23, v26, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
   ; CHECK-NEXT:    vfadd.vf v23, v24, fa5, v0.t
   ; CHECK-NEXT:    vfrsub.vf v26, v23, fa5, v0.t
   ; CHECK-NEXT:  .Lpcrel_hi12:
@@ -215,26 +205,24 @@
   ; CHECK-NEXT:    vmerge.vvm v14, v23, v24, v0
   ; CHECK-NEXT:    vmv.v.v v0, v13
   ; CHECK-NEXT:    vfmul.vf v14, v14, fa5, v0.t
-  ; CHECK-NEXT:    vmand.mm v11, v11, v22
+  ; CHECK-NEXT:    vmand.mm v12, v12, v22
   ; CHECK-NEXT:    li a0, -1009
-  ; CHECK-NEXT:    slli a0, a0, 52
-  ; CHECK-NEXT:    vmv.v.v v0, v11
-  ; CHECK-NEXT:    vadd.vx v20, v20, a0, v0.t
   ; CHECK-NEXT:  .Lpcrel_hi14:
-  ; CHECK-NEXT:    auipc a0, %pcrel_hi(.LCPI0_13)
-  ; CHECK-NEXT:    fld fa5, %pcrel_lo(.Lpcrel_hi14)(a0)
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, mu
+  ; CHECK-NEXT:    auipc a1, %pcrel_hi(.LCPI0_13)
+  ; CHECK-NEXT:    fld fa5, %pcrel_lo(.Lpcrel_hi14)(a1)
+  ; CHECK-NEXT:    slli a0, a0, 52
+  ; CHECK-NEXT:    vmv.v.v v0, v12
+  ; CHECK-NEXT:    vadd.vx v20, v20, a0, v0.t
   ; CHECK-NEXT:    vfmadd.vv v19, v20, v20, v0.t
-  ; CHECK-NEXT:    vsetvli zero, zero, e64, m1, ta, ma
   ; CHECK-NEXT:    vfmul.vf v19, v19, fa5, v0.t
-  ; CHECK-NEXT:    vmand.mm v12, v12, v15
+  ; CHECK-NEXT:    vmand.mm v11, v11, v15
   ; CHECK-NEXT:    vmv1r.v v0, v10
   ; CHECK-NEXT:    vmerge.vvm v10, v18, v17, v0
   ; CHECK-NEXT:    vmv1r.v v0, v8
   ; CHECK-NEXT:    vmerge.vvm v8, v10, v21, v0
-  ; CHECK-NEXT:    vmv.v.v v0, v12
-  ; CHECK-NEXT:    vmerge.vim v8, v8, 0, v0
   ; CHECK-NEXT:    vmv.v.v v0, v11
+  ; CHECK-NEXT:    vmerge.vim v8, v8, 0, v0
+  ; CHECK-NEXT:    vmv.v.v v0, v12
   ; CHECK-NEXT:    vmerge.vvm v8, v8, v19, v0
   ; CHECK-NEXT:    vmv.v.v v0, v13
   ; CHECK-NEXT:    vmerge.vvm v8, v8, v14, v0
@@ -368,91 +356,91 @@
     ret <vscale x 1 x double> %vp.predphi91
   }
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare i32 @llvm.vscale.i32() #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: readwrite)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: readwrite)
   declare void @llvm.assume(i1 noundef) #2
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i32> @llvm.experimental.vp.stepvector.nxv1i32(<vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i1> @llvm.vp.icmp.nxv1i32(<vscale x 1 x i32>, <vscale x 1 x i32>, metadata, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i64> @llvm.vp.lshr.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i64>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i32> @llvm.vp.trunc.nxv1i32.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i32> @llvm.vp.and.nxv1i32(<vscale x 1 x i32>, <vscale x 1 x i32>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i32> @llvm.vp.add.nxv1i32(<vscale x 1 x i32>, <vscale x 1 x i32>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i1> @llvm.vp.xor.nxv1i1(<vscale x 1 x i1>, <vscale x 1 x i1>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i1> @llvm.vp.and.nxv1i1(<vscale x 1 x i1>, <vscale x 1 x i1>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i1> @llvm.vp.icmp.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i64>, metadata, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x double> @llvm.vp.select.nxv1f64(<vscale x 1 x i1>, <vscale x 1 x double>, <vscale x 1 x double>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x double> @llvm.vp.fadd.nxv1f64(<vscale x 1 x double>, <vscale x 1 x double>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i32> @llvm.vp.select.nxv1i32(<vscale x 1 x i1>, <vscale x 1 x i32>, <vscale x 1 x i32>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i1> @llvm.vp.or.nxv1i1(<vscale x 1 x i1>, <vscale x 1 x i1>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x double> @llvm.vp.fmul.nxv1f64(<vscale x 1 x double>, <vscale x 1 x double>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x double> @llvm.vp.fmuladd.nxv1f64(<vscale x 1 x double>, <vscale x 1 x double>, <vscale x 1 x double>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i64> @llvm.vp.shl.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i64>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i64> @llvm.vp.and.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i64>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(read)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(read)
   declare <vscale x 1 x double> @llvm.vp.gather.nxv1f64.nxv1p0(<vscale x 1 x ptr>, <vscale x 1 x i1>, i32) #3
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i64> @llvm.vp.or.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i64>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(read)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(read)
   declare <vscale x 1 x i64> @llvm.vp.gather.nxv1i64.nxv1p0(<vscale x 1 x ptr>, <vscale x 1 x i1>, i32) #3
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i64> @llvm.vp.add.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i64>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i1> @llvm.vp.fcmp.nxv1f64(<vscale x 1 x double>, <vscale x 1 x double>, metadata, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x double> @llvm.vp.fsub.nxv1f64(<vscale x 1 x double>, <vscale x 1 x double>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x i64> @llvm.vp.ptrtoint.nxv1i64.nxv1p0(<vscale x 1 x ptr>, <vscale x 1 x i1>, i32) #1
 
-  ; Function Attrs: mustprogress nocallback nofree nosync nounwind willreturn memory(none)
+  ; Function Attrs: nocallback nofree nosync nounwind willreturn memory(none)
   declare <vscale x 1 x ptr> @llvm.vp.inttoptr.nxv1p0.nxv1i64(<vscale x 1 x i64>, <vscale x 1 x i1>, i32) #1
 
-  attributes #0 = { mustprogress nofree nosync nounwind willreturn memory(none) uwtable vscale_range(1,1024) "_ZGVENk1v_musl_exp" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="generic-rv64" "target-features"="+64bit,+a,+c,+d,+f,+m,+zepi,+zicsr,+zve32f,+zve32x,+zve64d,+zve64f,+zve64x,+zvl32b,+zvl64b,-e,-experimental-smaia,-experimental-ssaia,-experimental-zca,-experimental-zcb,-experimental-zcd,-experimental-zcf,-experimental-zcmp,-experimental-zcmt,-experimental-zfa,-experimental-zicond,-experimental-zihintntl,-experimental-ztso,-experimental-zvbb,-experimental-zvbc,-experimental-zvfh,-experimental-zvkg,-experimental-zvkn,-experimental-zvkned,-experimental-zvkng,-experimental-zvknha,-experimental-zvknhb,-experimental-zvks,-experimental-zvksed,-experimental-zvksg,-experimental-zvksh,-experimental-zvkt,-h,-relax,-save-restore,-svinval,-svnapot,-svpbmt,-v,-xsfvcp,-xtheadba,-xtheadbb,-xtheadbs,-xtheadcmo,-xtheadcondmov,-xtheadfmemidx,-xtheadmac,-xtheadmemidx,-xtheadmempair,-xtheadsync,-xtheadvdot,-xventanacondops,-zawrs,-zba,-zbb,-zbc,-zbkb,-zbkc,-zbkx,-zbs,-zdinx,-zfh,-zfhmin,-zfinx,-zhinx,-zhinxmin,-zicbom,-zicbop,-zicboz,-zicntr,-zifencei,-zihintpause,-zihpm,-zk,-zkn,-zknd,-zkne,-zknh,-zkr,-zks,-zksed,-zksh,-zkt,-zmmul,-zvl1024b,-zvl128b,-zvl16384b,-zvl2048b,-zvl256b,-zvl32768b,-zvl4096b,-zvl512b,-zvl65536b,-zvl8192b" }
-  attributes #1 = { mustprogress nocallback nofree nosync nounwind willreturn memory(none) }
-  attributes #2 = { mustprogress nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: readwrite) }
-  attributes #3 = { mustprogress nocallback nofree nosync nounwind willreturn memory(read) }
+  attributes #0 = { mustprogress nofree nosync nounwind willreturn memory(none) uwtable vscale_range(1,1024) "_ZGVENk1v_musl_exp" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="generic-rv64" "target-features"="+64bit,+a,+c,+d,+f,+m,+zepi,+zicsr,+zve32f,+zve32x,+zve64d,+zve64f,+zve64x,+zvl32b,+zvl64b,-e,-experimental-smaia,-experimental-ssaia,-experimental-zca,-experimental-zcb,-experimental-zcd,-experimental-zcf,-experimental-zcmp,-experimental-zcmt,-experimental-zfa,-experimental-zicond,-experimental-zihintntl,-experimental-ztso,-experimental-zvbb,-experimental-zvbc,-experimental-zvfh,-experimental-zvkg,-experimental-zvkn,-experimental-zvkned,-experimental-zvkng,-experimental-zvknha,-experimental-zvknhb,-experimental-zvks,-experimental-zvksed,-experimental-zvksg,-experimental-zvksh,-experimental-zvkt,-h,-relax,-save-restore,-svinval,-svnapot,-svpbmt,-v,-xsfvcp,-xtheadba,-xtheadbb,-xtheadbs,-xtheadcmo,-xtheadcondmov,-xtheadfmemidx,-xtheadmac,-xtheadmemidx,-xtheadmempair,-xtheadsync,-xtheadvdot,-xventanacondops,-zawrs,-zba,-zbb,-zbc,-zbkb,-zbkc,-zbkx,-zbs,-zdinx,-zfh,-zfhmin,-zfinx,-zhinx,-zhinxmin,-zicbom,-zicbop,-zicboz,-zicntr,-zifencei,-zihintpause,-zihpm,-zk,-zkn,-zknd,-zkne,-zknh,-zkr,-zks,-zksed,-zksh,-zkt,-zmmul,-zvl1024b,-zvl128b,-zvl16384b,-zvl2048b,-zvl256b,-zvl32768b,-zvl4096b,-zvl512b,-zvl65536b,-zvl8192b,+m,+a,+f,+d,+zepi" }
+  attributes #1 = { nocallback nofree nosync nounwind willreturn memory(none) "target-features"="+m,+a,+f,+d,+zepi" }
+  attributes #2 = { nocallback nofree nosync nounwind willreturn memory(inaccessiblemem: readwrite) "target-features"="+m,+a,+f,+d,+zepi" }
+  attributes #3 = { nocallback nofree nosync nounwind willreturn memory(read) "target-features"="+m,+a,+f,+d,+zepi" }
 
   !llvm.module.flags = !{!0, !1, !2, !3, !4, !5}
   !llvm.ident = !{!6}
@@ -473,56 +461,109 @@
 ---
 name:            _ZGVENk1v_musl_exp
 alignment:       2
+exposesReturnsTwice: false
+legalized:       false
+regBankSelected: false
+selected:        false
+failedISel:      false
 tracksRegLiveness: true
+hasWinCFI:       false
+callsEHReturn:   false
+callsUnwindInit: false
+hasEHCatchret:   false
+hasEHScopes:     false
+hasEHFunclets:   false
+isOutlined:      false
+debugInstrRef:   false
+failsVerification: false
 tracksDebugUserValues: true
+registers:       []
 liveins:
-  - { reg: '$v8' }
-  - { reg: '$x10' }
+  - { reg: '$v8', virtual-reg: '' }
+  - { reg: '$x10', virtual-reg: '' }
 frameInfo:
+  isFrameAddressTaken: false
+  isReturnAddressTaken: false
+  hasStackMap:     false
+  hasPatchPoint:   false
+  stackSize:       0
+  offsetAdjustment: 0
   maxAlignment:    1
+  adjustsStack:    false
+  hasCalls:        false
+  stackProtector:  ''
+  functionContext: ''
+  maxCallFrameSize: 4294967295
+  cvBytesOfCalleeSavedRegisters: 0
+  hasOpaqueSPAdjustment: false
+  hasVAStart:      false
+  hasMustTailInVarArgFunc: false
+  hasTailCall:     false
+  localFrameSize:  0
+  savePoint:       ''
+  restorePoint:    ''
+fixedStack:      []
+stack:           []
+entry_values:    []
+callSites:       []
+debugValueSubstitutions: []
 constants:
   - id:              0
     value:           double 0x7FF0000000000000
     alignment:       8
+    isTargetSpecific: false
   - id:              1
     value:           'double 1.000000e+00'
     alignment:       8
+    isTargetSpecific: false
   - id:              2
     value:           double 0x40671547652B82FE
     alignment:       8
+    isTargetSpecific: false
   - id:              3
     value:           double 0x4338000000000000
     alignment:       8
+    isTargetSpecific: false
   - id:              4
     value:           double 0xC338000000000000
     alignment:       8
+    isTargetSpecific: false
   - id:              5
     value:           double 0xBF762E42FEFA0000
     alignment:       8
+    isTargetSpecific: false
   - id:              6
     value:           double 0xBD0CF79ABC9E3B3A
     alignment:       8
+    isTargetSpecific: false
   - id:              7
     value:           double 0x3FDFFFFFFFFFFDBD
     alignment:       8
+    isTargetSpecific: false
   - id:              8
     value:           double 0x3FC555555555543C
     alignment:       8
+    isTargetSpecific: false
   - id:              9
     value:           double 0x3FA55555CF172B91
     alignment:       8
+    isTargetSpecific: false
   - id:              10
     value:           double 0x3F81111167A4D017
     alignment:       8
+    isTargetSpecific: false
   - id:              11
     value:           'double -1.000000e+00'
     alignment:       8
+    isTargetSpecific: false
   - id:              12
     value:           double 0x10000000000000
     alignment:       8
+    isTargetSpecific: false
   - id:              13
     value:           double 0x7F00000000000000
     alignment:       8
+    isTargetSpecific: false
 machineFunctionInfo:
   varArgsFrameIndex: 0
   varArgsSaveSize: 0
@@ -532,7 +573,7 @@ body:             |
 
     renamable $x11 = ADDIW renamable $x10, -1
     dead $x0 = PseudoVSETVLI renamable $x10, 215 /* e32, mf2, ta, ma */, implicit-def $vl, implicit-def $vtype
-    renamable $v9 = PseudoVID_V_MF2 $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
+    renamable $v9 = PseudoVID_V_MF2 undef renamable $v9, $noreg, 5 /* e32 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
     renamable $v14 = PseudoVMSLEU_VX_MF2 killed renamable $v9, killed renamable $x11, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
     renamable $x11 = ADDI $x0, 52
     renamable $v9 = PseudoVNSRL_WX_MF2 renamable $v8, killed renamable $x11, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
@@ -542,24 +583,24 @@ body:             |
     renamable $v9 = PseudoVADD_VX_MF2 renamable $v19, killed renamable $x12, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
     renamable $x12 = ADDI $x0, 63
     renamable $v20 = PseudoVMSLTU_VX_MF2 killed renamable $v9, killed renamable $x12, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
-    renamable $v11 = PseudoVMANDN_MM_MF8 renamable $v14, renamable $v20, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v12 = PseudoVMANDN_MM_MF8 renamable $v14, renamable $v20, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $x12 = ADDI $x0, 969
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v9 = PseudoVMSLTU_VX_MF2_MASK undef renamable $v9, renamable $v19, killed renamable $x12, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
-    renamable $v17 = PseudoVMAND_MM_MF8 renamable $v11, killed renamable $v9, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v13 = PseudoVMANDN_MM_MF8 renamable $v11, renamable $v17, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v17 = PseudoVMAND_MM_MF8 renamable $v12, killed renamable $v9, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v13 = PseudoVMANDN_MM_MF8 renamable $v12, renamable $v17, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $x12 = ADDI $x0, 1033
     $v0 = COPY renamable $v13
     renamable $v9 = PseudoVMSLTU_VX_MF2_MASK undef renamable $v9, renamable $v19, killed renamable $x12, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
     renamable $v21 = PseudoVMAND_MM_MF8 renamable $v13, killed renamable $v9, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v12 = PseudoVMANDN_MM_MF8 renamable $v13, renamable $v21, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v11 = PseudoVMANDN_MM_MF8 renamable $v13, renamable $v21, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $x12 = ADDI $x0, -1
     renamable $x12 = SLLI killed renamable $x12, 52
     dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v12
+    $v0 = COPY renamable $v11
     renamable $v9 = PseudoVMSEQ_VX_M1_MASK undef renamable $v9, renamable $v8, killed renamable $x12, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
-    renamable $v15 = PseudoVMAND_MM_MF8 renamable $v12, killed renamable $v9, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v10 = PseudoVMANDN_MM_MF8 renamable $v12, renamable $v15, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v15 = PseudoVMAND_MM_MF8 renamable $v11, killed renamable $v9, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v10 = PseudoVMANDN_MM_MF8 renamable $v11, renamable $v15, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     dead $x0 = PseudoVSETVLIX0 killed $x0, 215 /* e32, mf2, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
     $v0 = COPY renamable $v10
     renamable $v9 = PseudoVMSEQ_VX_MF2_MASK undef renamable $v9, renamable $v19, killed renamable $x11, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
@@ -576,26 +617,26 @@ body:             |
     dead $x0 = PseudoVSETVLI renamable $x10, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.1, pre-instr-symbol <mcsymbol .Lpcrel_hi1>
     renamable $f15_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi1> :: (load (s64) from constant-pool)
-    renamable $v16 = PseudoVFMERGE_VF64M_M1 killed renamable $v16, killed renamable $f14_d, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v16 = PseudoVFMERGE_VF64M_M1_TU undef renamable $v16, killed renamable $v16, killed renamable $f14_d, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $v10 = PseudoVMAND_MM_MF8 killed renamable $v10, killed renamable $v18, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v11 = PseudoVMAND_MM_MF8 killed renamable $v11, killed renamable $v17, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v12, killed renamable $v17, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v10
     renamable $v17 = nofpexcept PseudoVFADD_VF64_M1_MASK undef renamable $v17, renamable $v8, renamable $f15_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    $v0 = COPY killed renamable $v11
+    $v0 = COPY killed renamable $v12
     renamable $v18 = nofpexcept PseudoVFADD_VF64_M1_MASK undef renamable $v18, renamable $v8, renamable $f15_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    renamable $v11 = PseudoVMAND_MM_MF8 killed renamable $v14, killed renamable $v20, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v14, killed renamable $v20, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $v0 = PseudoVMAND_MM_MF8 killed renamable $v13, killed renamable $v21, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     dead $x0 = PseudoVSETVLIX0 killed $x0, 215 /* e32, mf2, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    renamable $v14 = PseudoVMERGE_VIM_MF2 killed renamable $v19, 0, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
+    renamable $v14 = PseudoVMERGE_VIM_MF2_TU undef renamable $v14, killed renamable $v19, 0, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.2, pre-instr-symbol <mcsymbol .Lpcrel_hi2>
     renamable $f14_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi2> :: (load (s64) from constant-pool)
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.3, pre-instr-symbol <mcsymbol .Lpcrel_hi3>
     renamable $f13_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi3> :: (load (s64) from constant-pool)
-    renamable $v11 = PseudoVMOR_MM_MF8 killed renamable $v0, killed renamable $v11, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v12 = PseudoVMOR_MM_MF8 killed renamable $v0, killed renamable $v12, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     dead $x0 = PseudoVSETVLIX0 $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v13 = nofpexcept PseudoVFMUL_VF64_M1_MASK undef renamable $v13, renamable $v8, killed renamable $f14_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v13 = nofpexcept PseudoVFADD_VF64_M1_MASK undef renamable $v13, killed renamable $v13, killed renamable $f13_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.4, pre-instr-symbol <mcsymbol .Lpcrel_hi4>
     renamable $f14_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi4> :: (load (s64) from constant-pool)
@@ -603,43 +644,39 @@ body:             |
     renamable $f13_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi5> :: (load (s64) from constant-pool)
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.6, pre-instr-symbol <mcsymbol .Lpcrel_hi6>
     renamable $f12_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi6> :: (load (s64) from constant-pool)
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v19 = nofpexcept PseudoVFADD_VF64_M1_MASK undef renamable $v19, renamable $v13, killed renamable $f14_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 $x0, 88 /* e64, m1, ta, mu */, implicit-def $vl, implicit-def $vtype, implicit $vl
     renamable $v20 = COPY renamable $v19
-    $v0 = COPY renamable $v11
-    renamable $v20 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v20, killed renamable $f13_d, killed renamable $v8, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
-    renamable $v19 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v19, killed renamable $f12_d, killed renamable $v20, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
+    renamable $v20 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v20, killed renamable $f13_d, killed renamable $v8, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
+    $v0 = COPY renamable $v12
+    renamable $v19 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v19, killed renamable $f12_d, killed renamable $v20, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
+    $v0 = COPY renamable $v12
     renamable $v8 = PseudoVSLL_VI_M1_MASK undef renamable $v8, renamable $v13, 1, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
     renamable $x11 = ADDI $x0, 254
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v8 = PseudoVAND_VX_M1_MASK undef renamable $v8, killed renamable $v8, killed renamable $x11, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
     renamable $x11 = ADDI $x0, 45
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v20 = PseudoVSLL_VX_M1_MASK undef renamable $v20, renamable $v13, killed renamable $x11, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
     renamable $v0 = PseudoVSLL_VI_M1 renamable $v8, 3, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $x11 = ADDI $x0, 112
-    renamable $v0 = PseudoVADD_VX_M1 killed renamable $v0, renamable $x11, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v21 = PseudoVADD_VX_M1 killed renamable $v0, renamable $x11, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $x12 = AUIPC target-flags(riscv-pcrel-hi) @__exp_data, pre-instr-symbol <mcsymbol .Lpcrel_hi7>
     renamable $x12 = ADDI killed renamable $x12, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi7>
-    renamable $v21 = PseudoVADD_VX_M1 killed renamable $v0, renamable $x12, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
-    renamable $v21 = PseudoVLUXEI64_V_M1_M1_MASK undef renamable $v21, $x0, killed renamable $v21, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype :: (load unknown-size, align 8, !tbaa !7)
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
+    renamable $v21 = PseudoVLUXEI64_V_M1_M1_MASK undef renamable $v21, renamable $x12, killed renamable $v21, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype :: (load unknown-size, align 8, !tbaa !7)
+    $v0 = COPY renamable $v12
     renamable $v8 = PseudoVOR_VI_M1_MASK undef renamable $v8, killed renamable $v8, 1, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
     renamable $v8 = PseudoVSLL_VI_M1 killed renamable $v8, 3, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $v8 = PseudoVADD_VX_M1 killed renamable $v8, killed renamable $x11, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
-    renamable $v8 = PseudoVADD_VX_M1 killed renamable $v8, killed renamable $x12, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
-    renamable $v8 = PseudoVLUXEI64_V_M1_M1_MASK undef renamable $v8, $x0, killed renamable $v8, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype :: (load unknown-size, align 8, !tbaa !7)
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
+    renamable $v8 = PseudoVLUXEI64_V_M1_M1_MASK undef renamable $v8, killed renamable $x12, killed renamable $v8, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype :: (load unknown-size, align 8, !tbaa !7)
+    $v0 = COPY renamable $v12
     renamable $v20 = PseudoVADD_VV_M1_MASK undef renamable $v20, killed renamable $v8, killed renamable $v20, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v8 = nofpexcept PseudoVFMUL_VV_M1_MASK undef renamable $v8, renamable $v19, renamable $v19, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v21 = nofpexcept PseudoVFADD_VV_M1_MASK undef renamable $v21, renamable $v19, killed renamable $v21, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.7, pre-instr-symbol <mcsymbol .Lpcrel_hi8>
     renamable $x11 = ADDI killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi8>
@@ -647,14 +684,13 @@ body:             |
     renamable $v22 = PseudoVLSE64_V_M1 killed renamable $x11, $x0, -1, 6 /* e64 */, implicit $vl, implicit $vtype :: (load (s64) from constant-pool)
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.8, pre-instr-symbol <mcsymbol .Lpcrel_hi9>
     renamable $f14_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi9> :: (load (s64) from constant-pool)
-    dead $x0 = PseudoVSETVLI renamable $x10, 88 /* e64, m1, ta, mu */, implicit-def $vl, implicit-def $vtype
+    dead $x0 = PseudoVSETVLI renamable $x10, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype
     renamable $v23 = COPY renamable $v19
-    $v0 = COPY renamable $v11
-    renamable $v23 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v23, killed renamable $f14_d, killed renamable $v22, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
-    renamable $v23 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v23, renamable $v8, killed renamable $v21, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
+    renamable $v23 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v23, killed renamable $f14_d, killed renamable $v22, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
+    $v0 = COPY renamable $v12
+    renamable $v23 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v23, renamable $v8, killed renamable $v21, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
+    $v0 = COPY renamable $v12
     renamable $v8 = nofpexcept PseudoVFMUL_VV_M1_MASK undef renamable $v8, killed renamable $v8, renamable $v8, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.9, pre-instr-symbol <mcsymbol .Lpcrel_hi10>
     renamable $x11 = ADDI killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi10>
@@ -662,50 +698,45 @@ body:             |
     renamable $v21 = PseudoVLSE64_V_M1 killed renamable $x11, $x0, -1, 6 /* e64 */, implicit $vl, implicit $vtype :: (load (s64) from constant-pool)
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.10, pre-instr-symbol <mcsymbol .Lpcrel_hi11>
     renamable $f14_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi11> :: (load (s64) from constant-pool)
-    dead $x0 = PseudoVSETVLI killed renamable $x10, 88 /* e64, m1, ta, mu */, implicit-def $vl, implicit-def $vtype
-    $v0 = COPY renamable $v11
-    renamable $v19 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v19, killed renamable $f14_d, killed renamable $v21, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
-    renamable $v19 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v19, killed renamable $v8, killed renamable $v23, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
+    dead $x0 = PseudoVSETVLI killed renamable $x10, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype
+    $v0 = COPY renamable $v12
+    renamable $v19 = nofpexcept PseudoVFMADD_VF64_M1_MASK killed renamable $v19, killed renamable $f14_d, killed renamable $v21, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
+    $v0 = COPY renamable $v12
+    renamable $v19 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v19, killed renamable $v8, killed renamable $v23, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
     dead $x0 = PseudoVSETVLIX0 killed $x0, 215 /* e32, mf2, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v8 = PseudoVMSEQ_VI_MF2_MASK undef renamable $v8, killed renamable $v14, 0, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
-    renamable $v14 = PseudoVMAND_MM_MF8 renamable $v11, killed renamable $v8, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v8 = PseudoVMANDN_MM_MF8 renamable $v11, renamable $v14, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 88 /* e64, m1, ta, mu */, implicit-def $vl, implicit-def $vtype, implicit $vl
+    renamable $v14 = PseudoVMAND_MM_MF8 renamable $v12, killed renamable $v8, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMANDN_MM_MF8 renamable $v12, renamable $v14, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
     renamable $v21 = COPY renamable $v19
     $v0 = COPY renamable $v8
-    renamable $v21 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v21, renamable $v20, renamable $v20, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    renamable $v11 = PseudoVMAND_MM_MF8 killed renamable $v11, killed renamable $v14, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v21 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v21, renamable $v20, renamable $v20, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
+    renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v12, killed renamable $v14, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $x10 = ADDI $x0, 1
     renamable $x10 = SLLI killed renamable $x10, 31
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v13 = PseudoVAND_VX_M1_MASK undef renamable $v13, killed renamable $v13, killed renamable $x10, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v13 = PseudoVMSEQ_VI_M1_MASK undef renamable $v13, killed renamable $v13, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
-    renamable $v22 = PseudoVMAND_MM_MF8 renamable $v11, killed renamable $v13, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v13 = PseudoVMANDN_MM_MF8 renamable $v11, renamable $v22, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v22 = PseudoVMAND_MM_MF8 renamable $v12, killed renamable $v13, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v13 = PseudoVMANDN_MM_MF8 renamable $v12, renamable $v22, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $x10 = ADDI $x0, 511
     renamable $x10 = SLLI killed renamable $x10, 53
     $v0 = COPY renamable $v13
     renamable $v23 = PseudoVADD_VX_M1_MASK undef renamable $v23, renamable $v20, killed renamable $x10, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 88 /* e64, m1, ta, mu */, implicit-def $vl, implicit-def $vtype, implicit $vl
     renamable $v24 = COPY renamable $v19
     $v0 = COPY renamable $v13
-    renamable $v24 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v24, renamable $v23, renamable $v23, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
+    renamable $v24 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v24, renamable $v23, renamable $v23, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v13
     renamable $v14 = nofpexcept PseudoVMFLT_VF64_M1_MASK undef renamable $v14, renamable $v24, renamable $f15_d, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $v25 = PseudoVMAND_MM_MF8 renamable $v13, killed renamable $v14, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $v14 = PseudoVMAND_MM_MF8 renamable $v13, renamable $v25, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v14
     renamable $v26 = nofpexcept PseudoVFSUB_VV_M1_MASK undef renamable $v26, renamable $v23, renamable $v24, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 88 /* e64, m1, ta, mu */, implicit-def $vl, implicit-def $vtype, implicit $vl
     renamable $v27 = COPY renamable $v19
     $v0 = COPY renamable $v14
-    renamable $v27 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v27, killed renamable $v23, killed renamable $v26, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
+    renamable $v27 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v27, killed renamable $v23, killed renamable $v26, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v14
     renamable $v23 = nofpexcept PseudoVFADD_VF64_M1_MASK undef renamable $v23, renamable $v24, renamable $f15_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v14
@@ -724,40 +755,38 @@ body:             |
     $v0 = COPY renamable $v14
     renamable $v0 = nofpexcept PseudoVMFEQ_VF64_M1_MASK undef renamable $v0, renamable $v23, killed renamable $f15_d, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $v0 = PseudoVMAND_MM_MF8 renamable $v14, killed renamable $v0, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v23 = PseudoVMERGE_VIM_M1 killed renamable $v23, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v23 = PseudoVMERGE_VIM_M1_TU undef renamable $v23, killed renamable $v23, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $x10 = AUIPC target-flags(riscv-pcrel-hi) %const.12, pre-instr-symbol <mcsymbol .Lpcrel_hi13>
     renamable $f15_d = FLD killed renamable $x10, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi13> :: (load (s64) from constant-pool)
     renamable $v0 = PseudoVMANDN_MM_MF8 killed renamable $v13, killed renamable $v25, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $v13 = PseudoVMOR_MM_MF8 killed renamable $v14, renamable $v0, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v14 = PseudoVMERGE_VVM_M1 killed renamable $v23, killed renamable $v24, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v14 = PseudoVMERGE_VVM_M1_TU undef renamable $v14, killed renamable $v23, killed renamable $v24, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v13
     renamable $v14 = nofpexcept PseudoVFMUL_VF64_M1_MASK undef renamable $v14, killed renamable $v14, killed renamable $f15_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    renamable $v11 = PseudoVMAND_MM_MF8 killed renamable $v11, killed renamable $v22, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v12, killed renamable $v22, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $x10 = ADDI $x0, -1009
+    renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.13, pre-instr-symbol <mcsymbol .Lpcrel_hi14>
+    renamable $f15_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi14> :: (load (s64) from constant-pool)
     renamable $x10 = SLLI killed renamable $x10, 52
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
     renamable $v20 = PseudoVADD_VX_M1_MASK undef renamable $v20, killed renamable $v20, killed renamable $x10, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $vl, implicit $vtype
-    renamable $x10 = AUIPC target-flags(riscv-pcrel-hi) %const.13, pre-instr-symbol <mcsymbol .Lpcrel_hi14>
-    renamable $f15_d = FLD killed renamable $x10, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi14> :: (load (s64) from constant-pool)
-    dead $x0 = PseudoVSETVLIX0 $x0, 88 /* e64, m1, ta, mu */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v11
-    renamable $v19 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v19, killed renamable $v20, renamable $v20, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    dead $x0 = PseudoVSETVLIX0 killed $x0, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    $v0 = COPY renamable $v11
+    $v0 = COPY renamable $v12
+    renamable $v19 = nofpexcept PseudoVFMADD_VV_M1_MASK killed renamable $v19, killed renamable $v20, renamable $v20, $v0, $noreg, 6 /* e64 */, 3 /* ta, ma */, implicit $frm, implicit $vl, implicit $vtype
+    $v0 = COPY renamable $v12
     renamable $v19 = nofpexcept PseudoVFMUL_VF64_M1_MASK undef renamable $v19, killed renamable $v19, killed renamable $f15_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
-    renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v12, killed renamable $v15, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
+    renamable $v11 = PseudoVMAND_MM_MF8 killed renamable $v11, killed renamable $v15, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v10
-    renamable $v10 = PseudoVMERGE_VVM_M1 killed renamable $v18, killed renamable $v17, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v10 = PseudoVMERGE_VVM_M1_TU undef renamable $v10, killed renamable $v18, killed renamable $v17, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v8
-    renamable $v8 = PseudoVMERGE_VVM_M1 killed renamable $v10, killed renamable $v21, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
-    $v0 = COPY killed renamable $v12
-    renamable $v8 = PseudoVMERGE_VIM_M1 killed renamable $v8, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v10, killed renamable $v21, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v11
-    renamable $v8 = PseudoVMERGE_VVM_M1 killed renamable $v8, killed renamable $v19, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VIM_M1_TU undef renamable $v8, killed renamable $v8, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    $v0 = COPY killed renamable $v12
+    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v8, killed renamable $v19, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v13
-    renamable $v8 = PseudoVMERGE_VVM_M1 killed renamable $v8, killed renamable $v14, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v8, killed renamable $v14, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v9
-    renamable $v8 = PseudoVMERGE_VVM_M1 killed renamable $v8, killed renamable $v16, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v8, killed renamable $v16, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     PseudoRET implicit $v8
 
 ...

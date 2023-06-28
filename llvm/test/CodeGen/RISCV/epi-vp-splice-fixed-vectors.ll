@@ -36,9 +36,9 @@ define <2 x i64> @test_vp_splice_v2i64_negative_offset(<2 x i64> %va, <2 x i64> 
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a2
-; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vid.v v10
+; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vmsltu.vx v0, v10, a0
 ; CHECK-NEXT:    vslideup.vx v10, v9, a0
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
@@ -53,17 +53,18 @@ define <2 x i64> @test_vp_splice_v2i64_negative_offset(<2 x i64> %va, <2 x i64> 
 define <2 x i64> @test_vp_splice_v2i64_offset_in_register(<2 x i64> %va, <2 x i64> %vb, i32 signext %offset, i32 zeroext %evla, i32 zeroext %evlb) {
 ; CHECK-LABEL: test_vp_splice_v2i64_offset_in_register:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vsetvli zero, a2, e64, m1, ta, ma
+; CHECK-NEXT:    vid.v v10
 ; CHECK-NEXT:    bgez a0, .LBB2_2
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB2_2:
+; CHECK-NEXT:    sub a3, a1, a0
+; CHECK-NEXT:    vmsltu.vx v0, v10, a3
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    sub a1, a1, a0
 ; CHECK-NEXT:    vsetvli zero, a2, e64, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v0, v10, a1
-; CHECK-NEXT:    vslideup.vx v10, v9, a1
+; CHECK-NEXT:    vslideup.vx v10, v9, a3
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %head = insertelement <2 x i1> undef, i1 1, i32 0
@@ -78,14 +79,13 @@ define <2 x i64> @test_vp_splice_v2i64_masked(<2 x i64> %va, <2 x i64> %vb, <2 x
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v10, v10, a2, v0.t
-; CHECK-NEXT:    vslideup.vx v11, v9, a2, v0.t
+; CHECK-NEXT:    vslideup.vx v10, v9, a2, v0.t
 ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vi v8, v8, 5, v0.t
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-NEXT:    vmv1r.v v0, v10
-; CHECK-NEXT:    vmerge.vvm v8, v11, v8, v0
+; CHECK-NEXT:    vid.v v9
+; CHECK-NEXT:    vmsltu.vx v0, v9, a2, v0.t
+; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %v = call <2 x i64> @llvm.experimental.vp.splice.v2i64(<2 x i64> %va, <2 x i64> %vb, i32 5, <2 x i1> %mask, i32 %evla, i32 %evlb)
   ret <2 x i64> %v
@@ -117,9 +117,9 @@ define <4 x i32> @test_vp_splice_v4i32_negative_offset(<4 x i32> %va, <4 x i32> 
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a0, e32, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a2
-; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
 ; CHECK-NEXT:    vid.v v10
+; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vmsltu.vx v0, v10, a0
 ; CHECK-NEXT:    vslideup.vx v10, v9, a0
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
@@ -134,17 +134,18 @@ define <4 x i32> @test_vp_splice_v4i32_negative_offset(<4 x i32> %va, <4 x i32> 
 define <4 x i32> @test_vp_splice_v4i32_offset_in_register(<4 x i32> %va, <4 x i32> %vb, i32 signext %offset, i32 zeroext %evla, i32 zeroext %evlb) {
 ; CHECK-LABEL: test_vp_splice_v4i32_offset_in_register:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vsetvli zero, a2, e32, m1, ta, ma
+; CHECK-NEXT:    vid.v v10
 ; CHECK-NEXT:    bgez a0, .LBB6_2
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB6_2:
+; CHECK-NEXT:    sub a3, a1, a0
+; CHECK-NEXT:    vmsltu.vx v0, v10, a3
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    sub a1, a1, a0
 ; CHECK-NEXT:    vsetvli zero, a2, e32, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v0, v10, a1
-; CHECK-NEXT:    vslideup.vx v10, v9, a1
+; CHECK-NEXT:    vslideup.vx v10, v9, a3
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %head = insertelement <4 x i1> undef, i1 1, i32 0
@@ -159,14 +160,13 @@ define <4 x i32> @test_vp_splice_v4i32_masked(<4 x i32> %va, <4 x i32> %vb, <4 x
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v10, v10, a2, v0.t
-; CHECK-NEXT:    vslideup.vx v11, v9, a2, v0.t
+; CHECK-NEXT:    vslideup.vx v10, v9, a2, v0.t
 ; CHECK-NEXT:    vsetvli zero, a0, e32, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vi v8, v8, 5, v0.t
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
-; CHECK-NEXT:    vmv1r.v v0, v10
-; CHECK-NEXT:    vmerge.vvm v8, v11, v8, v0
+; CHECK-NEXT:    vid.v v9
+; CHECK-NEXT:    vmsltu.vx v0, v9, a2, v0.t
+; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %v = call <4 x i32> @llvm.experimental.vp.splice.v4i32(<4 x i32> %va, <4 x i32> %vb, i32 5, <4 x i1> %mask, i32 %evla, i32 %evlb)
   ret <4 x i32> %v
@@ -198,9 +198,9 @@ define <8 x i16> @test_vp_splice_v8i16_negative_offset(<8 x i16> %va, <8 x i16> 
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a0, e16, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a2
-; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
 ; CHECK-NEXT:    vid.v v10
+; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vmsltu.vx v0, v10, a0
 ; CHECK-NEXT:    vslideup.vx v10, v9, a0
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
@@ -215,17 +215,18 @@ define <8 x i16> @test_vp_splice_v8i16_negative_offset(<8 x i16> %va, <8 x i16> 
 define <8 x i16> @test_vp_splice_v8i16_offset_in_register(<8 x i16> %va, <8 x i16> %vb, i32 signext %offset, i32 zeroext %evla, i32 zeroext %evlb) {
 ; CHECK-LABEL: test_vp_splice_v8i16_offset_in_register:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vsetvli zero, a2, e16, m1, ta, ma
+; CHECK-NEXT:    vid.v v10
 ; CHECK-NEXT:    bgez a0, .LBB10_2
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB10_2:
+; CHECK-NEXT:    sub a3, a1, a0
+; CHECK-NEXT:    vmsltu.vx v0, v10, a3
 ; CHECK-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    sub a1, a1, a0
 ; CHECK-NEXT:    vsetvli zero, a2, e16, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v0, v10, a1
-; CHECK-NEXT:    vslideup.vx v10, v9, a1
+; CHECK-NEXT:    vslideup.vx v10, v9, a3
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %head = insertelement <8 x i1> undef, i1 1, i32 0
@@ -240,14 +241,13 @@ define <8 x i16> @test_vp_splice_v8i16_masked(<8 x i16> %va, <8 x i16> %vb, <8 x
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v10, v10, a2, v0.t
-; CHECK-NEXT:    vslideup.vx v11, v9, a2, v0.t
+; CHECK-NEXT:    vslideup.vx v10, v9, a2, v0.t
 ; CHECK-NEXT:    vsetvli zero, a0, e16, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vi v8, v8, 5, v0.t
 ; CHECK-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
-; CHECK-NEXT:    vmv1r.v v0, v10
-; CHECK-NEXT:    vmerge.vvm v8, v11, v8, v0
+; CHECK-NEXT:    vid.v v9
+; CHECK-NEXT:    vmsltu.vx v0, v9, a2, v0.t
+; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %v = call <8 x i16> @llvm.experimental.vp.splice.v8i16(<8 x i16> %va, <8 x i16> %vb, i32 5, <8 x i1> %mask, i32 %evla, i32 %evlb)
   ret <8 x i16> %v
@@ -279,9 +279,9 @@ define <16 x i8> @test_vp_splice_v16i8_negative_offset(<16 x i8> %va, <16 x i8> 
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a0, e8, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a2
-; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
 ; CHECK-NEXT:    vid.v v10
+; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vmsltu.vx v0, v10, a0
 ; CHECK-NEXT:    vslideup.vx v10, v9, a0
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
@@ -296,17 +296,18 @@ define <16 x i8> @test_vp_splice_v16i8_negative_offset(<16 x i8> %va, <16 x i8> 
 define <16 x i8> @test_vp_splice_v16i8_offset_in_register(<16 x i8> %va, <16 x i8> %vb, i32 signext %offset, i32 zeroext %evla, i32 zeroext %evlb) {
 ; CHECK-LABEL: test_vp_splice_v16i8_offset_in_register:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vsetvli zero, a2, e8, m1, ta, ma
+; CHECK-NEXT:    vid.v v10
 ; CHECK-NEXT:    bgez a0, .LBB14_2
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB14_2:
+; CHECK-NEXT:    sub a3, a1, a0
+; CHECK-NEXT:    vmsltu.vx v0, v10, a3
 ; CHECK-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    sub a1, a1, a0
 ; CHECK-NEXT:    vsetvli zero, a2, e8, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v0, v10, a1
-; CHECK-NEXT:    vslideup.vx v10, v9, a1
+; CHECK-NEXT:    vslideup.vx v10, v9, a3
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %head = insertelement <16 x i1> undef, i1 1, i32 0
@@ -321,14 +322,13 @@ define <16 x i8> @test_vp_splice_v16i8_masked(<16 x i8> %va, <16 x i8> %vb, <16 
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v10, v10, a2, v0.t
-; CHECK-NEXT:    vslideup.vx v11, v9, a2, v0.t
+; CHECK-NEXT:    vslideup.vx v10, v9, a2, v0.t
 ; CHECK-NEXT:    vsetvli zero, a0, e8, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vi v8, v8, 5, v0.t
 ; CHECK-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
-; CHECK-NEXT:    vmv1r.v v0, v10
-; CHECK-NEXT:    vmerge.vvm v8, v11, v8, v0
+; CHECK-NEXT:    vid.v v9
+; CHECK-NEXT:    vmsltu.vx v0, v9, a2, v0.t
+; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %v = call <16 x i8> @llvm.experimental.vp.splice.v16i8(<16 x i8> %va, <16 x i8> %vb, i32 5, <16 x i1> %mask, i32 %evla, i32 %evlb)
   ret <16 x i8> %v
@@ -360,9 +360,9 @@ define <2 x double> @test_vp_splice_v2f64_negative_offset(<2 x double> %va, <2 x
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a2
-; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vid.v v10
+; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vmsltu.vx v0, v10, a0
 ; CHECK-NEXT:    vslideup.vx v10, v9, a0
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
@@ -377,17 +377,18 @@ define <2 x double> @test_vp_splice_v2f64_negative_offset(<2 x double> %va, <2 x
 define <2 x double> @test_vp_splice_v2f64_offset_in_register(<2 x double> %va, <2 x double> %vb, i32 signext %offset, i32 zeroext %evla, i32 zeroext %evlb) {
 ; CHECK-LABEL: test_vp_splice_v2f64_offset_in_register:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vsetvli zero, a2, e64, m1, ta, ma
+; CHECK-NEXT:    vid.v v10
 ; CHECK-NEXT:    bgez a0, .LBB18_2
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB18_2:
+; CHECK-NEXT:    sub a3, a1, a0
+; CHECK-NEXT:    vmsltu.vx v0, v10, a3
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    sub a1, a1, a0
 ; CHECK-NEXT:    vsetvli zero, a2, e64, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v0, v10, a1
-; CHECK-NEXT:    vslideup.vx v10, v9, a1
+; CHECK-NEXT:    vslideup.vx v10, v9, a3
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %head = insertelement <2 x i1> undef, i1 1, i32 0
@@ -402,14 +403,13 @@ define <2 x double> @test_vp_splice_v2f64_masked(<2 x double> %va, <2 x double> 
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v10, v10, a2, v0.t
-; CHECK-NEXT:    vslideup.vx v11, v9, a2, v0.t
+; CHECK-NEXT:    vslideup.vx v10, v9, a2, v0.t
 ; CHECK-NEXT:    vsetvli zero, a0, e64, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vi v8, v8, 5, v0.t
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-NEXT:    vmv1r.v v0, v10
-; CHECK-NEXT:    vmerge.vvm v8, v11, v8, v0
+; CHECK-NEXT:    vid.v v9
+; CHECK-NEXT:    vmsltu.vx v0, v9, a2, v0.t
+; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %v = call <2 x double> @llvm.experimental.vp.splice.v2f64(<2 x double> %va, <2 x double> %vb, i32 5, <2 x i1> %mask, i32 %evla, i32 %evlb)
   ret <2 x double> %v
@@ -441,9 +441,9 @@ define <4 x float> @test_vp_splice_v4f32_negative_offset(<4 x float> %va, <4 x f
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a0, e32, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a2
-; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
 ; CHECK-NEXT:    vid.v v10
+; CHECK-NEXT:    sub a0, a0, a2
 ; CHECK-NEXT:    vmsltu.vx v0, v10, a0
 ; CHECK-NEXT:    vslideup.vx v10, v9, a0
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
@@ -458,17 +458,18 @@ define <4 x float> @test_vp_splice_v4f32_negative_offset(<4 x float> %va, <4 x f
 define <4 x float> @test_vp_splice_v4f32_offset_in_register(<4 x float> %va, <4 x float> %vb, i32 signext %offset, i32 zeroext %evla, i32 zeroext %evlb) {
 ; CHECK-LABEL: test_vp_splice_v4f32_offset_in_register:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vsetvli zero, a2, e32, m1, ta, ma
+; CHECK-NEXT:    vid.v v10
 ; CHECK-NEXT:    bgez a0, .LBB22_2
 ; CHECK-NEXT:  # %bb.1:
 ; CHECK-NEXT:    add a0, a1, a0
 ; CHECK-NEXT:  .LBB22_2:
+; CHECK-NEXT:    sub a3, a1, a0
+; CHECK-NEXT:    vmsltu.vx v0, v10, a3
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vx v8, v8, a0
-; CHECK-NEXT:    sub a1, a1, a0
 ; CHECK-NEXT:    vsetvli zero, a2, e32, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v0, v10, a1
-; CHECK-NEXT:    vslideup.vx v10, v9, a1
+; CHECK-NEXT:    vslideup.vx v10, v9, a3
 ; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %head = insertelement <4 x i1> undef, i1 1, i32 0
@@ -483,14 +484,13 @@ define <4 x float> @test_vp_splice_v4f32_masked(<4 x float> %va, <4 x float> %vb
 ; CHECK:       # %bb.0:
 ; CHECK-NEXT:    addi a2, a0, -5
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vmsltu.vx v10, v10, a2, v0.t
-; CHECK-NEXT:    vslideup.vx v11, v9, a2, v0.t
+; CHECK-NEXT:    vslideup.vx v10, v9, a2, v0.t
 ; CHECK-NEXT:    vsetvli zero, a0, e32, m1, ta, ma
 ; CHECK-NEXT:    vslidedown.vi v8, v8, 5, v0.t
 ; CHECK-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
-; CHECK-NEXT:    vmv1r.v v0, v10
-; CHECK-NEXT:    vmerge.vvm v8, v11, v8, v0
+; CHECK-NEXT:    vid.v v9
+; CHECK-NEXT:    vmsltu.vx v0, v9, a2, v0.t
+; CHECK-NEXT:    vmerge.vvm v8, v10, v8, v0
 ; CHECK-NEXT:    ret
   %v = call <4 x float> @llvm.experimental.vp.splice.v4f32(<4 x float> %va, <4 x float> %vb, i32 5, <4 x i1> %mask, i32 %evla, i32 %evlb)
   ret <4 x float> %v
