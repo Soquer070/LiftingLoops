@@ -38,7 +38,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#if defined(__GLIBC__) && __has_include(<sys/rseq.h>)
+// clang <14 is known to crash when compiling __builtin_thread_pointer on X86
+// so preemptively disable this when compiling with that compiler.
+#if defined(__GLIBC__) && __has_include(<sys/rseq.h>) \
+  && !(defined(__clang__) && __clang_major__ < 14)
 #include <sys/rseq.h>
 #ifdef RSEQ_SIG
 #define GLIBC_INITS_RSEQ
