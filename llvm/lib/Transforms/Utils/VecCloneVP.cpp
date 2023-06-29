@@ -224,12 +224,14 @@ static bool isMasked(const VFShape &Shape) {
                       }) != Shape.Parameters.end();
 }
 
+#ifndef NDEBUG
 static bool hasVL(const VFShape &Shape) {
   return std::find_if(Shape.Parameters.begin(), Shape.Parameters.end(),
                       [](const VFParameter &P) {
                         return P.ParamKind == VFParamKind::GlobalVL;
                       }) != Shape.Parameters.end();
 }
+#endif
 
 Function *VecCloneVPPass::cloneFunction(Module &M, Function &F,
                                         const VFInfo &V) {
