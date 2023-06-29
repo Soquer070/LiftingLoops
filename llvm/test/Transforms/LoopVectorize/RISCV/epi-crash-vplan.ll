@@ -18,33 +18,31 @@ define dso_local void @foo(ptr nocapture noundef readnone %A, ptr nocapture noun
 ; CHECK:       for.body.preheader:
 ; CHECK-NEXT:    [[WIDE_TRIP_COUNT:%.*]] = zext i32 [[TC]] to i64
 ; CHECK-NEXT:    [[TMP0:%.*]] = tail call i32 @llvm.vscale.i32()
-; CHECK-NEXT:    [[TMP1:%.*]] = shl i32 [[TMP0]], 1
-; CHECK-NEXT:    [[TMP2:%.*]] = tail call i32 @llvm.vscale.i32()
-; CHECK-NEXT:    [[TMP3:%.*]] = shl i32 [[TMP2]], 1
-; CHECK-NEXT:    [[TMP4:%.*]] = add i32 [[TMP3]], -1
-; CHECK-NEXT:    [[VECTOR_RECUR_INIT:%.*]] = insertelement <vscale x 2 x i32> poison, i32 33, i32 [[TMP4]]
-; CHECK-NEXT:    [[TMP5:%.*]] = tail call <vscale x 2 x i32> @llvm.experimental.stepvector.nxv2i32()
+; CHECK-NEXT:    [[TMP1:%.*]] = tail call i32 @llvm.vscale.i32()
+; CHECK-NEXT:    [[TMP2:%.*]] = add i32 [[TMP1]], -1
+; CHECK-NEXT:    [[VECTOR_RECUR_INIT:%.*]] = insertelement <vscale x 1 x i32> poison, i32 33, i32 [[TMP2]]
+; CHECK-NEXT:    [[TMP3:%.*]] = tail call <vscale x 1 x i32> @llvm.experimental.stepvector.nxv1i32()
 ; CHECK-NEXT:    br label [[VECTOR_BODY:%.*]]
 ; CHECK:       vector.body:
 ; CHECK-NEXT:    [[INDEX:%.*]] = phi i64 [ 0, [[FOR_BODY_PREHEADER]] ], [ [[INDEX_NEXT:%.*]], [[VECTOR_BODY]] ]
-; CHECK-NEXT:    [[PREV_EVL:%.*]] = phi i32 [ [[TMP1]], [[FOR_BODY_PREHEADER]] ], [ [[TMP8:%.*]], [[VECTOR_BODY]] ]
-; CHECK-NEXT:    [[VECTOR_RECUR:%.*]] = phi <vscale x 2 x i32> [ [[VECTOR_RECUR_INIT]], [[FOR_BODY_PREHEADER]] ], [ [[VEC_IND6:%.*]], [[VECTOR_BODY]] ]
-; CHECK-NEXT:    [[VEC_IND6]] = phi <vscale x 2 x i32> [ [[TMP5]], [[FOR_BODY_PREHEADER]] ], [ [[VEC_IND_NEXT9:%.*]], [[VECTOR_BODY]] ]
-; CHECK-NEXT:    [[TMP6:%.*]] = sub i64 [[WIDE_TRIP_COUNT]], [[INDEX]]
-; CHECK-NEXT:    [[TMP7:%.*]] = tail call i64 @llvm.epi.vsetvl(i64 [[TMP6]], i64 2, i64 0)
-; CHECK-NEXT:    [[TMP8]] = trunc i64 [[TMP7]] to i32
-; CHECK-NEXT:    [[DOTSPLATINSERT7:%.*]] = insertelement <vscale x 2 x i32> poison, i32 [[TMP8]], i64 0
-; CHECK-NEXT:    [[DOTSPLAT8:%.*]] = shufflevector <vscale x 2 x i32> [[DOTSPLATINSERT7]], <vscale x 2 x i32> poison, <vscale x 2 x i32> zeroinitializer
-; CHECK-NEXT:    [[TMP9:%.*]] = add i32 [[PREV_EVL]], -1
-; CHECK-NEXT:    [[TMP10:%.*]] = tail call <vscale x 2 x i32> @llvm.experimental.vp.splice.nxv2i32(<vscale x 2 x i32> [[VECTOR_RECUR]], <vscale x 2 x i32> [[VEC_IND6]], i32 [[TMP9]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[PREV_EVL]], i32 [[TMP8]])
-; CHECK-NEXT:    [[VP_OP:%.*]] = tail call <vscale x 2 x i32> @llvm.vp.add.nxv2i32(<vscale x 2 x i32> [[TMP10]], <vscale x 2 x i32> [[VEC_IND6]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP8]])
-; CHECK-NEXT:    [[TMP11:%.*]] = getelementptr inbounds i32, ptr [[B:%.*]], i64 [[INDEX]]
-; CHECK-NEXT:    tail call void @llvm.vp.store.nxv2i32.p0(<vscale x 2 x i32> [[VP_OP]], ptr [[TMP11]], <vscale x 2 x i1> shufflevector (<vscale x 2 x i1> insertelement (<vscale x 2 x i1> poison, i1 true, i64 0), <vscale x 2 x i1> poison, <vscale x 2 x i32> zeroinitializer), i32 [[TMP8]]), !tbaa [[TBAA4:![0-9]+]]
-; CHECK-NEXT:    [[TMP12:%.*]] = and i64 [[TMP7]], 4294967295
-; CHECK-NEXT:    [[INDEX_NEXT]] = add i64 [[INDEX]], [[TMP12]]
-; CHECK-NEXT:    [[VEC_IND_NEXT9]] = add <vscale x 2 x i32> [[VEC_IND6]], [[DOTSPLAT8]]
-; CHECK-NEXT:    [[TMP13:%.*]] = icmp eq i64 [[INDEX_NEXT]], [[WIDE_TRIP_COUNT]]
-; CHECK-NEXT:    br i1 [[TMP13]], label [[FOR_COND_CLEANUP]], label [[VECTOR_BODY]], !llvm.loop [[LOOP8:![0-9]+]]
+; CHECK-NEXT:    [[PREV_EVL:%.*]] = phi i32 [ [[TMP0]], [[FOR_BODY_PREHEADER]] ], [ [[TMP6:%.*]], [[VECTOR_BODY]] ]
+; CHECK-NEXT:    [[VECTOR_RECUR:%.*]] = phi <vscale x 1 x i32> [ [[VECTOR_RECUR_INIT]], [[FOR_BODY_PREHEADER]] ], [ [[VEC_IND6:%.*]], [[VECTOR_BODY]] ]
+; CHECK-NEXT:    [[VEC_IND6]] = phi <vscale x 1 x i32> [ [[TMP3]], [[FOR_BODY_PREHEADER]] ], [ [[VEC_IND_NEXT9:%.*]], [[VECTOR_BODY]] ]
+; CHECK-NEXT:    [[TMP4:%.*]] = sub i64 [[WIDE_TRIP_COUNT]], [[INDEX]]
+; CHECK-NEXT:    [[TMP5:%.*]] = tail call i64 @llvm.epi.vsetvl(i64 [[TMP4]], i64 2, i64 7)
+; CHECK-NEXT:    [[TMP6]] = trunc i64 [[TMP5]] to i32
+; CHECK-NEXT:    [[DOTSPLATINSERT7:%.*]] = insertelement <vscale x 1 x i32> poison, i32 [[TMP6]], i64 0
+; CHECK-NEXT:    [[DOTSPLAT8:%.*]] = shufflevector <vscale x 1 x i32> [[DOTSPLATINSERT7]], <vscale x 1 x i32> poison, <vscale x 1 x i32> zeroinitializer
+; CHECK-NEXT:    [[TMP7:%.*]] = add i32 [[PREV_EVL]], -1
+; CHECK-NEXT:    [[TMP8:%.*]] = tail call <vscale x 1 x i32> @llvm.experimental.vp.splice.nxv1i32(<vscale x 1 x i32> [[VECTOR_RECUR]], <vscale x 1 x i32> [[VEC_IND6]], i32 [[TMP7]], <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[PREV_EVL]], i32 [[TMP6]])
+; CHECK-NEXT:    [[VP_OP:%.*]] = tail call <vscale x 1 x i32> @llvm.vp.add.nxv1i32(<vscale x 1 x i32> [[TMP8]], <vscale x 1 x i32> [[VEC_IND6]], <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP6]])
+; CHECK-NEXT:    [[TMP9:%.*]] = getelementptr inbounds i32, ptr [[B:%.*]], i64 [[INDEX]]
+; CHECK-NEXT:    tail call void @llvm.vp.store.nxv1i32.p0(<vscale x 1 x i32> [[VP_OP]], ptr [[TMP9]], <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP6]]), !tbaa [[TBAA4:![0-9]+]]
+; CHECK-NEXT:    [[TMP10:%.*]] = and i64 [[TMP5]], 4294967295
+; CHECK-NEXT:    [[INDEX_NEXT]] = add i64 [[INDEX]], [[TMP10]]
+; CHECK-NEXT:    [[VEC_IND_NEXT9]] = add <vscale x 1 x i32> [[VEC_IND6]], [[DOTSPLAT8]]
+; CHECK-NEXT:    [[TMP11:%.*]] = icmp eq i64 [[INDEX_NEXT]], [[WIDE_TRIP_COUNT]]
+; CHECK-NEXT:    br i1 [[TMP11]], label [[FOR_COND_CLEANUP]], label [[VECTOR_BODY]], !llvm.loop [[LOOP8:![0-9]+]]
 ; CHECK:       for.cond.cleanup:
 ; CHECK-NEXT:    ret void
 ;

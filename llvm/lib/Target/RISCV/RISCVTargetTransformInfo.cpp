@@ -62,8 +62,12 @@ InstructionCost RISCVTTIImpl::getLMULCost(MVT VT) {
         RISCVVType::decodeVLMUL(RISCVTargetLowering::getLMUL(VT));
     if (Fractional)
       Cost = LMul <= DLenFactor ? (DLenFactor / LMul) : 1;
-    else
+    else {
       Cost = (LMul * DLenFactor);
+      if (ST->hasEPI() && LMul > 1)
+        // Arbitrary high cost to discourage the use of LMUL > 1.
+        Cost += 20 * LMul;
+    }
   } else {
     Cost = divideCeil(VT.getSizeInBits(), ST->getRealMinVLen() / DLenFactor);
   }
@@ -361,8 +365,12 @@ std::optional<unsigned> RISCVTTIImpl::getMaxVScale() const {
 std::optional<unsigned> RISCVTTIImpl::getVScaleForTuning() const {
   if (ST->hasVInstructions())
     if (unsigned MinVLen = ST->getRealMinVLen();
-        MinVLen >= RISCV::RVVBitsPerBlock)
+        MinVLen >= RISCV::RVVBitsPerBlock && !ST->hasEPI())
       return MinVLen / RISCV::RVVBitsPerBlock;
+  if (ST->hasEPI())
+    // We don't really want a vscale of 1, but making DLEN=512 and vscale=64 is
+    // problematic (at the moment of writing).
+    return 2;
   return BaseT::getVScaleForTuning();
 }
 
@@ -591,7 +599,7 @@ RISCVTTIImpl::getMaskedMemoryOpCost(unsigned Opcode, Type *Src, Align Alignment,
   auto LT = getTypeLegalizationCost(Src);
   if (!LT.first.isValid())
     return InstructionCost::getInvalid();
-  return LT.first;
+  return LT.first * getLMULCost(LT.second);
 }
 
 InstructionCost RISCVTTIImpl::getInterleavedMemoryOpCost(
@@ -1371,6 +1379,8 @@ InstructionCost RISCVTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
     // FIXME: Need to consider vsetvli and lmul.
     int PowDiff = (int)Log2_32(Dst->getScalarSizeInBits()) -
                   (int)Log2_32(Src->getScalarSizeInBits());
+    auto LT = getTypeLegalizationCost(PowDiff > 0 ? Dst : Src);
+    InstructionCost LMULCost = getLMULCost(LT.second);
     switch (ISD) {
     case ISD::SIGN_EXTEND:
     case ISD::ZERO_EXTEND:
@@ -1379,9 +1389,9 @@ InstructionCost RISCVTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
         // Instead we use the following instructions to extend from mask vector:
         // vmv.v.i v8, 0
         // vmerge.vim v8, v8, -1, v0
-        return 2;
+        return 2 * LMULCost;
       }
-      return 1;
+      return LMULCost;
     case ISD::TRUNCATE:
       if (Dst->getScalarSizeInBits() == 1) {
         // We do not use several vncvt to truncate to mask vector. So we could
@@ -1389,13 +1399,13 @@ InstructionCost RISCVTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
         // Instead we use the following instructions to truncate to mask vector:
         // vand.vi v8, v8, 1
         // vmsne.vi v0, v8, 0
-        return 2;
+        return 2 * LMULCost;
       }
       [[fallthrough]];
     case ISD::FP_EXTEND:
     case ISD::FP_ROUND:
       // Counts of narrow/widen instructions.
-      return std::abs(PowDiff);
+      return std::abs(PowDiff) * LMULCost;
     case ISD::FP_TO_SINT:
     case ISD::FP_TO_UINT:
     case ISD::SINT_TO_FP:
@@ -1412,16 +1422,17 @@ InstructionCost RISCVTTIImpl::getCastInstrCost(unsigned Opcode, Type *Dst,
         // vfncvt.rtz.x.f.w v9, v8
         // vand.vi v8, v9, 1
         // vmsne.vi v0, v8, 0
-        return 3;
+        return 3 * LMULCost;
       }
       if (std::abs(PowDiff) <= 1)
-        return 1;
+        return LMULCost;
       // Backend could lower (v[sz]ext i8 to double) to vfcvt(v[sz]ext.f8 i8),
       // so it only need two conversion.
-      if (Src->isIntOrIntVectorTy())
-        return 2;
+      if (Src->isIntOrIntVectorTy() && PowDiff > 0) {
+        return 2 * LMULCost;
+      }
       // Counts of narrow/widen instructions.
-      return std::abs(PowDiff);
+      return std::abs(PowDiff) * LMULCost;
     }
   }
   return BaseT::getCastInstrCost(Opcode, Dst, Src, CCH, CostKind, I);

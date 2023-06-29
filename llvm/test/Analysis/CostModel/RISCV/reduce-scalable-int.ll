@@ -1141,12 +1141,12 @@ define signext i32 @vreduce_add_nxv4i32(<vscale x 4 x i32> %v) {
 
 define signext i32 @vwreduce_add_nxv4i16(<vscale x 4 x i16> %v) {
 ; CHECK-LABEL: 'vwreduce_add_nxv4i16'
-; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = sext <vscale x 4 x i16> %v to <vscale x 4 x i32>
+; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = sext <vscale x 4 x i16> %v to <vscale x 4 x i32>
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i32 @llvm.vector.reduce.add.nxv4i32(<vscale x 4 x i32> %e)
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i32 %red
 ;
 ; SIZE-LABEL: 'vwreduce_add_nxv4i16'
-; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = sext <vscale x 4 x i16> %v to <vscale x 4 x i32>
+; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = sext <vscale x 4 x i16> %v to <vscale x 4 x i32>
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i32 @llvm.vector.reduce.add.nxv4i32(<vscale x 4 x i32> %e)
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i32 %red
 ;
@@ -1157,12 +1157,12 @@ define signext i32 @vwreduce_add_nxv4i16(<vscale x 4 x i16> %v) {
 
 define signext i32 @vwreduce_uadd_nxv4i16(<vscale x 4 x i16> %v) {
 ; CHECK-LABEL: 'vwreduce_uadd_nxv4i16'
-; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = zext <vscale x 4 x i16> %v to <vscale x 4 x i32>
+; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = zext <vscale x 4 x i16> %v to <vscale x 4 x i32>
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i32 @llvm.vector.reduce.add.nxv4i32(<vscale x 4 x i32> %e)
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i32 %red
 ;
 ; SIZE-LABEL: 'vwreduce_uadd_nxv4i16'
-; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = zext <vscale x 4 x i16> %v to <vscale x 4 x i32>
+; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = zext <vscale x 4 x i16> %v to <vscale x 4 x i32>
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i32 @llvm.vector.reduce.add.nxv4i32(<vscale x 4 x i32> %e)
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i32 %red
 ;
@@ -1445,12 +1445,12 @@ define i64 @vreduce_add_nxv2i64(<vscale x 2 x i64> %v) {
 
 define i64 @vwreduce_add_nxv2i32(<vscale x 2 x i32> %v) {
 ; CHECK-LABEL: 'vwreduce_add_nxv2i32'
-; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = sext <vscale x 2 x i32> %v to <vscale x 2 x i64>
+; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = sext <vscale x 2 x i32> %v to <vscale x 2 x i64>
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv2i64(<vscale x 2 x i64> %e)
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
 ; SIZE-LABEL: 'vwreduce_add_nxv2i32'
-; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = sext <vscale x 2 x i32> %v to <vscale x 2 x i64>
+; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = sext <vscale x 2 x i32> %v to <vscale x 2 x i64>
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv2i64(<vscale x 2 x i64> %e)
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
@@ -1461,12 +1461,12 @@ define i64 @vwreduce_add_nxv2i32(<vscale x 2 x i32> %v) {
 
 define i64 @vwreduce_uadd_nxv2i32(<vscale x 2 x i32> %v) {
 ; CHECK-LABEL: 'vwreduce_uadd_nxv2i32'
-; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = zext <vscale x 2 x i32> %v to <vscale x 2 x i64>
+; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = zext <vscale x 2 x i32> %v to <vscale x 2 x i64>
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv2i64(<vscale x 2 x i64> %e)
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
 ; SIZE-LABEL: 'vwreduce_uadd_nxv2i32'
-; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = zext <vscale x 2 x i32> %v to <vscale x 2 x i64>
+; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %e = zext <vscale x 2 x i32> %v to <vscale x 2 x i64>
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv2i64(<vscale x 2 x i64> %e)
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
@@ -1597,12 +1597,12 @@ define i64 @vreduce_add_nxv4i64(<vscale x 4 x i64> %v) {
 
 define i64 @vwreduce_add_nxv4i32(<vscale x 4 x i32> %v) {
 ; CHECK-LABEL: 'vwreduce_add_nxv4i32'
-; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = sext <vscale x 4 x i32> %v to <vscale x 4 x i64>
+; CHECK-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e = sext <vscale x 4 x i32> %v to <vscale x 4 x i64>
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv4i64(<vscale x 4 x i64> %e)
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
 ; SIZE-LABEL: 'vwreduce_add_nxv4i32'
-; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = sext <vscale x 4 x i32> %v to <vscale x 4 x i64>
+; SIZE-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e = sext <vscale x 4 x i32> %v to <vscale x 4 x i64>
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv4i64(<vscale x 4 x i64> %e)
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
@@ -1613,12 +1613,12 @@ define i64 @vwreduce_add_nxv4i32(<vscale x 4 x i32> %v) {
 
 define i64 @vwreduce_uadd_nxv4i32(<vscale x 4 x i32> %v) {
 ; CHECK-LABEL: 'vwreduce_uadd_nxv4i32'
-; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = zext <vscale x 4 x i32> %v to <vscale x 4 x i64>
+; CHECK-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e = zext <vscale x 4 x i32> %v to <vscale x 4 x i64>
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv4i64(<vscale x 4 x i64> %e)
 ; CHECK-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
 ; SIZE-LABEL: 'vwreduce_uadd_nxv4i32'
-; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: %e = zext <vscale x 4 x i32> %v to <vscale x 4 x i64>
+; SIZE-NEXT:  Cost Model: Found an estimated cost of 4 for instruction: %e = zext <vscale x 4 x i32> %v to <vscale x 4 x i64>
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 2 for instruction: %red = call i64 @llvm.vector.reduce.add.nxv4i64(<vscale x 4 x i64> %e)
 ; SIZE-NEXT:  Cost Model: Found an estimated cost of 1 for instruction: ret i64 %red
 ;
