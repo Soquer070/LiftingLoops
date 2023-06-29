@@ -167,7 +167,7 @@ CMAKE_INVOCATION_EXTRA_FLAGS+=("-DCMAKE_CXX_COMPILER=${CXX}")
 LINKER=gnu-ld
 if [ "$COMPILER" = "clang" ];
 then
- if ( ${CC} -fuse-ld=lld -Wl,--version 2> /dev/null ) | grep -q "^LLD";
+ if ( ${CC} -fuse-ld=lld -Wl,--version 2> /dev/null ) | grep -q ".*LLD ";
  then
    info "Using LLD"
    LINKER=lld
