@@ -28,6 +28,7 @@ define void @test_vp_logical(<vscale x 1 x i64>* %a0, <vscale x 1 x i64>* %a1, i
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
 ; CHECK-O0-NEXT:    vand.vi v9, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
@@ -142,6 +143,7 @@ define void @test_vp_logical_2(<vscale x 2 x i32>* %a0, <vscale x 2 x i32>* %a1,
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e32, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
 ; CHECK-O0-NEXT:    vand.vi v9, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
@@ -256,6 +258,7 @@ define void @test_vp_logical_3(<vscale x 4 x i16>* %a0, <vscale x 4 x i16>* %a1,
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e16, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
 ; CHECK-O0-NEXT:    vand.vi v9, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
@@ -370,6 +373,7 @@ define void @test_vp_logical_4(<vscale x 8 x i8>* %a0, <vscale x 8 x i8>* %a1, i
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m1, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v8, v8, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
+; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
 ; CHECK-O0-NEXT:    vand.vi v9, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
@@ -484,6 +488,7 @@ define void @test_vp_logical_5(<vscale x 16 x i8>* %a0, <vscale x 16 x i8>* %a1,
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m2, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v12, v8, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v12, 0
+; CHECK-O0-NEXT:    # implicit-def: $v14m2
 ; CHECK-O0-NEXT:    vmv.v.i v14, 0
 ; CHECK-O0-NEXT:    vand.vi v10, v10, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v10, 0
@@ -598,6 +603,7 @@ define void @test_vp_logical_6(<vscale x 32 x i8>* %a0, <vscale x 32 x i8>* %a1,
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m4, ta, ma
 ; CHECK-O0-NEXT:    vand.vi v16, v8, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v16, 0
+; CHECK-O0-NEXT:    # implicit-def: $v20m4
 ; CHECK-O0-NEXT:    vmv.v.i v20, 0
 ; CHECK-O0-NEXT:    vand.vi v12, v12, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v12, 0

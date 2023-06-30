@@ -11,11 +11,11 @@ define void @bar() nounwind {
 ; CHECK-NEXT:    csrr a0, vlenb
 ; CHECK-NEXT:    slli a0, a0, 3
 ; CHECK-NEXT:    sub sp, sp, a0
-; CHECK-NEXT:    vsetvli a0, zero, e32, m8, ta, ma
-; CHECK-NEXT:    vmv.v.i v8, 0
 ; CHECK-NEXT:    addi a0, sp, 32
-; CHECK-NEXT:    vs8r.v v8, (a0)
 ; CHECK-NEXT:    sd a0, 0(sp)
+; CHECK-NEXT:    vsetvli a1, zero, e32, m8, ta, ma
+; CHECK-NEXT:    vmv.v.i v8, 0
+; CHECK-NEXT:    vs8r.v v8, (a0)
 ; CHECK-NEXT:    li a0, 0
 ; CHECK-NEXT:    li a1, 0
 ; CHECK-NEXT:    li a2, 0

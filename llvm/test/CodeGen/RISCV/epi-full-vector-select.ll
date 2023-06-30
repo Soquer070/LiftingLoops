@@ -210,6 +210,7 @@ define void @test_select_scalar_int(<vscale x 1 x i64> %a, <vscale x 1 x i64> %b
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, mf8, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -246,6 +247,7 @@ define void @test_select_scalar_int_2(<vscale x 2 x i32> %a, <vscale x 2 x i32> 
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, mf4, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -282,6 +284,7 @@ define void @test_select_scalar_int_3(<vscale x 2 x i64> %a, <vscale x 2 x i64> 
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, mf4, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -318,6 +321,7 @@ define void @test_select_scalar_int_4(<vscale x 8 x i64> %a, <vscale x 8 x i64> 
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m1, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -354,6 +358,7 @@ define void @test_select_scalar_int_5(<vscale x 16 x i32> %a, <vscale x 16 x i32
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8m2
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m2, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -390,6 +395,7 @@ define void @test_select_scalar_int_6(<vscale x 32 x i16> %a, <vscale x 32 x i16
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8m4
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m4, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -436,6 +442,7 @@ define void @test_select_scalar_fp(<vscale x 1 x double> %a, <vscale x 1 x doubl
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, mf8, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -472,6 +479,7 @@ define void @test_select_scalar_fp_2(<vscale x 2 x float> %a, <vscale x 2 x floa
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, mf4, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0
@@ -508,6 +516,7 @@ define void @test_select_scalar_fp_3(<vscale x 2 x double> %a, <vscale x 2 x dou
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, mf4, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v8, a1
 ; CHECK-O0-NEXT:    vmsne.vi v0, v8, 0

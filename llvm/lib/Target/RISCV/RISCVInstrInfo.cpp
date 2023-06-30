@@ -523,14 +523,17 @@ void RISCVInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
 
     if (NF == 1) {
       auto MIB = BuildMI(MBB, MBBI, DL, get(Opc), DstReg);
+      if (UseVMV_V_V)
+        MIB.addReg(DstReg, RegState::Undef);
       if (UseVMV_V_I)
-        MIB = MIB.add(DefMBBI->getOperand(1));
+        MIB = MIB.add(DefMBBI->getOperand(2));
       else
         MIB = MIB.addReg(SrcReg, getKillRegState(KillSrc));
       if (UseVMV_V_V) {
         const MCInstrDesc &Desc = DefMBBI->getDesc();
         MIB.add(DefMBBI->getOperand(RISCVII::getVLOpNum(Desc))); // AVL
         MIB.add(DefMBBI->getOperand(RISCVII::getSEWOpNum(Desc))); // SEW
+        MIB.addImm(0); // tu, mu
         MIB.addReg(RISCV::VL, RegState::Implicit);
         MIB.addReg(RISCV::VTYPE, RegState::Implicit);
       }
@@ -551,8 +554,11 @@ void RISCVInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
       for (; I != End; I += Incr) {
         auto MIB = BuildMI(MBB, MBBI, DL, get(Opc),
                            TRI->getSubReg(DstReg, SubRegIdx + I));
+        if (UseVMV_V_V)
+          MIB.addReg(TRI->getSubReg(DstReg, SubRegIdx + I),
+                     RegState::Undef);
         if (UseVMV_V_I)
-          MIB = MIB.add(DefMBBI->getOperand(1));
+          MIB = MIB.add(DefMBBI->getOperand(2));
         else
           MIB = MIB.addReg(TRI->getSubReg(SrcReg, SubRegIdx + I),
                            getKillRegState(KillSrc));
@@ -560,6 +566,7 @@ void RISCVInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
           const MCInstrDesc &Desc = DefMBBI->getDesc();
           MIB.add(DefMBBI->getOperand(RISCVII::getVLOpNum(Desc))); // AVL
           MIB.add(DefMBBI->getOperand(RISCVII::getSEWOpNum(Desc))); // SEW
+          MIB.addImm(0);  // tu, mu
           MIB.addReg(RISCV::VL, RegState::Implicit);
           MIB.addReg(RISCV::VTYPE, RegState::Implicit);
         }

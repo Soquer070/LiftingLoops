@@ -23,6 +23,7 @@ define void @test_vp_fold_unsigned_greater(<vscale x 1 x i64> %a, i64 %b, <vscal
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x12
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vsetvli a3, zero, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v10, a1
 ; CHECK-O0-NEXT:    slli a2, a2, 32
@@ -122,6 +123,7 @@ define void @test_vp_fold_unsigned_lower(<vscale x 1 x i64> %a, i64 %b, <vscale 
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v9
 ; CHECK-O0-NEXT:    vsetvli a3, zero, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v9, a2
 ; CHECK-O0-NEXT:    slli a1, a1, 32
@@ -222,6 +224,7 @@ define void @test_vp_fold_signed_greater(<vscale x 1 x i64> %a, i64 %b, <vscale 
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x12
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vsetvli a3, zero, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v10, a1
 ; CHECK-O0-NEXT:    slli a2, a2, 32
@@ -321,6 +324,7 @@ define void @test_vp_fold_signed_lower(<vscale x 1 x i64> %a, i64 %b, <vscale x 
 ; CHECK-O0-NEXT:    # kill: def $x10 killed $x11
 ; CHECK-O0-NEXT:    lui a0, %hi(scratch)
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
+; CHECK-O0-NEXT:    # implicit-def: $v9
 ; CHECK-O0-NEXT:    vsetvli a3, zero, e64, m1, ta, ma
 ; CHECK-O0-NEXT:    vmv.v.x v9, a2
 ; CHECK-O0-NEXT:    slli a1, a1, 32

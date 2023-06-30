@@ -3865,6 +3865,13 @@ bool RecursiveASTVisitor<Derived>::VisitOMPXDynCGroupMemClause(
 }
 
 template <typename Derived>
+bool RecursiveASTVisitor<Derived>::VisitOMPDoacrossClause(
+    OMPDoacrossClause *C) {
+  TRY_TO(VisitOMPClauseList(C));
+  return true;
+}
+
+template <typename Derived>
 bool RecursiveASTVisitor<Derived>::VisitOMPFreeAgentClause(OMPFreeAgentClause *C){
     TRY_TO(VisitOMPClauseWithPreInit(C));
     TRY_TO(TraverseStmt(C->getFreeAgent()));

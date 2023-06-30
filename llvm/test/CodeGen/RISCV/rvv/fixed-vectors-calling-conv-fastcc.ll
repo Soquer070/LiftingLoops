@@ -386,9 +386,9 @@ define fastcc <32 x i32> @pass_vector_arg_indirect_stack(<32 x i32> %x, <32 x i3
 ; LMULMAX4-NEXT:    .cfi_def_cfa_offset 144
 ; LMULMAX4-NEXT:    sd ra, 136(sp) # 8-byte Folded Spill
 ; LMULMAX4-NEXT:    .cfi_offset ra, -8
-; LMULMAX4-NEXT:    addi a0, sp, 64
 ; LMULMAX4-NEXT:    vsetivli zero, 16, e32, m4, ta, ma
 ; LMULMAX4-NEXT:    vmv.v.i v8, 0
+; LMULMAX4-NEXT:    addi a0, sp, 64
 ; LMULMAX4-NEXT:    vse32.v v8, (a0)
 ; LMULMAX4-NEXT:    mv a0, sp
 ; LMULMAX4-NEXT:    li a1, 1
@@ -488,9 +488,9 @@ define fastcc <32 x i32> @pass_vector_arg_direct_stack(<32 x i32> %x, <32 x i32>
 ; LMULMAX4-NEXT:    sd a0, 136(sp)
 ; LMULMAX4-NEXT:    li a0, 13
 ; LMULMAX4-NEXT:    sd a0, 0(sp)
-; LMULMAX4-NEXT:    addi a0, sp, 72
 ; LMULMAX4-NEXT:    vsetivli zero, 16, e32, m4, ta, ma
 ; LMULMAX4-NEXT:    vmv.v.i v8, 0
+; LMULMAX4-NEXT:    addi a0, sp, 72
 ; LMULMAX4-NEXT:    vse32.v v8, (a0)
 ; LMULMAX4-NEXT:    addi a0, sp, 8
 ; LMULMAX4-NEXT:    li a1, 1

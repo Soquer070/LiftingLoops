@@ -415,7 +415,7 @@ def EPIPseudosTable : GenericTable {
 multiclass pseudo_nullary<VReg result_reg_class,
                           LMULInfo MInfo,
                           string constraints> {
-  let Constraints = Join<[constraints, "$rd = $merge"], ",">.ret,
+  let Constraints = !interleave([constraints, "$rd = $merge"], ","),
       Uses = [VL, VTYPE], VLIndex = 3, SEWIndex = 4, MergeOpIndex = 1,
       MaskOpIndex = 2,
       BaseInstr = !cast<Instruction>(!subst("PseudoEPI", "", NAME)) in
@@ -442,7 +442,7 @@ multiclass pseudo_unary<VReg result_reg_class,
                         VReg op_reg_class,
                         LMULInfo MInfo,
                         string constraints> {
-  let Constraints = Join<[constraints, "$rd = $merge"], ",">.ret,
+  let Constraints = !interleave([constraints, "$rd = $merge"], ","),
       Uses = [VL, VTYPE], VLIndex = 4, SEWIndex = 5, MergeOpIndex = 1,
       MaskOpIndex = 3,
       BaseInstr = !cast<Instruction>(!subst("PseudoEPI", "", NAME)) in
@@ -563,7 +563,7 @@ multiclass pseudo_binary<VReg result_reg_class,
                          LMULInfo MInfo,
                          string constraints,
                          list<SchedReadWrite> sched = []> {
-  let Constraints = Join<[constraints, "$rd = $merge"], ",">.ret,
+  let Constraints = !interleave([constraints, "$rd = $merge"], ","),
       Uses = [VL, VTYPE], VLIndex = 5, SEWIndex = 6, MergeOpIndex = 1,
       MaskOpIndex = 4,
       BaseInstr = !cast<Instruction>(!subst("PseudoEPI", "", NAME)) in
@@ -971,7 +971,7 @@ multiclass pseudo_ternary<VReg result_reg_class,
                           LMULInfo MInfo,
                           string constraints,
                           list<SchedReadWrite> sched = []> {
-  let Constraints = Join<["$rd = $rs3", constraints], ",">.ret,
+  let Constraints = !interleave(["$rd = $rs3", constraints], ","),
       Uses = [VL, VTYPE],
       VLIndex = 5, SEWIndex = 6, MergeOpIndex = 1,
       MaskOpIndex = 4,

@@ -99,13 +99,16 @@ define <vscale x 1 x double> @test_load_vp_reverse_mask_nxv1f64(<vscale x 1 x do
 define <vscale x 1 x double> @test_load_vp_inconsistent_mask_nxv1f64(<vscale x 1 x double> *%ptr, <vscale x 1 x i1> %mask, <vscale x 1 x i1> %mask2, i32 zeroext %evl) {
 ; CHECK-LABEL: test_load_vp_inconsistent_mask_nxv1f64:
 ; CHECK:       # %bb.0:
+; CHECK-NEXT:    vmv1r.v v9, v0
 ; CHECK-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-NEXT:    vmv.v.i v9, 0
-; CHECK-NEXT:    vmerge.vim v9, v9, 1, v0
 ; CHECK-NEXT:    vmv1r.v v0, v8
 ; CHECK-NEXT:    vid.v v10, v0.t
 ; CHECK-NEXT:    addi a1, a1, -1
 ; CHECK-NEXT:    vrsub.vx v10, v10, a1, v0.t
+; CHECK-NEXT:    vmv.v.i v11, 0
+; CHECK-NEXT:    vmv1r.v v0, v9
+; CHECK-NEXT:    vmerge.vim v9, v11, 1, v0
+; CHECK-NEXT:    vmv1r.v v0, v8
 ; CHECK-NEXT:    vrgather.vv v11, v9, v10, v0.t
 ; CHECK-NEXT:    vmsne.vi v0, v11, 0, v0.t
 ; CHECK-NEXT:    vle64.v v9, (a0), v0.t
