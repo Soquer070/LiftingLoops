@@ -53,8 +53,54 @@ Value *InstCombinerImpl::tryToOptimizeGEP(GetElementPtrInst &GEP) {
   Value *PtrOp = GEP.getPointerOperand();
   Type *PtrOpTy = GEP.getPointerOperandType();
   if (PtrOpTy->isVectorTy()) {
-    if (!isSplatValue(PtrOp))
+    if (!isSplatValue(PtrOp)) {
+      // Special case: the base pointer is the result of a GEP.
+      if (auto *BaseFromGEP = dyn_cast<GetElementPtrInst>(PtrOp)) {
+        // Use the base pointer of this GEP as the one for the optimized GEP; as
+        // indices, sum together the ones from this GEP and the ones from the
+        // to-be-optimized one.
+
+        // We only try to optimize GEPs with just one index operand.
+        if (GEP.getNumIndices() > 1 || BaseFromGEP->getNumIndices() > 1)
+          return nullptr;
+        // Ensure the source element type is the same for both GEPS.
+        if (GEP.getSourceElementType() != BaseFromGEP->getSourceElementType())
+          return nullptr;
+
+        ElementCount EC = cast<VectorType>(PtrOpTy)->getElementCount();
+        Value *Idx = GEP.getOperand(GEP.getPointerOperandIndex() + 1);
+        if (!Idx->getType()->isVectorTy())
+          Idx = Builder.CreateVectorSplat(EC, Idx);
+
+        Value *BaseGEPIdx =
+            BaseFromGEP->getOperand(BaseFromGEP->getPointerOperandIndex() + 1);
+        if (!BaseGEPIdx->getType()->isVectorTy())
+          BaseGEPIdx = Builder.CreateVectorSplat(EC, BaseGEPIdx);
+
+        Type *IdxTy = Idx->getType();
+        Type *BaseGEPIdxTy = BaseGEPIdx->getType();
+        if (IdxTy != BaseGEPIdxTy) {
+          unsigned int IdxElemSize = IdxTy->getScalarSizeInBits();
+          unsigned int BaseGEPIdxElemSize = BaseGEPIdxTy->getScalarSizeInBits();
+          assert(IdxElemSize != BaseGEPIdxElemSize);
+          if (IdxElemSize > BaseGEPIdxElemSize)
+            BaseGEPIdx = Builder.CreateSExt(BaseGEPIdx, IdxTy);
+          else
+            Idx = Builder.CreateSExt(Idx, BaseGEPIdxTy);
+        }
+        assert(Idx->getType() == BaseGEPIdx->getType() &&
+               "Indices types shouldn't differ!");
+
+        Value *NewBasePtr = BaseFromGEP->getPointerOperand();
+        Value *NewIdx = Builder.CreateAdd(BaseGEPIdx, Idx);
+
+        return Builder.CreateGEP(GEP.getSourceElementType(), NewBasePtr, NewIdx,
+                                 "gep.opt", GEP.isInBounds());
+      }
+
+      // In all other cases, we bail out.
       return nullptr;
+    }
 
     PtrOp = getSplatValue(PtrOp);
   }
