@@ -814,6 +814,7 @@ struct IRPosition {
     case IRPosition::IRP_CALL_SITE_RETURNED:
       return AttributeList::ReturnIndex;
     case IRPosition::IRP_ARGUMENT:
+      return getCalleeArgNo() + AttributeList::FirstArgIndex;
     case IRPosition::IRP_CALL_SITE_ARGUMENT:
       return getCallSiteArgNo() + AttributeList::FirstArgIndex;
     }
@@ -3115,11 +3116,14 @@ struct IRAttribute : public BaseType {
   IRAttribute(const IRPosition &IRP) : BaseType(IRP) {}
 
   static bool isImpliedByIR(Attributor &A, const IRPosition &IRP,
-                            ArrayRef<Attribute::AttrKind> AttrKinds,
-                            bool IgnoreSubsumingPositions = false) {
-    if (isa<UndefValue>(IRP.getAssociatedValue()))
+                            Attribute::AttrKind ImpliedAttributeKind = AK,
+                            bool IgnoreSubsumingPositions = false,
+                            bool RequiresPoison = false) {
+    if (RequiresPoison ? isa<PoisonValue>(IRP.getAssociatedValue())
+                       : isa<UndefValue>(IRP.getAssociatedValue()))
       return true;
-    return A.hasAttr(IRP, AttrKinds, IgnoreSubsumingPositions);
+    return A.hasAttr(IRP, {ImpliedAttributeKind}, IgnoreSubsumingPositions,
+                     ImpliedAttributeKind);
   }
 
   /// See AbstractAttribute::initialize(...).
@@ -3601,9 +3605,10 @@ struct AAWillReturn
   AAWillReturn(const IRPosition &IRP, Attributor &A) : IRAttribute(IRP) {}
 
   static bool isImpliedByIR(Attributor &A, const IRPosition &IRP,
-                            ArrayRef<Attribute::AttrKind> AttrKinds,
+                            Attribute::AttrKind ImpliedAttributeKind,
                             bool IgnoreSubsumingPositions = false) {
-    if (IRAttribute::isImpliedByIR(A, IRP, AttrKinds, IgnoreSubsumingPositions))
+    if (IRAttribute::isImpliedByIR(A, IRP, ImpliedAttributeKind,
+                                   IgnoreSubsumingPositions))
       return true;
     return isImpliedByMustprogressAndReadonly(A, IRP, /* KnownOnly */ true);
   }
@@ -3614,7 +3619,7 @@ struct AAWillReturn
                                                  bool KnownOnly) {
     // Check for `mustprogress` in the scope and the associated function which
     // might be different if this is a call site.
-    if (!IRAttribute::isImpliedByIR(A, IRP, {Attribute::MustProgress}))
+    if (!A.hasAttr(IRP, {Attribute::MustProgress}))
       return false;
 
     SmallVector<Attribute, 1> Attrs;
@@ -3737,9 +3742,10 @@ struct AANoAlias
   }
 
   static bool isImpliedByIR(Attributor &A, const IRPosition &IRP,
-                            ArrayRef<Attribute::AttrKind> AttrKinds,
+                            Attribute::AttrKind ImpliedAttributeKind,
                             bool IgnoreSubsumingPositions = false) {
-    if (IRAttribute::isImpliedByIR(A, IRP, AttrKinds))
+    if (IRAttribute::isImpliedByIR(A, IRP, ImpliedAttributeKind,
+                                   IgnoreSubsumingPositions))
       return true;
 
     Value &Val = IRP.getAnchorValue();
@@ -5980,16 +5986,18 @@ enum AttributorRunOption {
 namespace AA {
 /// Helper to avoid creating an AA for IR Attributes that might already be set.
 template <Attribute::AttrKind AK>
-bool hasAssumedIRAttr(Attributor &A, const AbstractAttribute &QueryingAA,
+bool hasAssumedIRAttr(Attributor &A, const AbstractAttribute *QueryingAA,
                       const IRPosition &IRP, DepClassTy DepClass, bool &IsKnown,
                       bool IgnoreSubsumingPositions = false) {
   IsKnown = false;
   switch (AK) {
 #define CASE(ATTRNAME, AANAME, ...)                                            \
   case Attribute::ATTRNAME: {                                                  \
-    if (AANAME::isImpliedByIR(A, IRP, {AK}, IgnoreSubsumingPositions))         \
+    if (AANAME::isImpliedByIR(A, IRP, AK, IgnoreSubsumingPositions))           \
       return IsKnown = true;                                                   \
-    const auto *AA = A.getAAFor<AANAME>(QueryingAA, IRP, DepClass);            \
+    if (!QueryingAA)                                                           \
+      return false;                                                            \
+    const auto *AA = A.getAAFor<AANAME>(*QueryingAA, IRP, DepClass);           \
     if (!AA || !AA->isAssumed(__VA_ARGS__))                                    \
       return false;                                                            \
     IsKnown = AA->isKnown(__VA_ARGS__);                                        \
