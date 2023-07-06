@@ -71,6 +71,25 @@ bool VPRecipeBase::mayWriteToMemory() const {
            "underlying instruction may write to memory");
     return false;
   }
+  // Vector Predication
+  case VPPredicatedWidenMemoryInstructionSC: {
+    return cast<VPPredicatedWidenMemoryInstructionRecipe>(this)->isStore();
+  }
+  case VPPredicatedWidenCallSC:
+    return cast<Instruction>(getVPSingleValue()->getUnderlyingValue())
+        ->mayWriteToMemory();
+  case VPPredicatedBlendSC:
+  case VPPredicatedReductionSC:
+  case VPPredicatedWidenSC:
+  case VPPredicatedWidenSelectSC: {
+    const Instruction *I =
+        dyn_cast_or_null<Instruction>(getVPSingleValue()->getUnderlyingValue());
+    (void)I;
+    assert((!I || !I->mayWriteToMemory()) &&
+           "underlying instruction may write to memory");
+    return false;
+  }
+  // Conservative default.
   default:
     return true;
   }
@@ -147,6 +166,25 @@ bool VPRecipeBase::mayHaveSideEffects() const {
     auto *R = cast<VPReplicateRecipe>(this);
     return R->getUnderlyingInstr()->mayHaveSideEffects();
   }
+  // Predicated versions.
+  case VPPredicatedReductionSC:
+  case VPPredicatedWidenSC:
+  case VPPredicatedWidenSelectSC: {
+    const Instruction *I =
+        dyn_cast_or_null<Instruction>(getVPSingleValue()->getUnderlyingValue());
+    (void)I;
+    assert((!I || !I->mayHaveSideEffects()) &&
+           "underlying instruction has side-effects");
+    return false;
+  }
+  case VPPredicatedWidenMemoryInstructionSC:
+    assert(cast<VPPredicatedWidenMemoryInstructionRecipe>(this)
+                   ->getIngredient()
+                   .mayHaveSideEffects() == mayWriteToMemory() &&
+           "mayHaveSideffects result for ingredient differs from this "
+           "implementation");
+    return mayWriteToMemory();
+  // Conservative default.
   default:
     return true;
   }

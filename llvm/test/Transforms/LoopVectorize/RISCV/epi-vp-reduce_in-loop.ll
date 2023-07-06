@@ -98,7 +98,6 @@ define dso_local void @_Z9summarizePKciiii(ptr noundef %name, i32 noundef signex
 ; CHECK-NEXT:    [[TMP16:%.*]] = mul i64 [[INDEX]], 16
 ; CHECK-NEXT:    [[TMP17:%.*]] = getelementptr i8, ptr [[TMP4]], i64 [[TMP16]]
 ; CHECK-NEXT:    [[VP_STRIDED_LOAD:%.*]] = call <vscale x 1 x double> @llvm.experimental.vp.strided.load.nxv1f64.p0.i64(ptr [[TMP17]], i64 16, <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP12]]), !tbaa [[TBAA11:![0-9]+]]
-; CHECK-NEXT:    [[VP_OP:%.*]] = call <vscale x 1 x i64> @llvm.vp.add.nxv1i64(<vscale x 1 x i64> [[VEC_IND]], <vscale x 1 x i64> shufflevector (<vscale x 1 x i64> insertelement (<vscale x 1 x i64> poison, i64 1, i64 0), <vscale x 1 x i64> poison, <vscale x 1 x i32> zeroinitializer), <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP12]])
 ; CHECK-NEXT:    [[TMP18]] = call double @llvm.vp.reduce.fadd.nxv1f64(double [[VEC_PHI]], <vscale x 1 x double> [[VP_STRIDED_LOAD]], <vscale x 1 x i1> [[VP_ICMP_ULE]], i32 [[TMP12]])
 ; CHECK-NEXT:    [[TMP19:%.*]] = zext i32 [[TMP12]] to i64
 ; CHECK-NEXT:    [[INDEX_NEXT]] = add i64 [[INDEX]], [[TMP19]]

@@ -65,7 +65,6 @@ define dso_local signext i32 @exactMatch(ptr nocapture noundef readonly %A, ptr 
 ; CHECK-NEXT:    [[TMP21:%.*]] = extractelement <vscale x 1 x i32> [[VP_OP]], i32 0
 ; CHECK-NEXT:    [[TMP22:%.*]] = call <vscale x 1 x i32> @_ZGVENk1vvl_bar(<vscale x 1 x i32> [[VP_OP_LOAD]], <vscale x 1 x i32> [[VP_OP_LOAD10]], i32 [[TMP21]], i32 [[TMP12]]), !llvm.access.group [[ACC_GRP9]]
 ; CHECK-NEXT:    [[VP_OP13:%.*]] = call <vscale x 1 x i32> @llvm.vp.add.nxv1i32(<vscale x 1 x i32> [[TMP22]], <vscale x 1 x i32> [[VEC_PHI]], <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP12]])
-; CHECK-NEXT:    [[VP_OP14:%.*]] = call <vscale x 1 x i64> @llvm.vp.add.nxv1i64(<vscale x 1 x i64> [[VEC_IND]], <vscale x 1 x i64> shufflevector (<vscale x 1 x i64> insertelement (<vscale x 1 x i64> poison, i64 1, i64 0), <vscale x 1 x i64> poison, <vscale x 1 x i32> zeroinitializer), <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP12]])
 ; CHECK-NEXT:    [[EVL_SPLATINSERT:%.*]] = insertelement <vscale x 1 x i32> poison, i32 [[TMP12]], i64 0
 ; CHECK-NEXT:    [[EVL_SPLAT:%.*]] = shufflevector <vscale x 1 x i32> [[EVL_SPLATINSERT]], <vscale x 1 x i32> poison, <vscale x 1 x i32> zeroinitializer
 ; CHECK-NEXT:    [[STEP_VEC:%.*]] = call <vscale x 1 x i32> @llvm.experimental.stepvector.nxv1i32()
@@ -93,7 +92,7 @@ define dso_local signext i32 @exactMatch(ptr nocapture noundef readonly %A, ptr 
 ; CHECK-NEXT:    [[TMP28:%.*]] = load i32, ptr [[ARRAYIDX10]], align 4, !tbaa [[TBAA5]], !llvm.access.group [[ACC_GRP9]]
 ; CHECK-NEXT:    [[TMP29:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 ; CHECK-NEXT:    [[TMP30:%.*]] = add i32 [[TMP29]], [[C]]
-; CHECK-NEXT:    [[CALL:%.*]] = tail call signext i32 @bar(i32 noundef signext [[TMP27]], i32 noundef signext [[TMP28]], i32 noundef signext [[TMP30]]) #[[ATTR4:[0-9]+]], !llvm.access.group [[ACC_GRP9]]
+; CHECK-NEXT:    [[CALL:%.*]] = tail call signext i32 @bar(i32 noundef signext [[TMP27]], i32 noundef signext [[TMP28]], i32 noundef signext [[TMP30]]) #[[ATTR5:[0-9]+]], !llvm.access.group [[ACC_GRP9]]
 ; CHECK-NEXT:    [[ADD11]] = add nsw i32 [[CALL]], [[SUM_026]]
 ; CHECK-NEXT:    [[INDVARS_IV_NEXT]] = add nuw nsw i64 [[INDVARS_IV]], 1
 ; CHECK-NEXT:    [[EXITCOND_NOT:%.*]] = icmp eq i64 [[INDVARS_IV_NEXT]], [[WIDE_TRIP_COUNT]]
@@ -211,8 +210,6 @@ define dso_local signext i32 @multipleMatches(ptr nocapture noundef readonly %A,
 ; CHECK-NEXT:    [[TMP25:%.*]] = extractelement <vscale x 1 x i32> [[VP_OP]], i32 0
 ; CHECK-NEXT:    [[TMP26:%.*]] = call <vscale x 1 x i32> @_ZGVENk1vvl_bar(<vscale x 1 x i32> [[VP_OP_LOAD]], <vscale x 1 x i32> [[VP_OP22]], i32 [[TMP25]], i32 [[TMP17]]), !llvm.access.group [[ACC_GRP15]]
 ; CHECK-NEXT:    [[VP_OP23:%.*]] = call <vscale x 1 x i32> @llvm.vp.add.nxv1i32(<vscale x 1 x i32> [[TMP26]], <vscale x 1 x i32> [[VEC_PHI]], <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP17]])
-; CHECK-NEXT:    [[VP_OP24:%.*]] = call <vscale x 1 x i64> @llvm.vp.add.nxv1i64(<vscale x 1 x i64> [[VEC_IND]], <vscale x 1 x i64> shufflevector (<vscale x 1 x i64> insertelement (<vscale x 1 x i64> poison, i64 1, i64 0), <vscale x 1 x i64> poison, <vscale x 1 x i32> zeroinitializer), <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP17]])
-; CHECK-NEXT:    [[VP_OP25:%.*]] = call <vscale x 1 x i32> @llvm.vp.add.nxv1i32(<vscale x 1 x i32> [[VEC_IND7]], <vscale x 1 x i32> shufflevector (<vscale x 1 x i32> insertelement (<vscale x 1 x i32> poison, i32 1, i64 0), <vscale x 1 x i32> poison, <vscale x 1 x i32> zeroinitializer), <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP17]])
 ; CHECK-NEXT:    [[EVL_SPLATINSERT:%.*]] = insertelement <vscale x 1 x i32> poison, i32 [[TMP17]], i64 0
 ; CHECK-NEXT:    [[EVL_SPLAT:%.*]] = shufflevector <vscale x 1 x i32> [[EVL_SPLATINSERT]], <vscale x 1 x i32> poison, <vscale x 1 x i32> zeroinitializer
 ; CHECK-NEXT:    [[STEP_VEC:%.*]] = call <vscale x 1 x i32> @llvm.experimental.stepvector.nxv1i32()
@@ -242,7 +239,7 @@ define dso_local signext i32 @multipleMatches(ptr nocapture noundef readonly %A,
 ; CHECK-NEXT:    [[TMP31:%.*]] = load i32, ptr [[ARRAYIDX]], align 4, !tbaa [[TBAA5]], !llvm.access.group [[ACC_GRP15]]
 ; CHECK-NEXT:    [[TMP32:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 ; CHECK-NEXT:    [[TMP33:%.*]] = add i32 [[TMP32]], [[B]]
-; CHECK-NEXT:    [[CALL:%.*]] = tail call signext i32 @bar(i32 noundef signext [[TMP31]], i32 noundef signext [[TMP33]], i32 noundef signext [[ADD12]]) #[[ATTR4]], !llvm.access.group [[ACC_GRP15]]
+; CHECK-NEXT:    [[CALL:%.*]] = tail call signext i32 @bar(i32 noundef signext [[TMP31]], i32 noundef signext [[TMP33]], i32 noundef signext [[ADD12]]) #[[ATTR5]], !llvm.access.group [[ACC_GRP15]]
 ; CHECK-NEXT:    [[ADD13]] = add nsw i32 [[CALL]], [[SUM_029]]
 ; CHECK-NEXT:    [[INDVARS_IV_NEXT]] = add nuw nsw i64 [[INDVARS_IV]], 1
 ; CHECK-NEXT:    [[ADD14]] = add nuw nsw i32 [[DOTOMP_IV_030]], 1
@@ -343,7 +340,6 @@ define dso_local signext i32 @mostGenericMatch(ptr nocapture noundef readonly %A
 ; CHECK-NEXT:    [[VP_OP13:%.*]] = call <vscale x 1 x i32> @llvm.vp.add.nxv1i32(<vscale x 1 x i32> [[VP_OP]], <vscale x 1 x i32> [[BROADCAST_SPLAT12]], <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP12]])
 ; CHECK-NEXT:    [[TMP21:%.*]] = call <vscale x 1 x i32> @_ZGVENk1vvv_bar(<vscale x 1 x i32> [[VP_OP_LOAD]], <vscale x 1 x i32> [[VP_OP_LOAD10]], <vscale x 1 x i32> [[VP_OP13]], i32 [[TMP12]]), !llvm.access.group [[ACC_GRP19]]
 ; CHECK-NEXT:    [[VP_OP14:%.*]] = call <vscale x 1 x i32> @llvm.vp.add.nxv1i32(<vscale x 1 x i32> [[TMP21]], <vscale x 1 x i32> [[VEC_PHI]], <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP12]])
-; CHECK-NEXT:    [[VP_OP15:%.*]] = call <vscale x 1 x i64> @llvm.vp.add.nxv1i64(<vscale x 1 x i64> [[VEC_IND]], <vscale x 1 x i64> shufflevector (<vscale x 1 x i64> insertelement (<vscale x 1 x i64> poison, i64 1, i64 0), <vscale x 1 x i64> poison, <vscale x 1 x i32> zeroinitializer), <vscale x 1 x i1> shufflevector (<vscale x 1 x i1> insertelement (<vscale x 1 x i1> poison, i1 true, i64 0), <vscale x 1 x i1> poison, <vscale x 1 x i32> zeroinitializer), i32 [[TMP12]])
 ; CHECK-NEXT:    [[EVL_SPLATINSERT:%.*]] = insertelement <vscale x 1 x i32> poison, i32 [[TMP12]], i64 0
 ; CHECK-NEXT:    [[EVL_SPLAT:%.*]] = shufflevector <vscale x 1 x i32> [[EVL_SPLATINSERT]], <vscale x 1 x i32> poison, <vscale x 1 x i32> zeroinitializer
 ; CHECK-NEXT:    [[STEP_VEC:%.*]] = call <vscale x 1 x i32> @llvm.experimental.stepvector.nxv1i32()
@@ -372,7 +368,7 @@ define dso_local signext i32 @mostGenericMatch(ptr nocapture noundef readonly %A
 ; CHECK-NEXT:    [[INDVARS_IV_TR:%.*]] = trunc i64 [[INDVARS_IV]] to i32
 ; CHECK-NEXT:    [[TMP28:%.*]] = shl i32 [[INDVARS_IV_TR]], 1
 ; CHECK-NEXT:    [[TMP29:%.*]] = add i32 [[TMP28]], [[C]]
-; CHECK-NEXT:    [[CALL:%.*]] = tail call signext i32 @bar(i32 noundef signext [[TMP26]], i32 noundef signext [[TMP27]], i32 noundef signext [[TMP29]]) #[[ATTR4]], !llvm.access.group [[ACC_GRP19]]
+; CHECK-NEXT:    [[CALL:%.*]] = tail call signext i32 @bar(i32 noundef signext [[TMP26]], i32 noundef signext [[TMP27]], i32 noundef signext [[TMP29]]) #[[ATTR5]], !llvm.access.group [[ACC_GRP19]]
 ; CHECK-NEXT:    [[ADD11]] = add nsw i32 [[CALL]], [[SUM_026]]
 ; CHECK-NEXT:    [[INDVARS_IV_NEXT]] = add nuw nsw i64 [[INDVARS_IV]], 1
 ; CHECK-NEXT:    [[EXITCOND_NOT:%.*]] = icmp eq i64 [[INDVARS_IV_NEXT]], [[WIDE_TRIP_COUNT]]
