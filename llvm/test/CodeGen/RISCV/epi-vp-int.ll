@@ -208,8 +208,10 @@ define void @test_vp_int_2(<vscale x 2 x i32>* %a0, <vscale x 2 x i32>* %a1, i32
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
 ; CHECK-O0-NEXT:    slli a3, a3, 32
 ; CHECK-O0-NEXT:    srli a3, a3, 32
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli zero, a3, e32, m1, ta, ma
 ; CHECK-O0-NEXT:    vle32.v v8, (a2)
+; CHECK-O0-NEXT:    # implicit-def: $v21
 ; CHECK-O0-NEXT:    vle32.v v21, (a1)
 ; CHECK-O0-NEXT:    vadd.vv v20, v8, v21
 ; CHECK-O0-NEXT:    vsub.vv v19, v8, v21

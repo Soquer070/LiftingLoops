@@ -1438,13 +1438,10 @@ unsigned RISCVTTIImpl::getEstimatedVLFor(VectorType *Ty) {
 }
 
 InstructionCost
-RISCVTTIImpl::getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
-                                     bool IsUnsigned, FastMathFlags FMF,
+RISCVTTIImpl::getMinMaxReductionCost(Intrinsic::ID IID, VectorType *Ty,
+                                     FastMathFlags FMF,
                                      TTI::TargetCostKind CostKind) {
   if (isa<ScalableVectorType>(Ty)) {
-    assert((isa<ScalableVectorType>(Ty) && isa<ScalableVectorType>(CondTy)) &&
-           "Both vectors need to be scalable");
-
     std::pair<InstructionCost, MVT> LT = getTypeLegalizationCost(Ty);
     InstructionCost LegalizationCost = 0;
     if (LT.first > 1) {
@@ -1462,11 +1459,11 @@ RISCVTTIImpl::getMinMaxReductionCost(VectorType *Ty, VectorType *CondTy,
   }
 
   if (isa<FixedVectorType>(Ty) && !ST->useRVVForFixedLengthVectors())
-    return BaseT::getMinMaxReductionCost(Ty, CondTy, IsUnsigned, FMF, CostKind);
+    return BaseT::getMinMaxReductionCost(IID, Ty, FMF, CostKind);
 
   // Skip if scalar size of Ty is bigger than ELEN.
   if (Ty->getScalarSizeInBits() > ST->getELEN())
-    return BaseT::getMinMaxReductionCost(Ty, CondTy, IsUnsigned, FMF, CostKind);
+    return BaseT::getMinMaxReductionCost(IID, Ty, FMF, CostKind);
 
   std::pair<InstructionCost, MVT> LT = getTypeLegalizationCost(Ty);
   if (Ty->getElementType()->isIntegerTy(1))

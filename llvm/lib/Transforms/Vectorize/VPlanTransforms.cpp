@@ -669,6 +669,9 @@ sinkRecurrenceUsersAfterPrevious(VPGenericFirstOrderRecurrencePHIRecipe *FOR,
         properlyDominates(Previous, SinkCandidate, VPDT))
       return true;
 
+    if (SinkCandidate->mayHaveSideEffects())
+      return false;
+
     WorkList.push_back(SinkCandidate);
     return true;
   };
@@ -679,6 +682,7 @@ sinkRecurrenceUsersAfterPrevious(VPGenericFirstOrderRecurrencePHIRecipe *FOR,
     VPRecipeBase *Current = WorkList[I];
     assert(Current->getNumDefinedValues() == 1 &&
            "only recipes with a single defined value expected");
+
     for (VPUser *User : Current->getVPSingleValue()->users()) {
       if (auto *R = dyn_cast<VPRecipeBase>(User))
         if (!TryToPushSinkCandidate(R))
