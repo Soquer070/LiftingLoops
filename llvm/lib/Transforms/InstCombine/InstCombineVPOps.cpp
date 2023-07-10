@@ -67,15 +67,21 @@ Value *InstCombinerImpl::tryToOptimizeGEP(GetElementPtrInst &GEP) {
         if (GEP.getSourceElementType() != BaseFromGEP->getSourceElementType())
           return nullptr;
 
-        ElementCount EC = cast<VectorType>(PtrOpTy)->getElementCount();
+        Value *NewBasePtr = BaseFromGEP->getPointerOperand();
         Value *Idx = GEP.getOperand(GEP.getPointerOperandIndex() + 1);
-        if (!Idx->getType()->isVectorTy())
-          Idx = Builder.CreateVectorSplat(EC, Idx);
-
         Value *BaseGEPIdx =
             BaseFromGEP->getOperand(BaseFromGEP->getPointerOperandIndex() + 1);
-        if (!BaseGEPIdx->getType()->isVectorTy())
-          BaseGEPIdx = Builder.CreateVectorSplat(EC, BaseGEPIdx);
+
+        // Indices do not need to be splatted if the base ptr is a vector.
+        if (!NewBasePtr->getType()->isVectorTy() ||
+            Idx->getType()->isVectorTy() ||
+            BaseGEPIdx->getType()->isVectorTy()) {
+          ElementCount EC = cast<VectorType>(PtrOpTy)->getElementCount();
+          if (!Idx->getType()->isVectorTy())
+            Idx = Builder.CreateVectorSplat(EC, Idx);
+          if (!BaseGEPIdx->getType()->isVectorTy())
+            BaseGEPIdx = Builder.CreateVectorSplat(EC, BaseGEPIdx);
+        }
 
         Type *IdxTy = Idx->getType();
         Type *BaseGEPIdxTy = BaseGEPIdx->getType();
@@ -91,7 +97,6 @@ Value *InstCombinerImpl::tryToOptimizeGEP(GetElementPtrInst &GEP) {
         assert(Idx->getType() == BaseGEPIdx->getType() &&
                "Indices types shouldn't differ!");
 
-        Value *NewBasePtr = BaseFromGEP->getPointerOperand();
         Value *NewIdx = Builder.CreateAdd(BaseGEPIdx, Idx);
 
         return Builder.CreateGEP(GEP.getSourceElementType(), NewBasePtr, NewIdx,
@@ -115,7 +120,7 @@ Value *InstCombinerImpl::tryToOptimizeGEP(GetElementPtrInst &GEP) {
   if (!IdxTy->isVectorTy())
     return nullptr;
 
-  auto IndexIsA = [] (Value *V, unsigned int Opcode) -> bool {
+  auto IndexIsA = [](Value *V, unsigned int Opcode) -> bool {
     auto *I = dyn_cast<Instruction>(V);
     if (!I)
       return false;
@@ -132,8 +137,7 @@ Value *InstCombinerImpl::tryToOptimizeGEP(GetElementPtrInst &GEP) {
     Idx = cast<Instruction>(Idx)->getOperand(0);
   Value *NewBasePtr = nullptr;
   Value *NewIdx = nullptr;
-  if (IndexIsA(Idx, Instruction::Add) ||
-             IndexIsA(Idx, Instruction::Sub)) {
+  if (IndexIsA(Idx, Instruction::Add) || IndexIsA(Idx, Instruction::Sub)) {
     auto *I = cast<Instruction>(Idx);
     Value *LHS = I->getOperand(0);
     Value *RHS = I->getOperand(1);
