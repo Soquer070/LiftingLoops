@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -323,18 +324,29 @@ getUnitForOffset(DIEBuilder &Builder, DWARFContext &DWCtx,
                                     [](uint64_t LHS, const DWARFUnit *RHS) {
                                       return LHS < RHS->getNextUnitOffset();
                                     });
+    static std::vector<DWARFUnit *> CUOffsets;
+    static std::once_flag InitVectorFlag;
+    auto initCUVector = [&]() {
+      CUOffsets.reserve(DWCtx.getNumCompileUnits());
+      for (const std::unique_ptr<DWARFUnit> &CU : DWCtx.compile_units())
+        CUOffsets.emplace_back(CU.get());
+    };
     DWARFUnit *CU = CUIter != Units.end() ? *CUIter : nullptr;
     // Above algorithm breaks when there is only one CU, and reference is
     // outside of it. Fall through slower path, that searches all the CUs.
+    // For example when src and destination of cross CU references have
+    // different abbrev section.
     if (!CU ||
         (CU && AttrSpec.Form == dwarf::DW_FORM_ref_addr &&
          !(CU->getOffset() < Offset && CU->getNextUnitOffset() > Offset))) {
-      auto CUIter = llvm::upper_bound(
-          DWCtx.compile_units(), Offset,
-          [](uint64_t LHS, const std::unique_ptr<DWARFUnit> &RHS) {
-            return LHS < RHS->getNextUnitOffset();
-          });
-      CU = CUIter != DWCtx.compile_units().end() ? (*CUIter).get() : nullptr;
+      // This is a work around for XCode clang. There is a build error when we
+      // pass DWCtx.compile_units() to llvm::upper_bound
+      std::call_once(InitVectorFlag, initCUVector);
+      auto CUIter = std::upper_bound(CUOffsets.begin(), CUOffsets.end(), Offset,
+                                     [](uint64_t LHS, const DWARFUnit *RHS) {
+                                       return LHS < RHS->getNextUnitOffset();
+                                     });
+      CU = CUIter != CUOffsets.end() ? (*CUIter) : nullptr;
     }
     return CU;
   };
@@ -472,6 +484,7 @@ void DIEBuilder::cloneDieReferenceAttribute(
 
   if (!DieInfo.Die) {
     assert(Ref > InputDIE.getOffset());
+    (void)Ref;
     errs() << "BOLT-WARNING: [internal-dwarf-error]: encounter unexpected "
               "unallocated DIE. Should be alloc!\n";
     // We haven't cloned this DIE yet. Just create an empty one and

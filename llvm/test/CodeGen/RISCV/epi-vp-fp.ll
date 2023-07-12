@@ -356,12 +356,14 @@ define void @test_vp_fp_2(<vscale x 2 x float>* %a0, <vscale x 2 x float>* %a1, 
 ; CHECK-O0-NEXT:    vs1r.v v10, (a1) # Unknown-size Folded Spill
 ; CHECK-O0-NEXT:    # implicit-def: $v16
 ; CHECK-O0-NEXT:    vle32.v v16, (a3)
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vfadd.vv v10, v8, v9
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    slli a1, a1, 1
 ; CHECK-O0-NEXT:    add a1, sp, a1
 ; CHECK-O0-NEXT:    addi a1, a1, 48
 ; CHECK-O0-NEXT:    vs1r.v v10, (a1) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vfsub.vv v10, v8, v9
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    slli a2, a1, 1
@@ -369,12 +371,14 @@ define void @test_vp_fp_2(<vscale x 2 x float>* %a0, <vscale x 2 x float>* %a1, 
 ; CHECK-O0-NEXT:    add a1, sp, a1
 ; CHECK-O0-NEXT:    addi a1, a1, 48
 ; CHECK-O0-NEXT:    vs1r.v v10, (a1) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vfmul.vv v10, v8, v9
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    slli a1, a1, 2
 ; CHECK-O0-NEXT:    add a1, sp, a1
 ; CHECK-O0-NEXT:    addi a1, a1, 48
 ; CHECK-O0-NEXT:    vs1r.v v10, (a1) # Unknown-size Folded Spill
+; CHECK-O0-NEXT:    # implicit-def: $v10
 ; CHECK-O0-NEXT:    vfdiv.vv v10, v8, v9
 ; CHECK-O0-NEXT:    csrr a1, vlenb
 ; CHECK-O0-NEXT:    slli a2, a1, 2
@@ -422,6 +426,7 @@ define void @test_vp_fp_2(<vscale x 2 x float>* %a0, <vscale x 2 x float>* %a1, 
 ; CHECK-O0-NEXT:    vl1r.v v8, (a1) # Unknown-size Folded Reload
 ; CHECK-O0-NEXT:    vsetvli zero, a4, e32, m1, ta, ma
 ; CHECK-O0-NEXT:    vfmadd.vv v10, v8, v9
+; CHECK-O0-NEXT:    # implicit-def: $v9
 ; CHECK-O0-NEXT:    vfneg.v v9, v8
 ; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vfcvt.f.x.v v8, v16

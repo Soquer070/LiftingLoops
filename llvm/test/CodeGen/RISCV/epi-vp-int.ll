@@ -208,24 +208,37 @@ define void @test_vp_int_2(<vscale x 2 x i32>* %a0, <vscale x 2 x i32>* %a1, i32
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
 ; CHECK-O0-NEXT:    slli a3, a3, 32
 ; CHECK-O0-NEXT:    srli a3, a3, 32
-; CHECK-O0-NEXT:    # implicit-def: $v8
-; CHECK-O0-NEXT:    vsetvli zero, a3, e32, m1, ta, ma
-; CHECK-O0-NEXT:    vle32.v v8, (a2)
 ; CHECK-O0-NEXT:    # implicit-def: $v21
-; CHECK-O0-NEXT:    vle32.v v21, (a1)
-; CHECK-O0-NEXT:    vadd.vv v20, v8, v21
-; CHECK-O0-NEXT:    vsub.vv v19, v8, v21
-; CHECK-O0-NEXT:    vmul.vv v18, v8, v21
-; CHECK-O0-NEXT:    vdiv.vv v17, v8, v21
-; CHECK-O0-NEXT:    vrem.vv v16, v8, v21
-; CHECK-O0-NEXT:    vdivu.vv v15, v8, v21
-; CHECK-O0-NEXT:    vremu.vv v14, v8, v21
-; CHECK-O0-NEXT:    vand.vv v13, v8, v21
-; CHECK-O0-NEXT:    vor.vv v12, v8, v21
-; CHECK-O0-NEXT:    vxor.vv v11, v8, v21
-; CHECK-O0-NEXT:    vsra.vv v10, v8, v21
-; CHECK-O0-NEXT:    vsrl.vv v9, v8, v21
-; CHECK-O0-NEXT:    vsll.vv v8, v8, v21
+; CHECK-O0-NEXT:    vsetvli zero, a3, e32, m1, ta, ma
+; CHECK-O0-NEXT:    vle32.v v21, (a2)
+; CHECK-O0-NEXT:    # implicit-def: $v22
+; CHECK-O0-NEXT:    vle32.v v22, (a1)
+; CHECK-O0-NEXT:    # implicit-def: $v20
+; CHECK-O0-NEXT:    vadd.vv v20, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v19
+; CHECK-O0-NEXT:    vsub.vv v19, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v18
+; CHECK-O0-NEXT:    vmul.vv v18, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v17
+; CHECK-O0-NEXT:    vdiv.vv v17, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v16
+; CHECK-O0-NEXT:    vrem.vv v16, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v15
+; CHECK-O0-NEXT:    vdivu.vv v15, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v14
+; CHECK-O0-NEXT:    vremu.vv v14, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v13
+; CHECK-O0-NEXT:    vand.vv v13, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v12
+; CHECK-O0-NEXT:    vor.vv v12, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v11
+; CHECK-O0-NEXT:    vxor.vv v11, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v10
+; CHECK-O0-NEXT:    vsra.vv v10, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vsrl.vv v9, v21, v22
+; CHECK-O0-NEXT:    # implicit-def: $v8
+; CHECK-O0-NEXT:    vsll.vv v8, v21, v22
 ; CHECK-O0-NEXT:    vse32.v v20, (a0)
 ; CHECK-O0-NEXT:    vse32.v v19, (a0)
 ; CHECK-O0-NEXT:    vse32.v v18, (a0)

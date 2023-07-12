@@ -68,17 +68,16 @@ define <vscale x 4 x i1> @test_vector_reverse_for_masks_nxv4i1(<vscale x 4 x i1>
 define <vscale x 8 x i1> @test_vector_reverse_for_masks_nxv8i1(<vscale x 8 x i1> %src) {
 ; CHECK-LABEL: test_vector_reverse_for_masks_nxv8i1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli a0, zero, e8, m1, ta, ma
-; CHECK-NEXT:    vmv.v.i v8, 0
-; CHECK-NEXT:    vmerge.vim v8, v8, 1, v0
 ; CHECK-NEXT:    csrr a0, vlenb
 ; CHECK-NEXT:    addi a0, a0, -1
-; CHECK-NEXT:    vsetvli zero, zero, e16, m2, ta, ma
-; CHECK-NEXT:    vid.v v10
-; CHECK-NEXT:    vrsub.vx v10, v10, a0
+; CHECK-NEXT:    vsetvli a1, zero, e16, m2, ta, ma
+; CHECK-NEXT:    vid.v v8
+; CHECK-NEXT:    vrsub.vx v8, v8, a0
 ; CHECK-NEXT:    vsetvli zero, zero, e8, m1, ta, ma
-; CHECK-NEXT:    vrgatherei16.vv v9, v8, v10
-; CHECK-NEXT:    vand.vi v8, v9, 1
+; CHECK-NEXT:    vmv.v.i v10, 0
+; CHECK-NEXT:    vmerge.vim v10, v10, 1, v0
+; CHECK-NEXT:    vrgatherei16.vv v11, v10, v8
+; CHECK-NEXT:    vand.vi v8, v11, 1
 ; CHECK-NEXT:    vmsne.vi v0, v8, 0
 ; CHECK-NEXT:    ret
   %dst = call <vscale x 8 x i1> @llvm.experimental.vector.reverse.nxv8i1(<vscale x 8 x i1> %src)
@@ -130,18 +129,18 @@ define <vscale x 32 x i1> @test_vector_reverse_for_masks_nxv32i1(<vscale x 32 x 
 define <vscale x 64 x i1> @test_vector_reverse_for_masks_nxv64i1(<vscale x 64 x i1> %src) {
 ; CHECK-LABEL: test_vector_reverse_for_masks_nxv64i1:
 ; CHECK:       # %bb.0:
-; CHECK-NEXT:    vsetvli a0, zero, e8, m8, ta, ma
-; CHECK-NEXT:    vmv.v.i v8, 0
-; CHECK-NEXT:    vmerge.vim v8, v8, 1, v0
 ; CHECK-NEXT:    vsetvli a0, zero, e16, m8, ta, ma
-; CHECK-NEXT:    vid.v v16
+; CHECK-NEXT:    vid.v v8
 ; CHECK-NEXT:    csrr a0, vlenb
 ; CHECK-NEXT:    slli a0, a0, 2
 ; CHECK-NEXT:    addi a0, a0, -1
-; CHECK-NEXT:    vrsub.vx v16, v16, a0
-; CHECK-NEXT:    vsetvli zero, zero, e8, m4, ta, ma
-; CHECK-NEXT:    vrgatherei16.vv v28, v8, v16
-; CHECK-NEXT:    vrgatherei16.vv v24, v12, v16
+; CHECK-NEXT:    vrsub.vx v8, v8, a0
+; CHECK-NEXT:    vsetvli a0, zero, e8, m8, ta, ma
+; CHECK-NEXT:    vmv.v.i v16, 0
+; CHECK-NEXT:    vmerge.vim v16, v16, 1, v0
+; CHECK-NEXT:    vsetvli a0, zero, e8, m4, ta, ma
+; CHECK-NEXT:    vrgatherei16.vv v28, v16, v8
+; CHECK-NEXT:    vrgatherei16.vv v24, v20, v8
 ; CHECK-NEXT:    vsetvli a0, zero, e8, m8, ta, ma
 ; CHECK-NEXT:    vand.vi v8, v24, 1
 ; CHECK-NEXT:    vmsne.vi v0, v8, 0

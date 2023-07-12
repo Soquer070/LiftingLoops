@@ -1861,21 +1861,21 @@ void DWARFRewriter::writeDWOFiles(
     }
   }
 
-    for (const SectionRef &Section : File->sections()) {
-      std::unique_ptr<DebugBufferVector> OutputData;
-      StringRef SectionName = getSectionName(Section);
-      if (SectionName == "debug_rnglists.dwo")
-        continue;
-      Expected<StringRef> ContentsExp = Section.getContents();
-      assert(ContentsExp && "Invalid contents.");
-      if (std::optional<StringRef> OutData = updateDebugData(
-              (*DWOCU)->getContext(), SectionName, *ContentsExp, KnownSections,
-              *Streamer, *this, CUDWOEntry, DWOId, OutputData,
-              RangeListssWriter, LocWriter, OverridenSections))
-        Streamer->emitBytes(*OutData);
-    }
-    Streamer->finish();
-    TempOut->keep();
+  for (const SectionRef &Section : File->sections()) {
+    std::unique_ptr<DebugBufferVector> OutputData;
+    StringRef SectionName = getSectionName(Section);
+    if (SectionName == "debug_rnglists.dwo")
+      continue;
+    Expected<StringRef> ContentsExp = Section.getContents();
+    assert(ContentsExp && "Invalid contents.");
+    if (std::optional<StringRef> OutData = updateDebugData(
+            (*DWOCU)->getContext(), SectionName, *ContentsExp, KnownSections,
+            *Streamer, *this, CUDWOEntry, DWOId, OutputData, RangeListssWriter,
+            LocWriter, OverridenSections))
+      Streamer->emitBytes(*OutData);
+  }
+  Streamer->finish();
+  TempOut->keep();
 }
 
 void DWARFRewriter::addGDBTypeUnitEntry(const GDBIndexTUEntry &&Entry) {

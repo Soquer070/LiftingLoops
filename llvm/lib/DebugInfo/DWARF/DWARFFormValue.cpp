@@ -639,7 +639,7 @@ std::optional<uint64_t> DWARFFormValue::getAsAddress() const {
 
 std::optional<object::SectionedAddress> DWARFFormValue::getAsSectionedAddress(
     const ValueType &Value, const dwarf::Form Form, const DWARFUnit *U) {
-  if (!doesFormBelongToClass(Form, FC_Address, U->getVersion()))
+  if (!doesFormBelongToClass(Form, FC_Address, U ? U->getVersion() : 3))
     return std::nullopt;
   bool AddrOffset = Form == dwarf::DW_FORM_LLVM_addrx_offset;
   if (Form == DW_FORM_GNU_addr_index || Form == DW_FORM_addrx ||

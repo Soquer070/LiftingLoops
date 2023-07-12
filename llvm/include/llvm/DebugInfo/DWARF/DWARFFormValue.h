@@ -73,8 +73,6 @@ public:
                                              ArrayRef<uint8_t> D);
   static DWARFFormValue createFromUnit(dwarf::Form F, const DWARFUnit *Unit,
                                        uint64_t *OffsetPtr);
-  static bool isFormClass(const dwarf::Form Form, DWARFFormValue::FormClass FC,
-                          const DWARFUnit *U);
   static std::optional<object::SectionedAddress>
   getAsSectionedAddress(const ValueType &Val, const dwarf::Form Form,
                         const DWARFUnit *U);

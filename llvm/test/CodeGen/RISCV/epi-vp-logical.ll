@@ -22,17 +22,19 @@ define void @test_vp_logical(<vscale x 1 x i64>* %a0, <vscale x 1 x i64>* %a1, i
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
 ; CHECK-O0-NEXT:    slli a1, a1, 32
 ; CHECK-O0-NEXT:    srli a1, a1, 32
-; CHECK-O0-NEXT:    # implicit-def: $v8
-; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
-; CHECK-O0-NEXT:    vle64.v v8, (a3)
 ; CHECK-O0-NEXT:    # implicit-def: $v9
-; CHECK-O0-NEXT:    vle64.v v9, (a2)
+; CHECK-O0-NEXT:    vsetvli zero, a1, e64, m1, ta, ma
+; CHECK-O0-NEXT:    vle64.v v9, (a3)
+; CHECK-O0-NEXT:    # implicit-def: $v10
+; CHECK-O0-NEXT:    vle64.v v10, (a2)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e64, m1, ta, ma
-; CHECK-O0-NEXT:    vand.vi v8, v8, 1
+; CHECK-O0-NEXT:    vand.vi v8, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
 ; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
-; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vand.vi v9, v10, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, mf8, ta, ma
 ; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
@@ -139,17 +141,19 @@ define void @test_vp_logical_2(<vscale x 2 x i32>* %a0, <vscale x 2 x i32>* %a1,
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
 ; CHECK-O0-NEXT:    slli a1, a1, 32
 ; CHECK-O0-NEXT:    srli a1, a1, 32
-; CHECK-O0-NEXT:    # implicit-def: $v8
-; CHECK-O0-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
-; CHECK-O0-NEXT:    vle32.v v8, (a3)
 ; CHECK-O0-NEXT:    # implicit-def: $v9
-; CHECK-O0-NEXT:    vle32.v v9, (a2)
+; CHECK-O0-NEXT:    vsetvli zero, a1, e32, m1, ta, ma
+; CHECK-O0-NEXT:    vle32.v v9, (a3)
+; CHECK-O0-NEXT:    # implicit-def: $v10
+; CHECK-O0-NEXT:    vle32.v v10, (a2)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e32, m1, ta, ma
-; CHECK-O0-NEXT:    vand.vi v8, v8, 1
+; CHECK-O0-NEXT:    vand.vi v8, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
 ; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
-; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vand.vi v9, v10, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, mf4, ta, ma
 ; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
@@ -256,17 +260,19 @@ define void @test_vp_logical_3(<vscale x 4 x i16>* %a0, <vscale x 4 x i16>* %a1,
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
 ; CHECK-O0-NEXT:    slli a1, a1, 32
 ; CHECK-O0-NEXT:    srli a1, a1, 32
-; CHECK-O0-NEXT:    # implicit-def: $v8
-; CHECK-O0-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
-; CHECK-O0-NEXT:    vle16.v v8, (a3)
 ; CHECK-O0-NEXT:    # implicit-def: $v9
-; CHECK-O0-NEXT:    vle16.v v9, (a2)
+; CHECK-O0-NEXT:    vsetvli zero, a1, e16, m1, ta, ma
+; CHECK-O0-NEXT:    vle16.v v9, (a3)
+; CHECK-O0-NEXT:    # implicit-def: $v10
+; CHECK-O0-NEXT:    vle16.v v10, (a2)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e16, m1, ta, ma
-; CHECK-O0-NEXT:    vand.vi v8, v8, 1
+; CHECK-O0-NEXT:    vand.vi v8, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
 ; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
-; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vand.vi v9, v10, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, mf2, ta, ma
 ; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
@@ -373,17 +379,19 @@ define void @test_vp_logical_4(<vscale x 8 x i8>* %a0, <vscale x 8 x i8>* %a1, i
 ; CHECK-O0-NEXT:    addi a0, a0, %lo(scratch)
 ; CHECK-O0-NEXT:    slli a1, a1, 32
 ; CHECK-O0-NEXT:    srli a1, a1, 32
-; CHECK-O0-NEXT:    # implicit-def: $v8
-; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
-; CHECK-O0-NEXT:    vle8.v v8, (a3)
 ; CHECK-O0-NEXT:    # implicit-def: $v9
-; CHECK-O0-NEXT:    vle8.v v9, (a2)
+; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
+; CHECK-O0-NEXT:    vle8.v v9, (a3)
+; CHECK-O0-NEXT:    # implicit-def: $v10
+; CHECK-O0-NEXT:    vle8.v v10, (a2)
+; CHECK-O0-NEXT:    # implicit-def: $v8
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m1, ta, ma
-; CHECK-O0-NEXT:    vand.vi v8, v8, 1
+; CHECK-O0-NEXT:    vand.vi v8, v9, 1
 ; CHECK-O0-NEXT:    vmsne.vi v8, v8, 0
 ; CHECK-O0-NEXT:    # implicit-def: $v11
 ; CHECK-O0-NEXT:    vmv.v.i v11, 0
-; CHECK-O0-NEXT:    vand.vi v9, v9, 1
+; CHECK-O0-NEXT:    # implicit-def: $v9
+; CHECK-O0-NEXT:    vand.vi v9, v10, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v9, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m1, ta, ma
 ; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
@@ -493,14 +501,16 @@ define void @test_vp_logical_5(<vscale x 16 x i8>* %a0, <vscale x 16 x i8>* %a1,
 ; CHECK-O0-NEXT:    # implicit-def: $v8m2
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m2, ta, ma
 ; CHECK-O0-NEXT:    vle8.v v8, (a3)
+; CHECK-O0-NEXT:    # implicit-def: $v12m2
+; CHECK-O0-NEXT:    vle8.v v12, (a2)
 ; CHECK-O0-NEXT:    # implicit-def: $v10m2
-; CHECK-O0-NEXT:    vle8.v v10, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m2, ta, ma
-; CHECK-O0-NEXT:    vand.vi v12, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v8, v12, 0
+; CHECK-O0-NEXT:    vand.vi v10, v8, 1
+; CHECK-O0-NEXT:    vmsne.vi v8, v10, 0
 ; CHECK-O0-NEXT:    # implicit-def: $v14m2
 ; CHECK-O0-NEXT:    vmv.v.i v14, 0
-; CHECK-O0-NEXT:    vand.vi v10, v10, 1
+; CHECK-O0-NEXT:    # implicit-def: $v10m2
+; CHECK-O0-NEXT:    vand.vi v10, v12, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v10, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m2, ta, ma
 ; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
@@ -610,14 +620,16 @@ define void @test_vp_logical_6(<vscale x 32 x i8>* %a0, <vscale x 32 x i8>* %a1,
 ; CHECK-O0-NEXT:    # implicit-def: $v8m4
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m4, ta, ma
 ; CHECK-O0-NEXT:    vle8.v v8, (a3)
+; CHECK-O0-NEXT:    # implicit-def: $v16m4
+; CHECK-O0-NEXT:    vle8.v v16, (a2)
 ; CHECK-O0-NEXT:    # implicit-def: $v12m4
-; CHECK-O0-NEXT:    vle8.v v12, (a2)
 ; CHECK-O0-NEXT:    vsetvli a2, zero, e8, m4, ta, ma
-; CHECK-O0-NEXT:    vand.vi v16, v8, 1
-; CHECK-O0-NEXT:    vmsne.vi v8, v16, 0
+; CHECK-O0-NEXT:    vand.vi v12, v8, 1
+; CHECK-O0-NEXT:    vmsne.vi v8, v12, 0
 ; CHECK-O0-NEXT:    # implicit-def: $v20m4
 ; CHECK-O0-NEXT:    vmv.v.i v20, 0
-; CHECK-O0-NEXT:    vand.vi v12, v12, 1
+; CHECK-O0-NEXT:    # implicit-def: $v12m4
+; CHECK-O0-NEXT:    vand.vi v12, v16, 1
 ; CHECK-O0-NEXT:    vmsne.vi v9, v12, 0
 ; CHECK-O0-NEXT:    vsetvli zero, a1, e8, m4, ta, ma
 ; CHECK-O0-NEXT:    vmand.mm v0, v8, v9
