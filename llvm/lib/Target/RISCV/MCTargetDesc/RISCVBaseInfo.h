@@ -111,6 +111,9 @@ enum {
 
   HasRoundModeOpShift = IsSignExtendingOpWShift + 1,
   HasRoundModeOpMask = 1 << HasRoundModeOpShift,
+
+  UsesVXRMShift = HasRoundModeOpShift + 1,
+  UsesVXRMMask = 1 << UsesVXRMShift,
 };
 
 enum VLMUL : uint8_t {
@@ -172,6 +175,9 @@ static inline bool usesMaskPolicy(uint64_t TSFlags) {
 static inline bool hasRoundModeOp(uint64_t TSFlags) {
   return TSFlags & HasRoundModeOpMask;
 }
+
+/// \returns true if this instruction uses vxrm
+static inline bool usesVXRM(uint64_t TSFlags) { return TSFlags & UsesVXRMMask; }
 
 static inline unsigned getVLOpNum(const MCInstrDesc &Desc) {
   const uint64_t TSFlags = Desc.TSFlags;
