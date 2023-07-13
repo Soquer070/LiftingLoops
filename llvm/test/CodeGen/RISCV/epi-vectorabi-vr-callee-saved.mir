@@ -617,7 +617,7 @@ body:             |
     dead $x0 = PseudoVSETVLI renamable $x10, 216 /* e64, m1, ta, ma */, implicit-def $vl, implicit-def $vtype
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.1, pre-instr-symbol <mcsymbol .Lpcrel_hi1>
     renamable $f15_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi1> :: (load (s64) from constant-pool)
-    renamable $v16 = PseudoVFMERGE_VF64M_M1_TU undef renamable $v16, killed renamable $v16, killed renamable $f14_d, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v16 = PseudoVFMERGE_VF64M_M1 undef renamable $v16, killed renamable $v16, killed renamable $f14_d, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $v10 = PseudoVMAND_MM_MF8 killed renamable $v10, killed renamable $v18, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v12, killed renamable $v17, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v10
@@ -627,7 +627,7 @@ body:             |
     renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v14, killed renamable $v20, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $v0 = PseudoVMAND_MM_MF8 killed renamable $v13, killed renamable $v21, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     dead $x0 = PseudoVSETVLIX0 killed $x0, 215 /* e32, mf2, ta, ma */, implicit-def $vl, implicit-def $vtype, implicit $vl
-    renamable $v14 = PseudoVMERGE_VIM_MF2_TU undef renamable $v14, killed renamable $v19, 0, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
+    renamable $v14 = PseudoVMERGE_VIM_MF2 undef renamable $v14, killed renamable $v19, 0, $v0, $noreg, 5 /* e32 */, implicit $vl, implicit $vtype
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.2, pre-instr-symbol <mcsymbol .Lpcrel_hi2>
     renamable $f14_d = FLD killed renamable $x11, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi2> :: (load (s64) from constant-pool)
     renamable $x11 = AUIPC target-flags(riscv-pcrel-hi) %const.3, pre-instr-symbol <mcsymbol .Lpcrel_hi3>
@@ -755,12 +755,12 @@ body:             |
     $v0 = COPY renamable $v14
     renamable $v0 = nofpexcept PseudoVMFEQ_VF64_M1_MASK undef renamable $v0, renamable $v23, killed renamable $f15_d, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $v0 = PseudoVMAND_MM_MF8 renamable $v14, killed renamable $v0, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v23 = PseudoVMERGE_VIM_M1_TU undef renamable $v23, killed renamable $v23, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v23 = PseudoVMERGE_VIM_M1 undef renamable $v23, killed renamable $v23, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     renamable $x10 = AUIPC target-flags(riscv-pcrel-hi) %const.12, pre-instr-symbol <mcsymbol .Lpcrel_hi13>
     renamable $f15_d = FLD killed renamable $x10, target-flags(riscv-pcrel-lo) <mcsymbol .Lpcrel_hi13> :: (load (s64) from constant-pool)
     renamable $v0 = PseudoVMANDN_MM_MF8 killed renamable $v13, killed renamable $v25, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     renamable $v13 = PseudoVMOR_MM_MF8 killed renamable $v14, renamable $v0, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
-    renamable $v14 = PseudoVMERGE_VVM_M1_TU undef renamable $v14, killed renamable $v23, killed renamable $v24, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v14 = PseudoVMERGE_VVM_M1 undef renamable $v14, killed renamable $v23, killed renamable $v24, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY renamable $v13
     renamable $v14 = nofpexcept PseudoVFMUL_VF64_M1_MASK undef renamable $v14, killed renamable $v14, killed renamable $f15_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
     renamable $v12 = PseudoVMAND_MM_MF8 killed renamable $v12, killed renamable $v22, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
@@ -776,17 +776,17 @@ body:             |
     renamable $v19 = nofpexcept PseudoVFMUL_VF64_M1_MASK undef renamable $v19, killed renamable $v19, killed renamable $f15_d, $v0, $noreg, 6 /* e64 */, 1 /* ta, mu */, implicit $frm, implicit $vl, implicit $vtype
     renamable $v11 = PseudoVMAND_MM_MF8 killed renamable $v11, killed renamable $v15, $noreg, 0 /* e8 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v10
-    renamable $v10 = PseudoVMERGE_VVM_M1_TU undef renamable $v10, killed renamable $v18, killed renamable $v17, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v10 = PseudoVMERGE_VVM_M1 undef renamable $v10, killed renamable $v18, killed renamable $v17, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v8
-    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v10, killed renamable $v21, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VVM_M1 undef renamable $v8, killed renamable $v10, killed renamable $v21, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v11
-    renamable $v8 = PseudoVMERGE_VIM_M1_TU undef renamable $v8, killed renamable $v8, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VIM_M1 undef renamable $v8, killed renamable $v8, 0, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v12
-    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v8, killed renamable $v19, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VVM_M1 undef renamable $v8, killed renamable $v8, killed renamable $v19, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v13
-    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v8, killed renamable $v14, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VVM_M1 undef renamable $v8, killed renamable $v8, killed renamable $v14, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     $v0 = COPY killed renamable $v9
-    renamable $v8 = PseudoVMERGE_VVM_M1_TU undef renamable $v8, killed renamable $v8, killed renamable $v16, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
+    renamable $v8 = PseudoVMERGE_VVM_M1 undef renamable $v8, killed renamable $v8, killed renamable $v16, $v0, $noreg, 6 /* e64 */, implicit $vl, implicit $vtype
     PseudoRET implicit $v8
 
 ...
