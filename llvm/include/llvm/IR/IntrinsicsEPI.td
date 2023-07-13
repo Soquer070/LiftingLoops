@@ -19,14 +19,6 @@ def llvm_epi_i64_ty : LLVMType<nxv1i64>;
 def llvm_epi_f32_ty : LLVMType<nxv1f32>;
 def llvm_epi_f64_ty : LLVMType<nxv1f64>;
 
-def llvm_ptr_i8_ty : LLVMPointerType<llvm_i8_ty>;
-def llvm_ptr_i16_ty : LLVMPointerType<llvm_i16_ty>;
-def llvm_ptr_i32_ty : LLVMPointerType<llvm_i32_ty>;
-def llvm_ptr_i64_ty : LLVMPointerType<llvm_i64_ty>;
-
-def llvm_ptr_f32_ty : LLVMPointerType<llvm_float_ty>;
-def llvm_ptr_f64_ty : LLVMPointerType<llvm_double_ty>;
-
 class EPIIntrinsicClassID;
 
 def EPICIDBinary : EPIIntrinsicClassID;
@@ -552,108 +544,108 @@ def int_epi_vfmv_v_f : EPIUnary;
 multiclass epi_load {
   let Properties = [SDNPMemOperand] in {
   def ""              : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_strided"      : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_indexed"      : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_mask"         : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                   [ LLVMMatchType<0>,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_strided_mask" : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                   [ LLVMMatchType<0>,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_anyvector_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_indexed_mask" : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                   [ LLVMMatchType<0>,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_anyvector_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
 
   def "_nt"           : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_nt_strided"   : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_nt_indexed"   : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_nt_mask"      : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                   [ LLVMMatchType<0>,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_nt_strided_mask" : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                      [ LLVMMatchType<0>,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_i64_ty, llvm_anyvector_ty,
                                        llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                      EPIIntrinsic<EPICIDload>;
   def "_nt_indexed_mask" : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                      [ LLVMMatchType<0>,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_anyvector_ty, llvm_anyvector_ty,
                                        llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                      EPIIntrinsic<EPICIDload>;
 
   def "_ext"           : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_ext_strided"   : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_ext_indexed"   : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
-                                  [ LLVMPointerType<LLVMMatchType<0>>,
+                                  [ llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<0>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_ext_mask"      : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                   [ LLVMMatchType<0>,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                   EPIIntrinsic<EPICIDload>;
   def "_ext_strided_mask" : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                      [ LLVMMatchType<0>,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_i64_ty, llvm_i64_ty,
                                        llvm_anyvector_ty, llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
                                      EPIIntrinsic<EPICIDload>;
   def "_ext_indexed_mask" : DefaultAttrsIntrinsic<[ llvm_anyvector_ty ],
                                      [ LLVMMatchType<0>,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_anyvector_ty, llvm_i64_ty,
                                        llvm_anyvector_ty, llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrReadMem ]>,
@@ -706,38 +698,38 @@ multiclass epi_store {
   let Properties = [SDNPMemOperand] in {
   def ""              : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_strided"      : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_indexed"      : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_mask"         : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_strided_mask" : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_anyvector_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_indexed_mask" : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_anyvector_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
@@ -745,38 +737,38 @@ multiclass epi_store {
 
   def "_nt"           : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_nt_strided"   : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_nt_indexed"   : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_nt_mask"      : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_nt_strided_mask" : DefaultAttrsIntrinsic<[],
                                      [ llvm_anyvector_ty,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_i64_ty, llvm_anyvector_ty,
                                        llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                      EPIIntrinsic<EPICIDstore>;
   def "_nt_indexed_mask" : DefaultAttrsIntrinsic<[],
                                      [ llvm_anyvector_ty,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_anyvector_ty, llvm_anyvector_ty,
                                        llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
@@ -784,38 +776,38 @@ multiclass epi_store {
 
   def "_ext"           : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_ext_strided"   : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_ext_indexed"   : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_anyvector_ty, llvm_i64_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_ext_mask"      : DefaultAttrsIntrinsic<[],
                                   [ llvm_anyvector_ty,
-                                    LLVMPointerType<LLVMMatchType<0>>,
+                                    llvm_ptr_ty,
                                     llvm_i64_ty, llvm_anyvector_ty, llvm_i64_ty ],
                                   [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                   EPIIntrinsic<EPICIDstore>;
   def "_ext_strided_mask" : DefaultAttrsIntrinsic<[],
                                      [ llvm_anyvector_ty,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_i64_ty, llvm_i64_ty,
                                        llvm_anyvector_ty, llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,
                                      EPIIntrinsic<EPICIDstore>;
   def "_ext_indexed_mask" : DefaultAttrsIntrinsic<[],
                                      [ llvm_anyvector_ty,
-                                       LLVMPointerType<LLVMMatchType<0>>,
+                                       llvm_ptr_ty,
                                        llvm_anyvector_ty, llvm_i64_ty,
                                        llvm_anyvector_ty, llvm_i64_ty ],
                                      [ NoCapture<ArgIndex<1>>, IntrWriteMem ]>,

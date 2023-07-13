@@ -269,7 +269,6 @@ fi
 info "Running cmake..."
 run cmake -G "${BUILD_SYSTEM}" ${SRCDIR}/llvm \
    -DLLVM_ENABLE_PROJECTS="clang" \
-   -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=RISCV \
    -DCMAKE_INSTALL_PREFIX=${INSTALLDIR} \
    -DLLVM_DEFAULT_TARGET_TRIPLE=riscv64-unknown-linux-gnu \
    -DLLVM_INSTALL_UTILS=ON \
