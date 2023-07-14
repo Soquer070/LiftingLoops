@@ -1007,7 +1007,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1))),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                                [LLVMPointerToElt<0>, llvm_anyint_ty]),
+                                [llvm_ptr_ty, llvm_anyint_ty]),
                     [NoCapture<ArgIndex<nf>>, IntrReadMem]>, RISCVVIntrinsic {
     let VLOperand = !add(nf, 1);
   }
@@ -1017,7 +1017,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1))),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                                [LLVMPointerToElt<0>,
+                                [llvm_ptr_ty,
                                  LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                                  llvm_anyint_ty, LLVMMatchType<1>]),
                     [ImmArg<ArgIndex<!add(nf, 3)>>, NoCapture<ArgIndex<nf>>, IntrReadMem]>,
@@ -1034,7 +1034,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1)), [llvm_anyint_ty]),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                    [LLVMPointerToElt<0>, LLVMMatchType<1>]),
+                    [llvm_ptr_ty, LLVMMatchType<1>]),
                     [NoCapture<ArgIndex<nf>>]>, RISCVVIntrinsic {
     let VLOperand = !add(nf, 1);
   }
@@ -1047,7 +1047,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1)), [llvm_anyint_ty]),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                     [LLVMPointerToElt<0>,
+                     [llvm_ptr_ty,
                       LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                       LLVMMatchType<1>, LLVMMatchType<1>]),
                     [ImmArg<ArgIndex<!add(nf, 3)>>, NoCapture<ArgIndex<nf>>]>,
@@ -1061,7 +1061,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1))),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                    [LLVMPointerToElt<0>, llvm_anyint_ty, LLVMMatchType<1>]),
+                    [llvm_ptr_ty, llvm_anyint_ty, LLVMMatchType<1>]),
                     [NoCapture<ArgIndex<nf>>, IntrReadMem]>, RISCVVIntrinsic {
     let VLOperand = !add(nf, 2);
   }
@@ -1071,7 +1071,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1))),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                                [LLVMPointerToElt<0>,
+                                [llvm_ptr_ty,
                                  llvm_anyint_ty,
                                  LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                                  LLVMMatchType<1>, LLVMMatchType<1>]),
@@ -1086,7 +1086,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1))),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                    [LLVMPointerToElt<0>, llvm_anyvector_ty, llvm_anyint_ty]),
+                    [llvm_ptr_ty, llvm_anyvector_ty, llvm_anyint_ty]),
                     [NoCapture<ArgIndex<nf>>, IntrReadMem]>, RISCVVIntrinsic {
     let VLOperand = !add(nf, 2);
   }
@@ -1096,7 +1096,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<!listconcat([llvm_anyvector_ty], !listsplat(LLVMMatchType<0>,
                                 !add(nf, -1))),
                     !listconcat(!listsplat(LLVMMatchType<0>, nf),
-                                [LLVMPointerToElt<0>,
+                                [llvm_ptr_ty,
                                  llvm_anyvector_ty,
                                  LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                                  llvm_anyint_ty, LLVMMatchType<2>]),
@@ -1111,7 +1111,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<[],
                     !listconcat([llvm_anyvector_ty],
                                 !listsplat(LLVMMatchType<0>, !add(nf, -1)),
-                                [LLVMPointerToElt<0>, llvm_anyint_ty]),
+                                [llvm_ptr_ty, llvm_anyint_ty]),
                     [NoCapture<ArgIndex<nf>>, IntrWriteMem]>, RISCVVIntrinsic {
     let VLOperand = !add(nf, 1);
   }
@@ -1121,7 +1121,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<[],
                     !listconcat([llvm_anyvector_ty],
                                 !listsplat(LLVMMatchType<0>, !add(nf, -1)),
-                                [LLVMPointerToElt<0>,
+                                [llvm_ptr_ty,
                                  LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                                  llvm_anyint_ty]),
                     [NoCapture<ArgIndex<nf>>, IntrWriteMem]>, RISCVVIntrinsic {
@@ -1134,7 +1134,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<[],
                     !listconcat([llvm_anyvector_ty],
                                 !listsplat(LLVMMatchType<0>, !add(nf, -1)),
-                                [LLVMPointerToElt<0>, llvm_anyint_ty,
+                                [llvm_ptr_ty, llvm_anyint_ty,
                                  LLVMMatchType<1>]),
                     [NoCapture<ArgIndex<nf>>, IntrWriteMem]>, RISCVVIntrinsic {
     let VLOperand = !add(nf, 2);
@@ -1145,7 +1145,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<[],
                     !listconcat([llvm_anyvector_ty],
                                 !listsplat(LLVMMatchType<0>, !add(nf, -1)),
-                                [LLVMPointerToElt<0>, llvm_anyint_ty,
+                                [llvm_ptr_ty, llvm_anyint_ty,
                                  LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                                  LLVMMatchType<1>]),
                     [NoCapture<ArgIndex<nf>>, IntrWriteMem]>, RISCVVIntrinsic {
@@ -1158,7 +1158,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<[],
                     !listconcat([llvm_anyvector_ty],
                                 !listsplat(LLVMMatchType<0>, !add(nf, -1)),
-                                [LLVMPointerToElt<0>, llvm_anyvector_ty,
+                                [llvm_ptr_ty, llvm_anyvector_ty,
                                  llvm_anyint_ty]),
                     [NoCapture<ArgIndex<nf>>, IntrWriteMem]>, RISCVVIntrinsic {
     let VLOperand = !add(nf, 2);
@@ -1169,7 +1169,7 @@ let TargetPrefix = "riscv" in {
         : DefaultAttrsIntrinsic<[],
                     !listconcat([llvm_anyvector_ty],
                                 !listsplat(LLVMMatchType<0>, !add(nf, -1)),
-                                [LLVMPointerToElt<0>, llvm_anyvector_ty,
+                                [llvm_ptr_ty, llvm_anyvector_ty,
                                  LLVMScalarOrSameVectorWidth<0, llvm_i1_ty>,
                                  llvm_anyint_ty]),
                     [NoCapture<ArgIndex<nf>>, IntrWriteMem]>, RISCVVIntrinsic {
