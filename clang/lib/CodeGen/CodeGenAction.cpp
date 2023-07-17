@@ -196,6 +196,10 @@ namespace clang {
       llvm::TimePassesPerRun = CodeGenOpts.TimePassesPerRun;
     }
     llvm::Module *getModule() const { return Gen->GetModule(); }
+    void updateModule(llvm::Module* M) {
+      Gen->ReleaseModule();
+      Gen->ResetModule(M);
+    }
     std::unique_ptr<llvm::Module> takeModule() {
       return std::unique_ptr<llvm::Module>(Gen->ReleaseModule());
     }
@@ -383,9 +387,11 @@ namespace clang {
 
       EmbedBitcode(getModule(), CodeGenOpts, llvm::MemoryBufferRef());
 
+      llvm::Module *Module = getModule();
       EmitBackendOutput(Diags, HeaderSearchOpts, CodeGenOpts, TargetOpts,
                         LangOpts, C.getTargetInfo().getDataLayoutString(),
-                        getModule(), Action, FS, std::move(AsmOutStream));
+                        Module, Action, FS, std::move(AsmOutStream));
+      updateModule(Module);
 
       Ctx.setDiagnosticHandler(std::move(OldDiagnosticHandler));
 
@@ -1254,10 +1260,12 @@ void CodeGenAction::ExecuteAction() {
   std::unique_ptr<llvm::ToolOutputFile> OptRecordFile =
       std::move(*OptRecordFileOrErr);
 
+  llvm::Module* Module = TheModule.release();
   EmitBackendOutput(
       Diagnostics, CI.getHeaderSearchOpts(), CodeGenOpts, TargetOpts,
-      CI.getLangOpts(), CI.getTarget().getDataLayoutString(), TheModule.get(),
+      CI.getLangOpts(), CI.getTarget().getDataLayoutString(), Module,
       BA, CI.getFileManager().getVirtualFileSystemPtr(), std::move(OS));
+  TheModule.reset(Module);
   if (OptRecordFile)
     OptRecordFile->keep();
 }

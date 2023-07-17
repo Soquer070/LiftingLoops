@@ -5791,6 +5791,9 @@ def disable_llvm_passes : Flag<["-"], "disable-llvm-passes">,
   MarshallingInfoFlag<CodeGenOpts<"DisableLLVMPasses">>;
 def disable_llvm_optzns : Flag<["-"], "disable-llvm-optzns">,
   Alias<disable_llvm_passes>;
+def enable_mlir_passes : Flag<["-"], "enable-mlir-passes">,
+  HelpText<"Run the MLIR pipeline">,
+  MarshallingInfoFlag<CodeGenOpts<"EnableMLIRPasses">>;
 def disable_lifetimemarkers : Flag<["-"], "disable-lifetime-markers">,
   HelpText<"Disable lifetime-markers emission even when optimizations are "
            "enabled">,

@@ -70,6 +70,8 @@ public:
   /// CodeGenerator after releasing its module.
   llvm::Module *ReleaseModule();
 
+  void ResetModule(llvm::Module *M);
+
   /// Return debug info code generator.
   CodeGen::CGDebugInfo *getCGDebugInfo();
 

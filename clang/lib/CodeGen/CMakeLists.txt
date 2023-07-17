@@ -128,7 +128,16 @@ add_clang_library(clangCodeGen
   clangFrontend
   clangLex
   clangSerialization
+
+  MLIRTargetLLVMIRImport
+  MLIRTargetLLVMIRExport
+  MLIRToLLVMIRTranslationRegistration
+  MLIRLLVMIRToLLVMTranslation
   )
+
+# FIXME: Do this the right way.
+include_directories(${CMAKE_SOURCE_DIR}/../mlir/include)
+include_directories(${CMAKE_BINARY_DIR}/tools/mlir/include)
 
 # EPI
 # FIXME: Do this better

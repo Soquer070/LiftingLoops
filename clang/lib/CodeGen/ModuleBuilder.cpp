@@ -110,6 +110,12 @@ namespace {
       return M.release();
     }
 
+    void ResetModule(llvm::Module *Mod) {
+      // Make sure the module has been released to avoid self-reset.
+      assert(!(bool)M && "Release first the module");
+      M.reset(Mod);
+    }
+
     const Decl *GetDeclForMangledName(StringRef MangledName) {
       GlobalDecl Result;
       if (!Builder->lookupRepresentativeDecl(MangledName, Result))
@@ -335,6 +341,10 @@ llvm::Module *CodeGenerator::GetModule() {
 
 llvm::Module *CodeGenerator::ReleaseModule() {
   return static_cast<CodeGeneratorImpl*>(this)->ReleaseModule();
+}
+
+void CodeGenerator::ResetModule(llvm::Module* Mod) {
+  return static_cast<CodeGeneratorImpl*>(this)->ResetModule(Mod);
 }
 
 CGDebugInfo *CodeGenerator::getCGDebugInfo() {

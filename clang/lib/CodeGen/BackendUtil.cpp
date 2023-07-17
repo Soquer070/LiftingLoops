@@ -78,7 +78,17 @@
 #include "llvm/Transforms/Scalar/JumpThreading.h"
 #include "llvm/Transforms/Utils/Debugify.h"
 #include "llvm/Transforms/Utils/EntryExitInstrumenter.h"
+#include "llvm/Transforms/Utils/Mem2Reg.h"
 #include "llvm/Transforms/Utils/ModuleUtils.h"
+
+#include "mlir/Dialect/DLTI/DLTI.h"
+#include "mlir/Dialect/Func/IR/FuncOps.h"
+#include "mlir/IR/BuiltinOps.h"
+#include "mlir/IR/MLIRContext.h"
+#include "mlir/Target/LLVMIR/Dialect/All.h"
+#include "mlir/Target/LLVMIR/Export.h"
+#include "mlir/Target/LLVMIR/Import.h"
+
 #include <memory>
 #include <optional>
 using namespace clang;
@@ -110,7 +120,8 @@ class EmitAssemblyHelper {
   const CodeGenOptions &CodeGenOpts;
   const clang::TargetOptions &TargetOpts;
   const LangOptions &LangOpts;
-  Module *TheModule;
+  // Note, this is a reference because RunMLIRPipeline can update this.
+  Module *&TheModule;
   IntrusiveRefCntPtr<llvm::vfs::FileSystem> VFS;
 
   Timer CodeGenerationTime;
@@ -153,6 +164,8 @@ class EmitAssemblyHelper {
     return F;
   }
 
+  void RunMLIRPipeline(BackendAction Action,
+                       std::unique_ptr<raw_pwrite_stream> &OS);
   void
   RunOptimizationPipeline(BackendAction Action,
                           std::unique_ptr<raw_pwrite_stream> &OS,
@@ -176,7 +189,7 @@ public:
                      const HeaderSearchOptions &HeaderSearchOpts,
                      const CodeGenOptions &CGOpts,
                      const clang::TargetOptions &TOpts,
-                     const LangOptions &LOpts, Module *M,
+                     const LangOptions &LOpts, Module *&M,
                      IntrusiveRefCntPtr<llvm::vfs::FileSystem> VFS)
       : Diags(_Diags), HSOpts(HeaderSearchOpts), CodeGenOpts(CGOpts),
         TargetOpts(TOpts), LangOpts(LOpts), TheModule(M), VFS(std::move(VFS)),
@@ -756,6 +769,118 @@ static void addSanitizers(const Triple &TargetTriple,
   }
 }
 
+void EmitAssemblyHelper::RunMLIRPipeline(
+    BackendAction Action, std::unique_ptr<raw_pwrite_stream> &OS) {
+  // This is an evil clone of RunOptimizationPipeline
+  std::optional<PGOOptions> PGOOpt;
+
+  PipelineTuningOptions PTO;
+  PTO.LoopUnrolling = CodeGenOpts.UnrollLoops;
+  // For historical reasons, loop interleaving is set to mirror setting for loop
+  // unrolling.
+  PTO.LoopInterleaving = CodeGenOpts.UnrollLoops;
+  PTO.LoopVectorization = CodeGenOpts.VectorizeLoop;
+  PTO.WFVVectorization = CodeGenOpts.VectorizeWFV;
+  PTO.SLPVectorization = CodeGenOpts.VectorizeSLP;
+  PTO.MergeFunctions = CodeGenOpts.MergeFunctions;
+  // Only enable CGProfilePass when using integrated assembler, since
+  // non-integrated assemblers don't recognize .cgprofile section.
+  PTO.CallGraphProfile = !CodeGenOpts.DisableIntegratedAS;
+
+  LoopAnalysisManager LAM;
+  FunctionAnalysisManager FAM;
+  CGSCCAnalysisManager CGAM;
+  ModuleAnalysisManager MAM;
+
+  bool DebugPassStructure = CodeGenOpts.DebugPass == "Structure";
+  PassInstrumentationCallbacks PIC;
+  PrintPassOptions PrintPassOpts;
+  PrintPassOpts.Indent = DebugPassStructure;
+  PrintPassOpts.SkipAnalyses = DebugPassStructure;
+  StandardInstrumentations SI(
+      TheModule->getContext(),
+      (CodeGenOpts.DebugPassManager || DebugPassStructure),
+      CodeGenOpts.VerifyEach, PrintPassOpts);
+  SI.registerCallbacks(PIC, &MAM);
+  PassBuilder PB(TM.get(), PTO, PGOOpt, &PIC);
+
+  // Register the target library analysis directly and give it a customized
+  // preset TLI.
+  std::unique_ptr<TargetLibraryInfoImpl> TLII(
+      createTLII(TargetTriple, CodeGenOpts));
+  FAM.registerPass([&] { return TargetLibraryAnalysis(*TLII); });
+
+  // Register all the basic analyses with the managers.
+  PB.registerModuleAnalyses(MAM);
+  PB.registerCGSCCAnalyses(CGAM);
+  PB.registerFunctionAnalyses(FAM);
+  PB.registerLoopAnalyses(LAM);
+  PB.crossRegisterProxies(LAM, FAM, CGAM, MAM);
+
+  ModulePassManager MPM;
+
+  // Minimal cleanups to have decent LLVM IR.
+  MPM.addPass(createModuleToFunctionPassAdaptor(llvm::PromotePass()));
+
+  // Now that we have all of the passes ready, run them.
+  {
+    PrettyStackTraceString CrashInfo("MLIR Pipeline");
+    llvm::TimeTraceScope TimeScope("MLIR Pipeline");
+    MPM.run(*TheModule, MAM);
+
+    LLVMContext &LLVMCtx = TheModule->getContext();
+    DataLayout DL = TheModule->getDataLayout();
+    std::string LLVMModuleName = TheModule->getName().str();
+
+    // This consumes TheModule so we need to update it later.
+    mlir::MLIRContext MLIRCtx;
+    std::unique_ptr<llvm::Module> LLVMModule{TheModule};
+    TheModule = nullptr;
+
+    mlir::DialectRegistry registry;
+    registry.insert<mlir::DLTIDialect, mlir::func::FuncDialect>();
+    mlir::registerAllToLLVMIRTranslations(registry);
+    mlir::registerAllFromLLVMIRTranslations(registry);
+    MLIRCtx.appendDialectRegistry(registry);
+
+    auto TheMLIRModule = mlir::translateLLVMIRToModule(
+        std::move(LLVMModule), &MLIRCtx,
+        /* emitExpensiveWarnings */ false);
+    if (!TheMLIRModule) {
+      auto DiagID = Diags.getCustomDiagID(
+          DiagnosticsEngine::Fatal, "failed to import from LLVM IR to MLIR");
+      Diags.Report(DiagID);
+      return;
+    }
+
+    // Do something here with MLIR.
+    // FIXME: Do something, for now let's just dump it.
+    TheMLIRModule->dump();
+
+    // Now convert back to MLIR.
+    LLVMModule =
+        translateModuleToLLVMIR(*TheMLIRModule, LLVMCtx, LLVMModuleName);
+
+    if (!LLVMModule) {
+      auto DiagID = Diags.getCustomDiagID(
+          DiagnosticsEngine::Fatal, "failed to export from MLIR to LLVM IR");
+      Diags.Report(DiagID);
+      return;
+    }
+
+    // Always set the triple and data layout, to make sure they match and are set.
+    // Note that this overwrites any datalayout stored in the LLVM-IR. This avoids
+    // an assert for incompatible data layout when the code-generation happens.
+    LLVMModule->setTargetTriple(TargetTriple.getTriple());
+    LLVMModule->setDataLayout(DL);
+
+    TheModule = LLVMModule.release();
+
+    // Uncomment this to dump the LLVM IR at this point.
+    // TheModule->dump();
+  }
+}
+
 void EmitAssemblyHelper::RunOptimizationPipeline(
     BackendAction Action, std::unique_ptr<raw_pwrite_stream> &OS,
     std::unique_ptr<llvm::ToolOutputFile> &ThinLinkOS) {
@@ -1134,6 +1259,23 @@ void EmitAssemblyHelper::EmitAssembly(BackendAction Action,
   cl::PrintOptionValues();
 
   std::unique_ptr<llvm::ToolOutputFile> ThinLinkOS, DwoOS;
+  if (CodeGenOpts.EnableMLIRPasses) {
+    if (CodeGenOpts.DisableLLVMPasses) {
+      auto DiagID = Diags.getCustomDiagID(
+          DiagnosticsEngine::Warning,
+          "not running MLIR passes because LLVM passes have been disabled");
+      Diags.Report(DiagID);
+    } else if (CodeGenOpts.OptimizationLevel == 0) {
+      auto DiagID = Diags.getCustomDiagID(
+          DiagnosticsEngine::Warning, "not running MLIR passes under -O0");
+      Diags.Report(DiagID);
+    } else {
+      auto DiagID =
+          Diags.getCustomDiagID(DiagnosticsEngine::Note, "running MLIR passes");
+      Diags.Report(DiagID);
+      RunMLIRPipeline(Action, OS);
+    }
+  }
   RunOptimizationPipeline(Action, OS, ThinLinkOS);
   RunCodegenPipeline(Action, OS, DwoOS);
 
@@ -1253,7 +1395,7 @@ void clang::EmitBackendOutput(DiagnosticsEngine &Diags,
                               const CodeGenOptions &CGOpts,
                               const clang::TargetOptions &TOpts,
                               const LangOptions &LOpts, StringRef TDesc,
-                              Module *M, BackendAction Action,
+                              Module *&M, BackendAction Action,
                               IntrusiveRefCntPtr<llvm::vfs::FileSystem> VFS,
                               std::unique_ptr<raw_pwrite_stream> OS) {
 
