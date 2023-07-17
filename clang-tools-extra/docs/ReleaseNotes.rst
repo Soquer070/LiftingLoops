@@ -121,6 +121,12 @@ New checks
   Detect implicit and explicit casts of ``enum`` type into ``bool`` where ``enum`` type
   doesn't have a zero-value enumerator.
 
+- New :doc:`bugprone-switch-missing-default-case
+  <clang-tidy/checks/bugprone/switch-missing-default-case>` check.
+
+  Ensures that switch statements without default cases are flagged, focuses only
+  on covering cases with non-enums where the compiler may not issue warnings.
+
 - New :doc:`bugprone-unique-ptr-array-mismatch
   <clang-tidy/checks/bugprone/unique-ptr-array-mismatch>` check.
 
@@ -312,6 +318,11 @@ Changes in existing checks
   constructor initializers. Correctly handle constructor arguments as being
   sequenced when constructor call is written as list-initialization. Understand
   that there is a sequence point between designated initializers.
+
+- Improved :doc:`bugprone-swapped-arguments
+  <clang-tidy/checks/bugprone/swapped-arguments>` by enhancing handling of
+  implicit conversions, resulting in better detection of argument swaps
+  involving integral and floating-point types.
 
 - Deprecated :doc:`cert-dcl21-cpp
   <clang-tidy/checks/cert/dcl21-cpp>` check.
