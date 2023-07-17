@@ -1200,7 +1200,12 @@ LogicalResult ModuleTranslation::createTBAAMetadata() {
     for (auto &op : metadata.getBody().getOps()) {
       SmallVector<llvm::Metadata *> operands;
       if (auto rootOp = dyn_cast<LLVM::TBAARootMetadataOp>(op)) {
-        operands.push_back(llvm::MDString::get(ctx, rootOp.getIdentity()));
+        // Changing the name is a hack to avoid creating an exactly identical
+        // hierarchy otherwise the LLVMContext may include old metadata that
+        // gets uniquified in unexpected ways.
+        std::string S = rootOp.getIdentity().str() + " - MLIR";
+        operands.push_back(
+            llvm::MDString::get(ctx, S));
       } else if (auto tdOp = dyn_cast<LLVM::TBAATypeDescriptorOp>(op)) {
         operands.push_back(llvm::MDString::get(
             ctx, tdOp.getIdentity().value_or(llvm::StringRef{})));
