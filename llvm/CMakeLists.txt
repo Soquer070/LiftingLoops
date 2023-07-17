@@ -144,6 +144,14 @@ if ("flang" IN_LIST LLVM_ENABLE_PROJECTS)
   endif()
 endif()
 
+# clang-mlir support
+if ("clang" IN_LIST LLVM_ENABLE_PROJECTS)
+  if (NOT "mlir" IN_LIST LLVM_ENABLE_PROJECTS)
+    message(STATUS "Enabling MLIR as a dependency to clang")
+    list(APPEND LLVM_ENABLE_PROJECTS "mlir")
+  endif()
+endif()
+
 # Select the runtimes to build
 #
 # As we migrate runtimes to using the bootstrapping build, the set of default runtimes
