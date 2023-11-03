@@ -116,6 +116,8 @@ add_clang_library(clangCodeGen
   Targets/XCore.cpp
   VarBypassDetector.cpp
 
+  ll/LiftingLoopsPass.cpp
+
   DEPENDS
   intrinsics_gen
   builtins_codegen_epi
@@ -133,6 +135,8 @@ add_clang_library(clangCodeGen
   MLIRTargetLLVMIRExport
   MLIRToLLVMIRTranslationRegistration
   MLIRLLVMIRToLLVMTranslation
+
+  # faltan libs!???
   )
 
 # FIXME: Do this the right way.

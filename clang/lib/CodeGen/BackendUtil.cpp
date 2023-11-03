@@ -83,11 +83,24 @@
 
 #include "mlir/Dialect/DLTI/DLTI.h"
 #include "mlir/Dialect/Func/IR/FuncOps.h"
+#include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/Target/LLVMIR/Dialect/All.h"
 #include "mlir/Target/LLVMIR/Export.h"
 #include "mlir/Target/LLVMIR/Import.h"
+
+//Added
+#include "mlir/IR/AsmState.h"
+#include "mlir/IR/Verifier.h"
+#include "mlir/Parser/Parser.h"
+#include "mlir/Pass/Pass.h"
+#include "mlir/Pass/PassManager.h"
+#include "mlir/Transforms/Passes.h"
+
+
+#include "ll/LiftingLoopsPass.h"
+
 
 #include <memory>
 #include <optional>
@@ -105,7 +118,7 @@ extern cl::opt<bool> DebugInfoCorrelate;
 static cl::opt<bool> ClSanitizeOnOptimizerEarlyEP(
     "sanitizer-early-opt-ep", cl::Optional,
     cl::desc("Insert sanitizers on OptimizerEarlyEP."), cl::init(false));
-}
+} // namespace llvm
 
 namespace {
 
@@ -207,7 +220,7 @@ public:
   void EmitAssembly(BackendAction Action,
                     std::unique_ptr<raw_pwrite_stream> OS);
 };
-}
+} // namespace
 
 static SanitizerCoverageOptions
 getSancovOptsFromCGOpts(const CodeGenOptions &CGOpts) {
@@ -324,14 +337,16 @@ getCodeModel(const CodeGenOptions &CodeGenOpts) {
 }
 
 static CodeGenFileType getCodeGenFileType(BackendAction Action) {
+  CodeGenFileType ret;
   if (Action == Backend_EmitObj)
-    return CGFT_ObjectFile;
+    ret= CGFT_ObjectFile;
   else if (Action == Backend_EmitMCNull)
     return CGFT_Null;
   else {
     assert(Action == Backend_EmitAssembly && "Invalid action!");
     return CGFT_AssemblyFile;
   }
+  return ret;
 }
 
 static bool actionRequiresCodeGen(BackendAction Action) {
@@ -853,9 +868,28 @@ void EmitAssemblyHelper::RunMLIRPipeline(
       return;
     }
 
-    // Do something here with MLIR.
+      // Do something here with MLIR.
     // FIXME: Do something, for now let's just dump it.
-    TheMLIRModule->dump();
+    //TheMLIRModule->dump();
+    
+    llvm::dbgs() << "////////////////////////////\n" <<
+                    "///////              ///////\n" <<
+                    "/////// LIFTINGLOOPS ///////\n" <<
+                    "///////              ///////\n" <<
+                    "////////////////////////////\n";
+
+    mlir::PassManager pm(&MLIRCtx);
+    // Apply any generic pass manager command line options and run the pipeline.
+    //if (mlir::failed(mlir::applyPassManagerCLOptions(pm)))
+      //llvm::report_fatal_error("MLIR failed to apply PassManager");
+      //return 4; -> 'RunMLIRPipeline' should not return a value, raise exception?!
+
+    // Now that there is only one function, we can infer the shapes of each of the operations.
+    mlir::OpPassManager &optPM = pm.nest<mlir::LLVM::LLVMFuncOp>();
+    optPM.addPass(std::make_unique<ll::LiftingLoopsPass>());
+    if (failed(pm.run(*TheMLIRModule))) {
+      llvm::report_fatal_error("MLIR failed to run PassManager");
+    }
 
     // Now convert back to MLIR.
     LLVMModule =
