@@ -873,9 +873,9 @@ void EmitAssemblyHelper::RunMLIRPipeline(
     //TheMLIRModule->dump();
     
     llvm::dbgs() << "////////////////////////////\n" <<
-                    "///////              ///////\n" <<
+    //                "///////              ///////\n" <<
                     "/////// LIFTINGLOOPS ///////\n" <<
-                    "///////              ///////\n" <<
+    //                "///////              ///////\n" <<
                     "////////////////////////////\n";
 
     mlir::PassManager pm(&MLIRCtx);
