@@ -14,8 +14,10 @@
 #include "llvm/Support/raw_ostream.h"
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 #include <ostream>
 #include <utility>
+#include <vector>
 
 #include "mlir/Dialect/DLTI/DLTI.h"
 #include "mlir/Dialect/Func/IR/FuncOps.h"
@@ -256,34 +258,70 @@ void LiftingLoopsPass::printBlock(mlir::Block &block) {
       }
 */
 
+        std::vector<mlir::BlockArgument > bas;// = new std::vector<mlir::BlockArgument*>(); //Block arguments to keep track
         llvm::dbgs() << "\nDumping loop! \n";
       for (auto *it : loopInfo.getTopLevelLoops()){
         //llvm::dbgs() << "\n inIterator geting blocks= " << it->getNumBlocks();
         for (auto *b : it->getBlocks()){
-          std::vector<mlir::BlockArgument> bas; //Block arguments to keep track
           llvm::dbgs() << "\nBlock ";
           
           if (loopInfo.isLoopHeader(b)){
             llvm::dbgs() << " HEADER \n";
-            //llvm::dbgs() << "\nNumArgs:" << b->getNumArguments() << "\n";
+            llvm::dbgs() << " NumArgs:" << b->getNumArguments() << "\n";
             for (auto &ba : b->getArguments()){
-              if (ba.getDefiningOp() != NULL) {
-                llvm::dbgs() << "Found somethig...\n";
-                ba.getDefiningOp()->dump();
-                llvm::dbgs() << "\n";
-              }
-              ba.dump();
-              if (ba.isUsedOutsideOfBlock(b)){ 
+              if (ba.isUsedOutsideOfBlock(b)){// && (ba.isa<std::int32_t>() || ba.isa<std::int64_t>())){ 
+                ba.dump();
+                //llvm::dbgs() << "Interesting argument! Number: " << ba.getArgNumber() << "\n";
                 bas.push_back(ba);
               }
-              else {
-                llvm::dbgs() << "   ..... unused arg LOL\n";
-              }
-            }llvm::dbgs() << "\n";
+              else llvm::dbgs() << "   ..... uninteresting arg\n";
+            }
+            llvm::dbgs() << "   ..... \n";
+            for (auto &op : b->getOperations()){
+              op.dump();llvm::dbgs() << "\n";
+              
+              auto attribu = op.getPropertiesAsAttribute();
+              attribu.print(llvm::dbgs());llvm::dbgs() << "\n";
+            
+              for (auto aDic : op.getAttrDictionary()){
+              llvm::dbgs() << "dic: name [" << aDic.getName() << "] val [" << aDic.getValue() << "]\n";
+            }
+            }
+            llvm::dbgs() << "\n";
+
           }
-          else if (it->isLoopLatch(b))
+          else if (it->isLoopLatch(b)){
             llvm::dbgs() << " LATCH ";
-          else{
+            if (b->getArguments().size() != 0){
+              for (auto arg : b->getArguments()){
+                //if bas->data() 
+                llvm::dbgs() << "bas SIZE!!!!: " << bas.size() << "\n";
+                for (auto ba : bas){
+                  if (ba == arg){
+                    llvm::dbgs() << "wut?\n;";
+                    ba.dump();
+                  }
+                }
+              }
+            }
+            else {
+              llvm::dbgs() << "latch block without args!\n";
+            }
+            
+            for (auto &op : b->getOperations()){
+              for (auto aDic : op.getAttrDictionary()){
+                llvm::dbgs() << "dic: name [" << aDic.getName() << "] val [" << aDic.getValue() << "]\n";
+              }
+              for (auto &bops : op.getBlockOperands()){
+                  llvm::dbgs() << "block op num: " << bops.getOperandNumber() << "\n";
+              }
+                  llvm::dbgs() << "operands : "  << "\n";
+              for (auto bops : op.getOperands()){
+                  bops.dump();
+              }
+            }
+          }
+          else if (false){
             llvm::dbgs() << " randomMofos ";
             for (auto arg : b->getArguments()){
               for (auto ba : bas){
@@ -295,8 +333,10 @@ void LiftingLoopsPass::printBlock(mlir::Block &block) {
             }
             llvm::dbgs() << "\n";
           }
-          llvm::dbgs() << "\n";
-          b->dump();
+
+          // sction for op review of arg usage
+          llvm::dbgs() << "\nBlock is: ";
+          b->dump(); llvm::dbgs() << "\n";
         }
       }
     }
