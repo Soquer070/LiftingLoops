@@ -1,6 +1,7 @@
 #include "mlir/IR/Block.h"
 #include "LiftingLoopsPass.h"
 #include "mlir/IR/BlockSupport.h"
+#include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/Value.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Pass/PassInstrumentation.h"
@@ -8,6 +9,7 @@
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/ilist.h"
 #include "llvm/Analysis/RegionInfo.h"
+#include "llvm/CodeGen/MachineValueType.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/CFG.h"
 #include "llvm/Support/Debug.h"
@@ -159,143 +161,197 @@ void LiftingLoopsPass::printBlock(mlir::Block &block) {
     mlir::Operation *op = getOperation();
     mlir::DominanceInfo &domInfo = getAnalysis<mlir::DominanceInfo>();
     
-    mlir::Region &region = op->getRegion(0);//getFunctionBody();
-    llvm::DominatorTreeBase<mlir::Block, false> &domTree = domInfo.getDomTree(&region);
-    mlir::CFGLoopInfo loopInfo(domTree);
-    
-    if (loopInfo.getTopLevelLoops().empty())
-      llvm::errs() << "no loops!!!!!\n";
-    else{
+    if (op->getNumRegions() != 1){
+      llvm::dbgs() << "Unexpected number of regions!\n";
+    }else{
 
-      /*for (auto rArgs : region.getArguments()){
-        llvm::dbgs() << "\nRegion argument num: " << rArgs.getArgNumber();
-        llvm::dbgs() << "\nRegion argument owner block: " << rArgs.getOwner();
-        //rArgs.isUsedOutsideOfBlock(Block *block)
-        rArgs.dump();
-      }llvm::dbgs() << "\n";
-*/
-      loopInfo.print(llvm::errs());
+      mlir::Region &region = op->getRegion(0);//getFunctionBody();
+      llvm::DominatorTreeBase<mlir::Block, false> &domTree = domInfo.getDomTree(&region);
+      mlir::CFGLoopInfo loopInfo(domTree);
+      
+      if (loopInfo.getTopLevelLoops().empty())
+        llvm::errs() << "no loops!!!!!\n";
+      else{
 
-      // step 1: print for all blocks, the header
-/*
-      for (auto &b : region.getBlocks()){
-        if (loopInfo.isLoopHeader(&b)){
-          llvm::dbgs() << "Found header" << "\n";
-          b.print(llvm::dbgs()); llvm::dbgs() << "\n";
+        /*for (auto rArgs : region.getArguments()){
+          llvm::dbgs() << "\nRegion argument num: " << rArgs.getArgNumber();
+          llvm::dbgs() << "\nRegion argument owner block: " << rArgs.getOwner();
+          //rArgs.isUsedOutsideOfBlock(Block *block)
+          rArgs.dump();
+        }llvm::dbgs() << "\n";
+  */
+        loopInfo.print(llvm::errs());
+
+        // step 1: print for all blocks, the header
+  /*
+        for (auto &b : region.getBlocks()){
+          if (loopInfo.isLoopHeader(&b)){
+            llvm::dbgs() << "Found header" << "\n";
+            b.print(llvm::dbgs()); llvm::dbgs() << "\n";
 
 
-          mlir::Block *up = b.getUniquePredecessor();
-          if (up != NULL)
-            llvm::dbgs() << "In unique predecessor\n";
-          else
-            llvm::dbgs() << "NO unique pred\n";
-          
-          std::vector<mlir::BlockArgument> bas;
-          llvm::dbgs() << "\nNumArgs:" << b.getNumArguments() << "\n";
-          for (auto &ba : b.getArguments()){
-            ba.dump();
-            bas.push_back(ba);
-          }
-
-          llvm::dbgs() << "\nOpSize:" << b.getOperations().size() << "\n";
-          for (auto &op : b.getOperations()){
-            op.dump();
-            for (auto & at : op.getAttrs()){
-              op.getAttr(at.getName()).dump();
+            mlir::Block *up = b.getUniquePredecessor();
+            if (up != NULL)
+              llvm::dbgs() << "In unique predecessor\n";
+            else
+              llvm::dbgs() << "NO unique pred\n";
+            
+            std::vector<mlir::BlockArgument> bas;
+            llvm::dbgs() << "\nNumArgs:" << b.getNumArguments() << "\n";
+            for (auto &ba : b.getArguments()){
+              ba.dump();
+              bas.push_back(ba);
             }
-            auto opops = op.getOpOperands();
-            for (auto &op : opops){
-              llvm::dbgs() << "This is opop num: " << op.getOperandNumber() << "\n";
-              //op.getNextOperandUsingThisValue().
-            }
-            //opops.take_while(PredicateT Pred);
-          }
 
+            llvm::dbgs() << "\nOpSize:" << b.getOperations().size() << "\n";
+            for (auto &op : b.getOperations()){
+              op.dump();
+              for (auto & at : op.getAttrs()){
+                op.getAttr(at.getName()).dump();
+              }
+              auto opops = op.getOpOperands();
+              for (auto &op : opops){
+                llvm::dbgs() << "This is opop num: " << op.getOperandNumber() << "\n";
+                //op.getNextOperandUsingThisValue().
+              }
+              //opops.take_while(PredicateT Pred);
+            }
+
+          }
+          //else if ()
         }
-        //else if ()
-      }
-*/
+  */
 
-      // step 2: print latch nodes!
-/*
-      auto loop = loopInfo.getTopLevelLoops();
-      for (auto *it : loopInfo.getTopLevelLoops()){
-        for (auto *b : it->getBlocks()){
-          if (it->isLoopLatch(b)){
+        // step 2: print latch nodes!
+  /*
+        auto loop = loopInfo.getTopLevelLoops();
+        for (auto *it : loopInfo.getTopLevelLoops()){
+          for (auto *b : it->getBlocks()){
+            if (it->isLoopLatch(b)){
 
-              llvm::dbgs() << "Found loop latch" << "\n";
-              b->print(llvm::dbgs()); llvm::dbgs() << "\n";
+                llvm::dbgs() << "Found loop latch" << "\n";
+                b->print(llvm::dbgs()); llvm::dbgs() << "\n";
 
 
-              mlir::Block *up = b->getUniquePredecessor();
-              if (up != NULL)
-                llvm::dbgs() << "In unique predecessor\n";
-              else
-                llvm::dbgs() << "NO unique pred\n";
-              
-              std::vector<mlir::BlockArgument> bas;
-              llvm::dbgs() << "\nNumArgs:" << b->getNumArguments() << "\n";
+                mlir::Block *up = b->getUniquePredecessor();
+                if (up != NULL)
+                  llvm::dbgs() << "In unique predecessor\n";
+                else
+                  llvm::dbgs() << "NO unique pred\n";
+                
+                std::vector<mlir::BlockArgument> bas;
+                llvm::dbgs() << "\nNumArgs:" << b->getNumArguments() << "\n";
+                for (auto &ba : b->getArguments()){
+                  ba.dump();
+                  bas.push_back(ba);
+                }
+
+                llvm::dbgs() << "\nOpSize:" << b->getOperations().size() << "\n";
+                for (auto &op : b->getOperations()){
+                  op.dump();
+                  for (auto & at : op.getAttrs()){
+                    op.getAttr(at.getName()).dump();
+                  }
+                  auto opops = op.getOpOperands();
+                  for (auto &op : opops){
+                    llvm::dbgs() << "This is opop num: " << op.getOperandNumber() << "\n";
+                    //op.getNextOperandUsingThisValue().
+                  }
+                  //opops.take_while(PredicateT Pred);
+                }
+            }
+          }
+        }
+  */
+
+          std::vector<mlir::BlockArgument > bas;// = new std::vector<mlir::BlockArgument*>(); //Block arguments to keep track
+          llvm::dbgs() << "\nDumping loop! \n";
+        for (auto *it : loopInfo.getTopLevelLoops()){  //for looping, we rely on top most latch info!!!
+          //llvm::dbgs() << "\n inIterator geting blocks= " << it->getNumBlocks();
+          for (auto *b : it->getBlocks()){
+            llvm::dbgs() << "\nBlock ";
+            
+            if (loopInfo.isLoopHeader(b)){
+              llvm::dbgs() << " HEADER \n";
+              llvm::dbgs() << " NumArgs:" << b->getNumArguments() << "\n";
               for (auto &ba : b->getArguments()){
-                ba.dump();
-                bas.push_back(ba);
+                if (ba.isUsedOutsideOfBlock(b)){// && (ba.isa<std::int32_t>() || ba.isa<std::int64_t>())){ 
+                  ba.dump();
+                  //llvm::dbgs() << "Interesting argument! Number: " << ba.getArgNumber() << "\n";
+                  bas.push_back(ba);
+                }
+                else llvm::dbgs() << "   ..... uninteresting arg\n";
+              }
+              llvm::dbgs() << "   ..... \n";
+              for (auto &op : b->getOperations()){
+                op.dump();llvm::dbgs() << "\n";
+                
+                auto attribu = op.getPropertiesAsAttribute();
+                attribu.print(llvm::dbgs());llvm::dbgs() << "\n";
+              
+                for (auto aDic : op.getAttrDictionary()){
+                llvm::dbgs() << "dic: name [" << aDic.getName() << "] val [" << aDic.getValue() << "]\n";
+              }
+              }
+              llvm::dbgs() << "\n";
+
+            }
+            else if (it->isLoopLatch(b)){
+              llvm::dbgs() << " LATCH ";
+              if (b->getArguments().size() != 0){
+                for (auto arg : b->getArguments()){
+                llvm::dbgs() << "dumping latch args...\n";
+                  //if bas->data() 
+                  llvm::dbgs() << "bas SIZE!!!!: " << bas.size() << "\n";
+                  for (auto ba : bas){
+                    if (ba == arg){
+                      llvm::dbgs() << "wut?\n;";
+                      ba.dump();
+                    }
+                  }
+                }
+              }
+              else {
+                llvm::dbgs() << "latch block without args!\n";
               }
 
-              llvm::dbgs() << "\nOpSize:" << b->getOperations().size() << "\n";
+              llvm::dbgs() << "OPERATIONS!!\n";
               for (auto &op : b->getOperations()){
                 op.dump();
-                for (auto & at : op.getAttrs()){
-                  op.getAttr(at.getName()).dump();
+                  llvm::dbgs() << "OPERATION dumped.... \n";
+                  for (auto opType : op.getOperandTypes()){
+                    opType.dump();
+                  llvm::dbgs() << "OPERATION TYPE dumped.... \n";
+                  }
+                  for (auto opRT : op.getResultTypes()){
+                    opRT.dump(); // So i mainly care about opResType as ints, as they are the only ones related to indVars
+                  llvm::dbgs() << "OPERATION ResultTYPE dumped.... \n";
+                  }
+                for (auto aDic : op.getAttrDictionary()){
+                  llvm::dbgs() << "dic: name [" << aDic.getName() << "] val [" << aDic.getValue() << "]\n";
                 }
-                auto opops = op.getOpOperands();
-                for (auto &op : opops){
-                  llvm::dbgs() << "This is opop num: " << op.getOperandNumber() << "\n";
-                  //op.getNextOperandUsingThisValue().
-                }
-                //opops.take_while(PredicateT Pred);
-              }
-          }
-        }
-      }
-*/
 
-        std::vector<mlir::BlockArgument > bas;// = new std::vector<mlir::BlockArgument*>(); //Block arguments to keep track
-        llvm::dbgs() << "\nDumping loop! \n";
-      for (auto *it : loopInfo.getTopLevelLoops()){
-        //llvm::dbgs() << "\n inIterator geting blocks= " << it->getNumBlocks();
-        for (auto *b : it->getBlocks()){
-          llvm::dbgs() << "\nBlock ";
-          
-          if (loopInfo.isLoopHeader(b)){
-            llvm::dbgs() << " HEADER \n";
-            llvm::dbgs() << " NumArgs:" << b->getNumArguments() << "\n";
-            for (auto &ba : b->getArguments()){
-              if (ba.isUsedOutsideOfBlock(b)){// && (ba.isa<std::int32_t>() || ba.isa<std::int64_t>())){ 
-                ba.dump();
-                //llvm::dbgs() << "Interesting argument! Number: " << ba.getArgNumber() << "\n";
-                bas.push_back(ba);
+                  llvm::dbgs() << "dumping BlockOperands!:\n";
+                for (auto &bops : op.getBlockOperands()){
+                    llvm::dbgs() << "block op num: " << bops.getOperandNumber() << "\n";
+                }
+
+                    llvm::dbgs() << "dumping OpOperands : "  << "\n";
+                for (auto bopops : op.getOperands()){
+                    bopops.dump();
+                    llvm::dbgs() << "dumping else info like bopops type?...";
+                    bopops.getType().dump();
+                    if (bopops.getType().isa<mlir::IntegerType>())
+                      llvm::dbgs() << "found int type in bopops!\n";
+                    
+                }
+                llvm::dbgs() << "\nOPERATION ended.... \n";
               }
-              else llvm::dbgs() << "   ..... uninteresting arg\n";
-            }
-            llvm::dbgs() << "   ..... \n";
-            for (auto &op : b->getOperations()){
-              op.dump();llvm::dbgs() << "\n";
               
-              auto attribu = op.getPropertiesAsAttribute();
-              attribu.print(llvm::dbgs());llvm::dbgs() << "\n";
-            
-              for (auto aDic : op.getAttrDictionary()){
-              llvm::dbgs() << "dic: name [" << aDic.getName() << "] val [" << aDic.getValue() << "]\n";
             }
-            }
-            llvm::dbgs() << "\n";
-
-          }
-          else if (it->isLoopLatch(b)){
-            llvm::dbgs() << " LATCH ";
-            if (b->getArguments().size() != 0){
+            else if (false){
+              llvm::dbgs() << " randomMofos ";
               for (auto arg : b->getArguments()){
-                //if bas->data() 
-                llvm::dbgs() << "bas SIZE!!!!: " << bas.size() << "\n";
                 for (auto ba : bas){
                   if (ba == arg){
                     llvm::dbgs() << "wut?\n;";
@@ -303,40 +359,17 @@ void LiftingLoopsPass::printBlock(mlir::Block &block) {
                   }
                 }
               }
+              llvm::dbgs() << "\n";
             }
-            else {
-              llvm::dbgs() << "latch block without args!\n";
-            }
-            
-            for (auto &op : b->getOperations()){
-              for (auto aDic : op.getAttrDictionary()){
-                llvm::dbgs() << "dic: name [" << aDic.getName() << "] val [" << aDic.getValue() << "]\n";
-              }
-              for (auto &bops : op.getBlockOperands()){
-                  llvm::dbgs() << "block op num: " << bops.getOperandNumber() << "\n";
-              }
-                  llvm::dbgs() << "operands : "  << "\n";
-              for (auto bops : op.getOperands()){
-                  bops.dump();
-              }
-            }
-          }
-          else if (false){
-            llvm::dbgs() << " randomMofos ";
-            for (auto arg : b->getArguments()){
-              for (auto ba : bas){
-                if (ba == arg){
-                  llvm::dbgs() << "wut?\n;";
-                  ba.dump();
-                }
-              }
-            }
-            llvm::dbgs() << "\n";
-          }
 
-          // sction for op review of arg usage
-          llvm::dbgs() << "\nBlock is: ";
-          b->dump(); llvm::dbgs() << "\n";
+            // sction for op review of arg usage
+            llvm::dbgs() << "\nBlock is: ";
+            b->dump(); llvm::dbgs() << "\n";
+
+            //find all var with possibility of induction
+            // recurrencies 
+
+          }
         }
       }
     }
