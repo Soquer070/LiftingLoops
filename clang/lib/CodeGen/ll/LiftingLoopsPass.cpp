@@ -48,39 +48,60 @@ struct MyPattern : public mlir::RewritePattern {
   }
 };
 
+/*
+class ConvertTFLeakyRelu : public mlir::RewritePattern {
+public:
+  ConvertTFLeakyRelu(mlir::MLIRContext *context)
+      : RewritePattern(mlir::TFLeakyReluOp::getOperationName(), 1, context) {}
+
+  mlir::LogicalResult matchAndRewrite(mlir::Operation *op,
+                                mlir::PatternRewriter &rewriter) const override {
+    // Cast the operation to the specific op class.
+    auto tfOp = cast<TFLeakyReluOp>(op);
+
+    // Create a new operation with the same type, operand, and attribute.
+    rewriter.replaceOpWithNewOp<TFL::LeakyReluOp>(
+        op, op->getResult(0).getType(), op->getOperand(0),
+        /alpha=//op->getAttrOfType<mlir::IntegerAttr>("lb"));
+
+    // Indicate that the rewrite was successful.
+    return success();
+  }
+};
+*/
+
   void LiftingLoopsPass::runOnOperation() {
     mlir::Operation *op = getOperation();
-    op->dump();
+    //op->dump();
     assert(op->getNumRegions() == 1);
     mlir::Region &region = op->getRegion(0);
-    
     llvm::dbgs() << " Dumping original blocks!\n";
-    for (mlir::Block &b : region.getBlocks())
+    //for (mlir::Block &b : region.getBlocks())
       //b.dump();
-    llvm::dbgs() << " \n";
+    //llvm::dbgs() << " \n";
 	
     mlir::BlockArgument indVar;
     mlir::Value lb, ub, step;
-    mlir::Block *header;
 
     mlir::DominanceInfo &domInfo = getAnalysis<mlir::DominanceInfo>();
     llvm::DominatorTreeBase<mlir::Block, false> &domTree = domInfo.getDomTree(&region);
     mlir::CFGLoopInfo loopInfo(domTree);
     assert(!loopInfo.getTopLevelLoopsVector().empty());
     
-mlir::LoopLikeOpInterface loop;
     loopInfo.print(llvm::dbgs());
     llvm::dbgs() << " \n";
+    mlir::Operation *terminator;
     
     for (auto *it : loopInfo.getTopLevelLoopsVector()){
       for (auto *b : it->getBlocks()){
         if (loopInfo.isLoopHeader(b)){
-          header = b;
+          //header = b;
           for (auto &ba : b->getArguments()){
             if (ba.isUsedOutsideOfBlock(b)){
               indVar = ba;
               for (mlir::Block *predBlock : ba.getOwner()->getPredecessors()) {
                 if (loopInfo.getLoopFor(predBlock) == nullptr){
+                  terminator = predBlock->getTerminator();
                   if (mlir::Operation *terminator = predBlock->getTerminator()) {
                     lb = terminator->getOperand(ba.getArgNumber());
                   }
@@ -120,29 +141,36 @@ mlir::LoopLikeOpInterface loop;
       llvm::dbgs() << "LowerBound: " << lb << "\n";
       llvm::dbgs() << "Step: " << step << "\n";
 
-
-
-      mlir::Region &region = op->getRegion(0);
-      mlir::Block &entryBlock = region.getBlocks().front();
       mlir::OpBuilder builder(op->getContext());
+      auto ip = builder.saveInsertionPoint();
 
-auto ip = builder.saveInsertionPoint();
-builder.setInsertionPointAfter(getOperation());
+      llvm::dbgs() << "print op\n";
+      getOperation()->getRegion(0).getParentOp()->dump();
+      llvm::dbgs() << "print op\n";
 
-      auto loc = header->begin()->getLoc();
 
-      llvm::dbgs() << "preeeee:\n";
-      //op->print(llvm::dbgs(), mlir::OpPrintingFlags().printGenericOpForm().elideLargeElementsAttrs());
-      getOperation()->getRegion(0).getOps().begin()->getLoc()->dump();
-      getOperation()->getRegion(0).getOps().begin()->dump();
-
+      builder.setInsertionPoint(terminator);
+      //getOperation()->getRegion(0).getOps().begin()->dump();
       auto forOp = builder.create<mlir::scf::ForOp>(getOperation()->getRegion(0).getOps().begin()->getLoc(), lb, ub, step);
-      forOp->print(llvm::dbgs(), mlir::OpPrintingFlags().printGenericOpForm().elideLargeElementsAttrs());
+/*
+      for (auto *b : it->getBlocks()){
+        if (loopInfo.isLoopHeader(b)){
+          b->getParentOp()->moveAfter(forOp);
+        }
+      }*/      
+      forOp->moveBefore(terminator);
+      //getOperation()->getRegion(0).getOps().begin()->moveBefore(forOp);
+      //forOp->print(llvm::dbgs(), mlir::OpPrintingFlags().printGenericOpForm().elideLargeElementsAttrs());
       builder.restoreInsertionPoint(ip);
 
-
-      
     }
+    
+    llvm::dbgs() << "\nend!\n";
+    op = getOperation();
+    op->dump();
+
+    llvm::dbgs() << "\nend!\n";
+    
 /*auto bodyBuilder = mlir::OpBuilder::atBlockEnd(forOp.getBody());
 auto iv = forOp.getInductionVar();
 auto ivType = iv.getType();
@@ -166,7 +194,6 @@ for (auto &oper : b.getOperations()) {
 */
 
     
-      llvm::dbgs() << "eeeend\n";
 
   }
 
