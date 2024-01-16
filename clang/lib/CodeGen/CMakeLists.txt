@@ -135,6 +135,9 @@ add_clang_library(clangCodeGen
   MLIRTargetLLVMIRExport
   MLIRToLLVMIRTranslationRegistration
   MLIRLLVMIRToLLVMTranslation
+  MLIRSCFToControlFlow
+  MLIRControlFlowToLLVM
+  MLIRArithToLLVM
 
   # faltan libs!???
   )

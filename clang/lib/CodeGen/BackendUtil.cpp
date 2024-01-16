@@ -44,6 +44,7 @@
 #include "llvm/Passes/StandardInstrumentations.h"
 #include "llvm/Support/BuryPointer.h"
 #include "llvm/Support/CommandLine.h"
+#include "llvm/Support/Debug.h"
 #include "llvm/Support/MemoryBuffer.h"
 #include "llvm/Support/PrettyStackTrace.h"
 #include "llvm/Support/TimeProfiler.h"
@@ -81,29 +82,44 @@
 #include "llvm/Transforms/Utils/Mem2Reg.h"
 #include "llvm/Transforms/Utils/ModuleUtils.h"
 
+#include "mlir/Conversion/ControlFlowToLLVM/ControlFlowToLLVM.h"
+#include "mlir/Conversion/LLVMCommon/ConversionTarget.h"
+#include "mlir/Conversion/LLVMCommon/TypeConverter.h"
+#include "mlir/Dialect/ControlFlow/IR/ControlFlow.h"
 #include "mlir/Dialect/DLTI/DLTI.h"
 #include "mlir/Dialect/Func/IR/FuncOps.h"
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+#include "mlir/Dialect/Transform/IR/TransformInterfaces.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/MLIRContext.h"
+#include "mlir/IR/PatternMatch.h"
+#include "mlir/Support/LogicalResult.h"
 #include "mlir/Target/LLVMIR/Dialect/All.h"
+#include "mlir/Target/LLVMIR/Dialect/Builtin/BuiltinToLLVMIRTranslation.h"
+#include "mlir/Target/LLVMIR/Dialect/LLVMIR/LLVMToLLVMIRTranslation.h"
 #include "mlir/Target/LLVMIR/Export.h"
 #include "mlir/Target/LLVMIR/Import.h"
 
 //Added
+
+#include "mlir/Conversion/Passes.h"
+#include "mlir/Conversion/SCFToControlFlow/SCFToControlFlow.h"
+#include "mlir/Dialect/SCF/IR/SCF.h"
 #include "mlir/IR/AsmState.h"
 #include "mlir/IR/Verifier.h"
 #include "mlir/Parser/Parser.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Pass/PassManager.h"
+#include "mlir/Transforms/DialectConversion.h"
 #include "mlir/Transforms/Passes.h"
-
 
 #include "ll/LiftingLoopsPass.h"
 
 
 #include <memory>
+#include <mlir/IR/DialectRegistry.h>
 #include <optional>
+#include <utility>
 using namespace clang;
 using namespace llvm;
 
@@ -853,9 +869,13 @@ void EmitAssemblyHelper::RunMLIRPipeline(
     TheModule = nullptr;
 
     mlir::DialectRegistry registry;
-    registry.insert<mlir::DLTIDialect, mlir::func::FuncDialect>();
+    registry.insert<mlir::DLTIDialect, mlir::func::FuncDialect, mlir::cf::ControlFlowDialect, mlir::scf::SCFDialect>();
     mlir::registerAllToLLVMIRTranslations(registry);
     mlir::registerAllFromLLVMIRTranslations(registry);
+    
+    mlir::registerLLVMDialectTranslation(registry);
+    mlir::registerBuiltinDialectTranslation(registry);
+
     MLIRCtx.appendDialectRegistry(registry);
 
     auto TheMLIRModule = mlir::translateLLVMIRToModule(
@@ -869,28 +889,68 @@ void EmitAssemblyHelper::RunMLIRPipeline(
     }
 
       // Do something here with MLIR.
-    // FIXME: Do something, for now let's just dump it.
-    //TheMLIRModule->dump();
-    
-    llvm::dbgs() << "////////////////////////////\n" <<
-    //                "///////              ///////\n" <<
-                    "/////// LIFTINGLOOPS ///////\n" <<
-    //                "///////              ///////\n" <<
-                    "////////////////////////////\n";
-
     mlir::PassManager pm(&MLIRCtx);
-    // Apply any generic pass manager command line options and run the pipeline.
-    //if (mlir::failed(mlir::applyPassManagerCLOptions(pm)))
-      //llvm::report_fatal_error("MLIR failed to apply PassManager");
-      //return 4; -> 'RunMLIRPipeline' should not return a value, raise exception?!
-
-    // Now that there is only one function, we can infer the shapes of each of the operations.
     mlir::OpPassManager &optPM = pm.nest<mlir::LLVM::LLVMFuncOp>();
     optPM.addPass(std::make_unique<ll::LiftingLoopsPass>());
     if (failed(pm.run(*TheMLIRModule))) {
       llvm::report_fatal_error("MLIR failed to run PassManager");
     }
+    llvm::dbgs() << "afterSCF\n";
+    TheMLIRModule->dump();
 
+/*
+  // Convert SCF to CF (always needed).
+    //pm.addPass(mlir::createConvertSCFToCFPass());
+    //mlir::OpPassManager &optPM2 = pm.nest<mlir::scf::ForOp>();
+    mlir::PassManager pm2(&MLIRCtx);
+    pm2.addPass(mlir::createConvertSCFToCFPass());
+    if (failed(pm2.run(*TheMLIRModule))) {
+      llvm::report_fatal_error("MLIR failed to run PassManager2");
+    }
+    llvm::dbgs() << "afterCF\n";
+    TheMLIRModule->dump();
+*/
+
+
+    /*
+    mlir::PassManager pm3(&MLIRCtx);
+    pm3.addPass(mlir::createControlFlowSinkPass());
+    if (failed(pm3.run(*TheMLIRModule))) {
+      llvm::report_fatal_error("MLIR failed to run PassManager2");
+    }
+    llvm::dbgs() << "afterLast?!\n";
+    TheMLIRModule->dump();*/
+
+    //optPM.addNestedPass<typename OpT>(std::unique_ptr<Pass> pass)
+    /*mlir::OpPassManager &optPM2 = pm.nest<mlir::scf::ForOp>();
+    // Add the conversion pass.
+    //pm2.addPass(std::make_unique<createConvertSCFToCFPass>());
+    optPM2.addPass(createConvertSCFToCFPass());
+    if (failed(pm.run(*TheMLIRModule))) {
+      llvm::errs() << "Failed to lower scf to cf pipeline\n";
+      return;
+    }*/
+    //mlir::DialectRegistry registry;
+    //mlir::registerLLVMDialectTranslation(registry);
+    //mlir::registerBuiltinDialectTranslation(registry);
+    //MLIRCtx.appendDialectRegistry(registry);
+
+    mlir::LLVMConversionTarget target(MLIRCtx);
+    mlir::RewritePatternSet patterns(&MLIRCtx);
+    mlir::LLVMTypeConverter converter(&MLIRCtx);
+    mlir::populateSCFToControlFlowConversionPatterns(patterns);
+    mlir::arith::populateArithToLLVMConversionPatterns(converter, patterns);
+    mlir::cf::populateControlFlowToLLVMConversionPatterns(converter, patterns);
+    target.addLegalOp<mlir::ModuleOp>();
+    
+    if (mlir::failed(mlir::applyFullConversion(*TheMLIRModule, target, std::move(patterns)))){
+      
+      auto DiagID = Diags.getCustomDiagID(
+          DiagnosticsEngine::Fatal, "failed to transform to LLVM Dialect");
+      Diags.Report(DiagID);
+      return;
+    }
+    
     // Now convert back to MLIR.
     LLVMModule =
         translateModuleToLLVMIR(*TheMLIRModule, LLVMCtx, LLVMModuleName);
