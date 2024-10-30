@@ -872,7 +872,6 @@ void EmitAssemblyHelper::RunMLIRPipeline(
     registry.insert<mlir::DLTIDialect, mlir::func::FuncDialect, mlir::cf::ControlFlowDialect, mlir::scf::SCFDialect>();
     mlir::registerAllToLLVMIRTranslations(registry);
     mlir::registerAllFromLLVMIRTranslations(registry);
-    
     mlir::registerLLVMDialectTranslation(registry);
     mlir::registerBuiltinDialectTranslation(registry);
 
@@ -898,43 +897,6 @@ void EmitAssemblyHelper::RunMLIRPipeline(
     llvm::dbgs() << "afterSCF\n";
     TheMLIRModule->dump();
 
-/*
-  // Convert SCF to CF (always needed).
-    //pm.addPass(mlir::createConvertSCFToCFPass());
-    //mlir::OpPassManager &optPM2 = pm.nest<mlir::scf::ForOp>();
-    mlir::PassManager pm2(&MLIRCtx);
-    pm2.addPass(mlir::createConvertSCFToCFPass());
-    if (failed(pm2.run(*TheMLIRModule))) {
-      llvm::report_fatal_error("MLIR failed to run PassManager2");
-    }
-    llvm::dbgs() << "afterCF\n";
-    TheMLIRModule->dump();
-*/
-
-
-    /*
-    mlir::PassManager pm3(&MLIRCtx);
-    pm3.addPass(mlir::createControlFlowSinkPass());
-    if (failed(pm3.run(*TheMLIRModule))) {
-      llvm::report_fatal_error("MLIR failed to run PassManager2");
-    }
-    llvm::dbgs() << "afterLast?!\n";
-    TheMLIRModule->dump();*/
-
-    //optPM.addNestedPass<typename OpT>(std::unique_ptr<Pass> pass)
-    /*mlir::OpPassManager &optPM2 = pm.nest<mlir::scf::ForOp>();
-    // Add the conversion pass.
-    //pm2.addPass(std::make_unique<createConvertSCFToCFPass>());
-    optPM2.addPass(createConvertSCFToCFPass());
-    if (failed(pm.run(*TheMLIRModule))) {
-      llvm::errs() << "Failed to lower scf to cf pipeline\n";
-      return;
-    }*/
-    //mlir::DialectRegistry registry;
-    //mlir::registerLLVMDialectTranslation(registry);
-    //mlir::registerBuiltinDialectTranslation(registry);
-    //MLIRCtx.appendDialectRegistry(registry);
-
     mlir::LLVMConversionTarget target(MLIRCtx);
     mlir::RewritePatternSet patterns(&MLIRCtx);
     mlir::LLVMTypeConverter converter(&MLIRCtx);
@@ -944,7 +906,6 @@ void EmitAssemblyHelper::RunMLIRPipeline(
     target.addLegalOp<mlir::ModuleOp>();
     
     if (mlir::failed(mlir::applyFullConversion(*TheMLIRModule, target, std::move(patterns)))){
-      
       auto DiagID = Diags.getCustomDiagID(
           DiagnosticsEngine::Fatal, "failed to transform to LLVM Dialect");
       Diags.Report(DiagID);

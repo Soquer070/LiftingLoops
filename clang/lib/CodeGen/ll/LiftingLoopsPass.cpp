@@ -3,10 +3,9 @@
 #include "mlir/Analysis/CFGLoopInfo.h"
 #include "mlir/Conversion/AffineToStandard/AffineToStandard.h"
 #include "mlir/Conversion/ControlFlowToLLVM/ControlFlowToLLVM.h"
+#include "mlir/Dialect/Affine/Analysis/LoopAnalysis.h"
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/SCF/IR/SCF.h"
-#include "llvm/Support/Debug.h"
-#include "mlir/Dialect/Affine/Analysis/LoopAnalysis.h"
 #include "mlir/Dialect/SCF/Transforms/Passes.h"
 #include "mlir/IR/Block.h"
 #include "mlir/IR/FunctionInterfaces.h"
@@ -14,14 +13,15 @@
 #include "mlir/IR/OpDefinition.h"
 #include "mlir/IR/PatternMatch.h"
 #include "mlir/IR/Value.h"
+#include "llvm/Support/Debug.h"
 
 #include "llvm/Analysis/LoopInfo.h"
 
 #include "mlir/Dialect/Affine/TransformOps/AffineTransformOps.h"
 #include "mlir/Dialect/Func/IR/FuncOps.h"
-#include "mlir/Dialect/Index/IR/IndexOps.h"
 #include "mlir/Dialect/Index/IR/IndexAttrs.h"
 #include "mlir/Dialect/Index/IR/IndexDialect.h"
+#include "mlir/Dialect/Index/IR/IndexOps.h"
 
 
 #include "mlir/Dialect/Index/IR/IndexAttrs.h"
@@ -46,10 +46,10 @@
 
 
 //Holy dirty
-#include "mlir/Target/LLVMIR/Dialect/LLVMIR/LLVMToLLVMIRTranslation.h"
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/IR/Operation.h"
 #include "mlir/Support/LLVM.h"
+#include "mlir/Target/LLVMIR/Dialect/LLVMIR/LLVMToLLVMIRTranslation.h"
 #include "mlir/Target/LLVMIR/ModuleTranslation.h"
 
 #include "llvm/IR/IRBuilder.h"
@@ -105,34 +105,12 @@ struct MyPattern : public mlir::RewritePattern {
   }
 };
 
-/*
-class ConvertTFLeakyRelu : public mlir::RewritePattern {
-public:
-  ConvertTFLeakyRelu(mlir::MLIRContext *context)
-      : RewritePattern(mlir::TFLeakyReluOp::getOperationName(), 1, context) {}
-
-  mlir::LogicalResult matchAndRewrite(mlir::Operation *op,
-                                mlir::PatternRewriter &rewriter) const override {
-    // Cast the operation to the specific op class.
-    auto tfOp = cast<TFLeakyReluOp>(op);
-
-    // Create a new operation with the same type, operand, and attribute.
-    rewriter.replaceOpWithNewOp<TFL::LeakyReluOp>(
-        op, op->getResult(0).getType(), op->getOperand(0),
-        /alpha=//op->getAttrOfType<mlir::IntegerAttr>("lb"));
-
-    // Indicate that the rewrite was successful.
-    return success();
-  }
-};
-*/
-
   void LiftingLoopsPass::runOnOperation() {
     mlir::Operation *op = getOperation();
     //op->dump();
     assert(op->getNumRegions() == 1);
     mlir::Region &region = op->getRegion(0);
-    llvm::dbgs() << " Dumping original blocks!\n";
+    //llvm::dbgs() << " Dumping original blocks!\n";
     //for (mlir::Block &b : region.getBlocks())
       //b.dump();
     //llvm::dbgs() << " \n";
